@@ -1,0 +1,124 @@
+---
+const faqs = [
+	{
+		q: "対応エリアはどこまででしょうか？",
+		a: "山形県内全域対応しております。遠方でも遠慮なくご相談ください。",
+	},
+	{
+		q: "即日対応はできるのでしょうか？",
+		a: "可能です。ただし、ご連絡いただくタイミングや時間帯によっては難しい場合もありますので、お急ぎの方は、なるべくお早目にご相談ください。",
+	},
+	{
+		q: "深夜・早朝でも対応してもらえますか？",
+		a: "可能です。ただし日時や状況によって対応が難しいケースもございますので、なるべくお早目にご相談いただけますと幸いです。",
+	},
+	{
+		q: "見積もり後にキャンセルはできますか？",
+		a: "無料でキャンセル可能ですので、お気軽にお見積もりをご相談くださいませ。",
+	},
+	{
+		q: "追加費用はかかりませんか？",
+		a: "はい、弊社のお見積もりは確定金額をお伝えしております。お見積もり時にご説明をしなかった費用を請求することはございません。",
+	},
+	{
+		q: "支払いはいつ・どんな方法ですか？",
+		a: "お支払いは作業終了後、その場で現金・クレジットカード・一部コード決済にて承ります。また、法人様の場合は、銀行振込にも対応しております。",
+	},
+	{
+		q: "日程変更はできますか？",
+		a: "作業、お見積もりの日程変更はいつでも可能です。お客様のご都合に沿って対応させていただきます。",
+	},
+];
+---
+
+<section class="faq">
+	<div class="l-container">
+		<div class="section-heading">
+			<p class="section-heading__en">Faq</p>
+			<p class="section-heading__ja" style="color:#222;">よくあるご質問</p>
+		</div>
+
+		<div class="faq__list">
+			{
+				faqs.map((item) => (
+					<details class="faq__item">
+						<summary class="faq__summary">
+							<span class="faq__q">Q.</span>
+							<span class="faq__question">{item.q}</span>
+						</summary>
+						<p class="faq__answer">{item.a}</p>
+					</details>
+				))
+			}
+		</div>
+	</div>
+</section>
+
+<style>
+	.faq {
+		background: #fff;
+		padding-block: 60px 90px;
+	}
+
+	.faq__list {
+		display: flex;
+		flex-direction: column;
+		gap: 16px;
+		max-width: 900px;
+		margin-inline: auto;
+	}
+
+	.faq__item {
+		background: var(--color-bg-gray);
+		border-radius: 5px;
+		padding: 20px;
+	}
+
+	.faq__summary {
+		display: flex;
+		align-items: baseline;
+		gap: 14px;
+		cursor: pointer;
+		list-style: none;
+	}
+
+	.faq__summary::-webkit-details-marker {
+		display: none;
+	}
+
+	.faq__q {
+		font-family: var(--font-en);
+		font-weight: 700;
+		font-size: 26px;
+		color: var(--color-primary);
+		flex-shrink: 0;
+	}
+
+	.faq__question {
+		font-family: var(--font-heading);
+		font-weight: 700;
+		font-size: 17px;
+		letter-spacing: 0.02em;
+	}
+
+	.faq__answer {
+		margin: 12px 0 0 40px;
+		font-size: 15px;
+		line-height: 1.9;
+		color: var(--color-text);
+	}
+
+	@media (min-width: 768px) {
+		.faq__q {
+			font-size: 32px;
+		}
+
+		.faq__question {
+			font-size: 20px;
+		}
+
+		.faq__answer {
+			font-size: 16px;
+		}
+	}
+</style>

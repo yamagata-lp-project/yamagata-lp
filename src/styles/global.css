@@ -1,0 +1,146 @@
+:root {
+	--color-primary: #0381dc;
+	--color-primary-dark: #0060a6;
+	--color-primary-mid: #278dd7;
+	--color-primary-light: #5ba0fb;
+	--color-primary-lighter: #5eb4f2;
+	--color-primary-pale: #91bcec;
+
+	--color-bg-pale-1: #eaf4ff;
+	--color-bg-pale-2: #e3ecf7;
+	--color-bg-pale-3: #cfe0f3;
+	--color-bg-pale-4: #d7e8fa;
+
+	--color-accent-red: #ff0211;
+	--color-text: #222222;
+	--color-text-sub: #7d7d7d;
+	--color-bg-gray: #f2f2f2;
+	--color-border-gray: #bac9d9;
+
+	--color-cta-phone: #e97434;
+	--color-cta-line: #06c755;
+
+	--font-heading: "Zen Kaku Gothic New", sans-serif;
+	--font-body: "Zen Kaku Gothic New", sans-serif;
+	--font-en: "Oswald", sans-serif;
+	--font-number: "Roboto", sans-serif;
+	--font-logo: "Zen Old Mincho", serif;
+
+	--container-width: 1200px;
+}
+
+*,
+*::before,
+*::after {
+	box-sizing: border-box;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+	width: 100%;
+}
+
+body {
+	font-family: var(--font-body);
+	color: var(--color-text);
+	background: #ffffff;
+	line-height: 1.6;
+	-webkit-font-smoothing: antialiased;
+	overflow-x: hidden;
+}
+
+@media (max-width: 767px) {
+	body {
+		padding-bottom: 56px;
+	}
+}
+
+img {
+	max-width: 100%;
+	display: block;
+}
+
+a {
+	color: inherit;
+	text-decoration: none;
+}
+
+ul,
+ol {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+p {
+	margin: 0;
+}
+
+.l-container {
+	width: 100%;
+	max-width: var(--container-width);
+	margin-inline: auto;
+	padding-inline: 20px;
+}
+
+.section-heading {
+	position: relative;
+	text-align: center;
+	margin-bottom: 40px;
+}
+
+.section-heading__en {
+	font-family: var(--font-en);
+	font-weight: 400;
+	text-transform: uppercase;
+	font-size: clamp(48px, 10vw, 120px);
+	color: var(--color-primary-pale);
+	opacity: 0.35;
+	line-height: 1;
+	margin: 0;
+	user-select: none;
+}
+
+.section-heading__ja {
+	font-family: var(--font-heading);
+	font-weight: 700;
+	font-size: clamp(26px, 4vw, 40px);
+	color: var(--color-primary);
+	letter-spacing: 0.05em;
+	position: relative;
+	margin-top: -0.6em;
+}
+
+.section-heading__lead {
+	font-family: var(--font-en);
+	font-size: clamp(14px, 2vw, 18px);
+	text-transform: uppercase;
+	color: var(--color-text);
+	margin-top: 12px;
+}
+
+.btn-cta {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	height: 48px;
+	padding-inline: 24px;
+	border-radius: 50px;
+	font-family: var(--font-heading);
+	font-weight: 700;
+	font-size: 13px;
+	letter-spacing: 0.08em;
+	color: #fff;
+	box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+	white-space: nowrap;
+}
+
+.btn-cta--phone {
+	background: var(--color-cta-phone);
+}
+
+.btn-cta--line {
+	background: var(--color-cta-line);
+}

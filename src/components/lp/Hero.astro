@@ -1,0 +1,188 @@
+---
+import heroBg from "../../assets/lp/hero-bg.webp";
+import { Image } from "astro:assets";
+---
+
+<section class="hero">
+	<Image src={heroBg} alt="" class="hero__bg" widths={[640, 1024, 1600, 2200]} sizes="100vw" priority />
+	<div class="hero__overlay"></div>
+
+	<div class="hero__content l-container">
+		<h1 class="hero__headline"><span class="hero__headline-highlight">今日中に<br class="hero__br-sp" />片付けたい方へ</span></h1>
+
+		<div class="hero__price">
+			<span class="hero__price-badge">最短30分後</span>
+			<span class="hero__price-amount">9,900円〜</span>
+		</div>
+	</div>
+</section>
+
+<div class="hero__badges-wrap l-container">
+	<ul class="hero__badges">
+		<li class="hero__badge">
+			<span class="hero__badge-small">グループ累計</span>
+			<span class="hero__badge-big">18万件<span class="hero__badge-mid">以上</span></span>
+			<span class="hero__badge-small">作業依頼あり</span>
+		</li>
+		<li class="hero__badge">
+			<span class="hero__badge-small">他社より</span>
+			<span class="hero__badge-big">1円<span class="hero__badge-mid">でも</span></span>
+			<span class="hero__badge-small">高ければご相談を</span>
+		</li>
+		<li class="hero__badge">
+			<span class="hero__badge-small">お見積もり</span>
+			<span class="hero__badge-big">完全無料</span>
+			<span class="hero__badge-small">お気軽にどうぞ</span>
+		</li>
+	</ul>
+</div>
+
+<style>
+	.hero {
+		position: relative;
+		min-height: 420px;
+		display: flex;
+		align-items: center;
+		overflow: hidden;
+		padding-block: 48px 40px;
+	}
+
+	.hero__bg {
+		position: absolute;
+		inset: 0;
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+		object-position: 70% top;
+		z-index: -2;
+	}
+
+	@media (min-width: 768px) {
+		.hero__bg {
+			object-position: 65% 15%;
+		}
+	}
+
+	.hero__overlay {
+		position: absolute;
+		inset: 0;
+		background: linear-gradient(180deg, rgba(3, 36, 66, 0.4) 0%, rgba(3, 36, 66, 0.2) 45%, rgba(3, 36, 66, 0.55) 100%);
+		z-index: -1;
+	}
+
+	.hero__content {
+		position: relative;
+		width: 100%;
+		text-align: center;
+		color: #fff;
+	}
+
+	.hero__headline {
+		font-family: var(--font-heading);
+		font-weight: 700;
+		font-size: clamp(26px, 6vw, 58px);
+		letter-spacing: 0.05em;
+		line-height: 1.35;
+		margin: 0;
+	}
+
+	.hero__headline-highlight {
+		display: inline;
+		background: #5ba0fb;
+		box-decoration-break: clone;
+		-webkit-box-decoration-break: clone;
+		padding: 0.1em 0.3em;
+	}
+
+	.hero__br-sp {
+		display: inline;
+	}
+
+	.hero__price {
+		margin-top: 20px;
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		justify-content: center;
+		gap: 12px;
+	}
+
+	.hero__price-badge {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		border: 3px solid #fafafa;
+		padding: 10px 18px;
+		font-family: var(--font-heading);
+		font-weight: 700;
+		font-size: clamp(16px, 3.2vw, 24px);
+		letter-spacing: 0.05em;
+	}
+
+	.hero__price-amount {
+		font-family: var(--font-number);
+		font-weight: 700;
+		font-size: clamp(34px, 9vw, 92px);
+		line-height: 1;
+	}
+
+	.hero__badges-wrap {
+		position: relative;
+		margin-top: -16px;
+		padding-bottom: 32px;
+	}
+
+	.hero__badges {
+		display: grid;
+		grid-template-columns: 1fr;
+		gap: 12px;
+		max-width: 720px;
+		margin-inline: auto;
+	}
+
+	.hero__badge {
+		background: #fff;
+		color: var(--color-text);
+		border-radius: 4px;
+		padding: 14px 12px;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+	}
+
+	.hero__badge-small {
+		font-size: 14px;
+		line-height: 1.4;
+	}
+
+	.hero__badge-big {
+		color: var(--color-accent-red);
+		font-size: 22px;
+		font-weight: 700;
+		line-height: 1.4;
+	}
+
+	.hero__badge-mid {
+		font-size: 16px;
+	}
+
+	@media (min-width: 640px) {
+		.hero__badges {
+			grid-template-columns: repeat(3, 1fr);
+			max-width: none;
+		}
+	}
+
+	@media (min-width: 768px) {
+		.hero {
+			min-height: 720px;
+			padding-block: 60px 40px;
+		}
+
+		.hero__badges-wrap {
+			margin-top: -40px;
+			padding-bottom: 40px;
+		}
+	}
+</style>

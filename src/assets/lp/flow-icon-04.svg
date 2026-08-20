@@ -1,0 +1,18 @@
+<svg viewBox="0 0 50 50" xmlns="http://www.w3.org/2000/svg">
+	<defs>
+		<mask id="calendar-holes">
+			<rect width="50" height="50" fill="white" />
+			<circle cx="15.5" cy="27" r="2.6" fill="black" />
+			<circle cx="25" cy="27" r="2.6" fill="black" />
+			<circle cx="34.5" cy="27" r="2.6" fill="black" />
+			<circle cx="15.5" cy="36" r="2.6" fill="black" />
+			<circle cx="25" cy="36" r="2.6" fill="black" />
+		</mask>
+	</defs>
+	<g mask="url(#calendar-holes)">
+		<rect x="6" y="10" width="38" height="34" rx="4" fill="black" />
+		<rect x="12.5" y="3" width="5" height="11" rx="2.5" fill="black" />
+		<rect x="32.5" y="3" width="5" height="11" rx="2.5" fill="black" />
+	</g>
+	<rect x="6" y="17" width="38" height="4" fill="black" />
+</svg>

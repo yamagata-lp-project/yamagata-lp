@@ -1,0 +1,141 @@
+---
+import flowBg from "../../assets/lp/flow-bg.webp";
+import iconPhone from "../../assets/lp/flow-icon-01.svg";
+import iconSurvey from "../../assets/lp/flow-icon-02.svg";
+import iconQuote from "../../assets/lp/flow-icon-03.svg";
+import iconSchedule from "../../assets/lp/flow-icon-04.svg";
+import iconStart from "../../assets/lp/flow-icon-05.svg";
+import { Image } from "astro:assets";
+
+const steps = [
+	{ n: "01", label: "お問い合わせ", icon: iconPhone },
+	{ n: "02", label: "荷物状況に応じて\n電話見積もりor現地確認", icon: iconSurvey },
+	{ n: "03", label: "お見積もりのご提案", icon: iconQuote },
+	{ n: "04", label: "日程調整", icon: iconSchedule },
+	{ n: "05", label: "作業開始", icon: iconStart },
+];
+---
+
+<section class="flow">
+	<Image src={flowBg} alt="" class="flow__bg" widths={[640, 1024, 1600]} sizes="100vw" />
+	<div class="flow__overlay"></div>
+
+	<div class="l-container flow__inner">
+		<div class="section-heading">
+			<p class="section-heading__en" style="color:#fff;">Flow</p>
+			<p class="section-heading__ja" style="color:#fff;">ご予約の流れ</p>
+		</div>
+
+		<ol class="flow__steps">
+			{
+				steps.map((step) => (
+					<li class="flow__step">
+						<span class="flow__number">{step.n}</span>
+						<span class="flow__icon">
+							<Image src={step.icon} alt="" width={28} height={28} />
+						</span>
+						<span class="flow__label" style="white-space:pre-line;">{step.label}</span>
+					</li>
+				))
+			}
+		</ol>
+	</div>
+</section>
+
+<style>
+	.flow {
+		position: relative;
+		padding-block: 60px 90px;
+		overflow: hidden;
+	}
+
+	.flow__bg {
+		position: absolute;
+		inset: 0;
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+		z-index: -2;
+	}
+
+	.flow__overlay {
+		position: absolute;
+		inset: 0;
+		background: linear-gradient(180deg, rgba(0, 40, 80, 0.75), rgba(0, 40, 80, 0.55));
+		z-index: -1;
+	}
+
+	.flow__inner {
+		position: relative;
+	}
+
+	.flow__steps {
+		display: flex;
+		flex-direction: column;
+		gap: 12px;
+		max-width: 640px;
+		margin-inline: auto;
+	}
+
+	.flow__step {
+		background: #ffffff;
+		border-radius: 8px;
+		padding: 20px 16px;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+		text-align: center;
+		gap: 8px;
+		min-height: 190px;
+		box-shadow: 3px 3px 6px rgba(0, 0, 0, 0.15);
+	}
+
+	.flow__number {
+		font-family: var(--font-en);
+		font-weight: 700;
+		font-size: 28px;
+		letter-spacing: 0.05em;
+		color: var(--color-primary);
+	}
+
+	.flow__icon {
+		width: 44px;
+		height: 44px;
+		border-radius: 50%;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		background: var(--color-primary);
+		box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+	}
+
+	.flow__icon :global(img) {
+		width: 24px;
+		height: 24px;
+		filter: brightness(0) invert(1);
+	}
+
+	.flow__label {
+		font-family: var(--font-heading);
+		font-weight: 700;
+		font-size: 15px;
+		letter-spacing: 0.03em;
+		line-height: 1.5;
+		color: #222;
+	}
+
+	@media (min-width: 900px) {
+		.flow__steps {
+			flex-direction: row;
+			align-items: stretch;
+			max-width: none;
+			gap: 16px;
+		}
+
+		.flow__step {
+			flex: 1;
+			justify-content: center;
+		}
+	}
+</style>

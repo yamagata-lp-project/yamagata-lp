@@ -1,0 +1,136 @@
+---
+import cardVisa from "../../assets/lp/card-visa.svg";
+import cardMastercard from "../../assets/lp/card-mastercard.svg";
+import cardJcb from "../../assets/lp/card-jcb.svg";
+import cardAmex from "../../assets/lp/card-amex.svg";
+import payPaypay from "../../assets/lp/pay-paypay.svg";
+import payMerpay from "../../assets/lp/pay-merpay.svg";
+import payYucho from "../../assets/lp/pay-yucho.webp";
+import payAeon from "../../assets/lp/pay-aeon.webp";
+import { Image } from "astro:assets";
+
+const TEL = "0120-442-9999";
+---
+
+<section class="payment">
+	<div class="l-container payment__cta-row">
+		<p class="payment__cta-text">
+			最短30分でお伺い！<br />お電話一本でスピード対応します
+		</p>
+		<div class="payment__cta-buttons">
+			<a href={`tel:${TEL.replace(/-/g, "")}`} class="btn-cta btn-cta--phone">電話でお問い合わせ</a>
+			<a href="https://line.me/" class="btn-cta btn-cta--line" target="_blank" rel="noopener">LINEでお問い合わせ</a>
+		</div>
+	</div>
+
+	<div class="l-container payment__inner">
+		<p class="payment__title">お支払い方法（現金・各種クレジットカード・QR決済対応）</p>
+		<ul class="payment__list">
+			<li class="payment__icon"><Image src={cardVisa} alt="VISA" width={56} height={36} /></li>
+			<li class="payment__icon"><Image src={cardMastercard} alt="Mastercard" width={56} height={36} /></li>
+			<li class="payment__icon"><Image src={cardJcb} alt="JCB" width={56} height={36} /></li>
+			<li class="payment__icon"><Image src={cardAmex} alt="American Express" width={56} height={36} /></li>
+			<li class="payment__icon payment__icon--pill"><Image src={payPaypay} alt="PayPay" width={72} height={18} /></li>
+			<li class="payment__icon payment__icon--label" style="background:#c03;">d払い</li>
+			<li class="payment__icon payment__icon--label" style="background:#eb5505;">au PAY</li>
+			<li class="payment__icon payment__icon--pill"><Image src={payMerpay} alt="メルペイ" width={60} height={24} /></li>
+			<li class="payment__icon payment__icon--pill"><Image src={payYucho} alt="ゆうちょPay" width={37} height={32} /></li>
+			<li class="payment__icon payment__icon--pill"><Image src={payAeon} alt="AEON Pay（イオンペイ）" width={112} height={20} /></li>
+		</ul>
+	</div>
+</section>
+
+<style>
+	.payment {
+		background: var(--color-primary-lighter);
+	}
+
+	.payment__cta-row {
+		padding-block: 28px 20px;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: 16px;
+		text-align: center;
+	}
+
+	.payment__cta-text {
+		font-family: var(--font-heading);
+		font-weight: 700;
+		font-size: 18px;
+		color: #fff;
+		line-height: 1.6;
+	}
+
+	.payment__cta-buttons {
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: center;
+		gap: 12px;
+	}
+
+	.payment__inner {
+		border-top: 1px solid rgba(255, 255, 255, 0.25);
+		padding-block: 24px;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: 16px;
+	}
+
+	.payment__title {
+		font-family: var(--font-heading);
+		font-weight: 700;
+		font-size: 14px;
+		color: #fff;
+		text-align: center;
+	}
+
+	.payment__list {
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: center;
+		align-items: center;
+		gap: 8px;
+	}
+
+	.payment__icon {
+		height: 36px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		background: #fff;
+		border-radius: 4px;
+		box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
+		padding-inline: 4px;
+	}
+
+	.payment__icon--pill {
+		padding-inline: 8px;
+	}
+
+	.payment__icon--label {
+		padding-inline: 12px;
+		color: #fff;
+		font-family: var(--font-heading);
+		font-weight: 900;
+		font-size: 12px;
+		white-space: nowrap;
+	}
+
+	@media (min-width: 768px) {
+		.payment__cta-row {
+			flex-direction: row;
+			justify-content: space-between;
+			text-align: left;
+		}
+
+		.payment__cta-buttons {
+			flex-wrap: nowrap;
+		}
+
+		.payment__title {
+			font-size: 16px;
+		}
+	}
+</style>

@@ -1,0 +1,152 @@
+---
+import truckLight from "../../assets/lp/truck-light.webp";
+import truckNormal from "../../assets/lp/truck-normal.webp";
+import truckFull from "../../assets/lp/truck-full.webp";
+import { Image } from "astro:assets";
+
+const plans = [
+	{
+		img: truckLight,
+		name: "軽トラお手軽プラン",
+		desc: "軽トラの荷台の半分まで\n縦型洗濯機3台分ほど",
+		price: "9,900",
+	},
+	{
+		img: truckNormal,
+		name: "軽トラ通常プラン",
+		desc: "軽トラの屋根の高さまで\n縦型洗濯機6台分ほど",
+		price: "16,500",
+	},
+	{
+		img: truckFull,
+		name: "軽トラ満載プラン",
+		desc: "軽トラに入る限界まで",
+		price: "20,900",
+	},
+];
+---
+
+<section class="pricing">
+	<div class="l-container">
+		<div class="section-heading">
+			<p class="section-heading__en">Price</p>
+			<p class="section-heading__ja">わかりやすい料金プラン</p>
+			<p class="section-heading__lead">お荷物の量をヒアリングし、適切なプランをご案内いたします</p>
+		</div>
+
+		<ul class="pricing__list">
+			{
+				plans.map((plan) => (
+					<li class="pricing__item">
+						<p class="pricing__name">{plan.name}</p>
+						<p class="pricing__desc" style="white-space:pre-line;">{plan.desc}</p>
+						<Image src={plan.img} alt={plan.name} width={280} height={200} class="pricing__truck" />
+						<p class="pricing__price">
+							{plan.price}<span class="pricing__price-unit">円</span>
+							<span class="pricing__price-tax">(税込)</span>
+						</p>
+					</li>
+				))
+			}
+		</ul>
+
+		<p class="pricing__note">
+			ご提示した金額が最終金額です。現地確認後、追加料金を頂くことは一切ございません。
+		</p>
+	</div>
+</section>
+
+<style>
+	.pricing {
+		background: var(--color-bg-pale-1);
+		padding-block: 60px 90px;
+		position: relative;
+	}
+
+	.pricing__list {
+		display: grid;
+		grid-template-columns: 1fr;
+		gap: 24px;
+		max-width: 420px;
+		margin: 0 auto 24px;
+	}
+
+	.pricing__item {
+		background: #fff;
+		border: 1px solid #d9d9d9;
+		border-radius: 4px;
+		padding: 24px 20px;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		text-align: center;
+		transition: transform 0.2s ease, box-shadow 0.2s ease;
+	}
+
+	.pricing__item:hover,
+	.pricing__item:active,
+	.pricing__item:focus-within {
+		transform: translateY(-8px);
+		box-shadow: 0 16px 28px rgba(3, 129, 220, 0.2);
+	}
+
+	.pricing__name {
+		font-family: var(--font-heading);
+		font-weight: 900;
+		font-size: 24px;
+		color: var(--color-text);
+		margin-bottom: 12px;
+	}
+
+	.pricing__desc {
+		font-size: 15px;
+		line-height: 1.7;
+		color: var(--color-text);
+		margin-bottom: 16px;
+	}
+
+	.pricing__truck :global(img) {
+		width: 100%;
+		max-width: 240px;
+		height: auto;
+		margin-bottom: 16px;
+	}
+
+	.pricing__price {
+		font-family: var(--font-number);
+		font-weight: 700;
+		font-size: 40px;
+		color: var(--color-accent-red);
+		line-height: 1;
+	}
+
+	.pricing__price-unit {
+		font-size: 28px;
+	}
+
+	.pricing__price-tax {
+		font-family: var(--font-heading);
+		font-size: 16px;
+		color: var(--color-accent-red);
+		margin-left: 6px;
+	}
+
+	.pricing__note {
+		text-align: center;
+		font-family: var(--font-en);
+		font-size: 14px;
+		color: var(--color-text);
+	}
+
+	@media (min-width: 768px) {
+		.pricing__list {
+			grid-template-columns: repeat(3, 1fr);
+			max-width: none;
+			gap: 32px;
+		}
+
+		.pricing__note {
+			font-size: 16px;
+		}
+	}
+</style>

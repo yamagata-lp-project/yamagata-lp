@@ -1,0 +1,272 @@
+---
+import case01Before from "../../assets/lp/case01-before.webp";
+import case01After from "../../assets/lp/case01-after.webp";
+import case02Before from "../../assets/lp/case02-before.webp";
+import case02After from "../../assets/lp/case02-after.webp";
+import { Image } from "astro:assets";
+
+const cases = [
+	{
+		title: "川本ポンプ｜給水ユニット更新工事",
+		before: case01Before,
+		after: case01After,
+		worry: "既設給水ユニット老朽化の為故障の心配",
+		period: "2日",
+		approachTitle: "テラルから川本製作所の給水ユニットに変更",
+		approachBody:
+			"既設の給水ユニットはテラル製で設置から20年が経過していました。現場調査を行い新規ポンプの設置位置や配管のルート等を検討した結果、テラルから川本製作所の給水ユニットに変更して、ポンプ以外にも老朽化した配管やバルブ類、パイプサイレンサー、防振架台等も交換する提案をいたしました。",
+	},
+	{
+		title: "給水方式変更工事（直結増圧給水に変更）",
+		before: case02Before,
+		after: case02After,
+		worry: "水道水の衛生管理・維持管理費用削減",
+		period: "約1カ月",
+		approachTitle: "省エネ効果も期待できる「直結増圧方式」に変更",
+		approachBody:
+			"既存の給水方式は受水槽と給水ユニットを用いたポンプ直送方式でした。受水槽を使用しない直結増圧方式は新鮮な水で、省エネ効果も期待できますので、直結増圧方式に変更する工事を提案いたしました。",
+	},
+];
+---
+
+<section class="case">
+	<div class="l-container">
+		<div class="section-heading">
+			<p class="section-heading__en">Case</p>
+			<p class="section-heading__ja" style="color:#0060a6;">作業事例</p>
+		</div>
+
+		<div class="case__slider" data-case-slider>
+			<div class="case__track">
+				{
+					cases.map((c, i) => (
+						<article class="case__card" data-case-panel style={i === 0 ? "" : "display:none;"}>
+							<h3 class="case__title">{c.title}</h3>
+							<div class="case__images">
+								<div class="case__image-wrap">
+									<Image src={c.before} alt={`${c.title} 施工前`} width={450} height={268} />
+									<span class="case__tag case__tag--before">Before</span>
+								</div>
+								<div class="case__image-wrap">
+									<Image src={c.after} alt={`${c.title} 施工後`} width={450} height={268} />
+									<span class="case__tag case__tag--after">After</span>
+								</div>
+							</div>
+							<dl class="case__desc">
+								<div class="case__row">
+									<dt>お悩み</dt>
+									<dd>{c.worry}</dd>
+								</div>
+								<div class="case__row">
+									<dt>工期</dt>
+									<dd>{c.period}</dd>
+								</div>
+								<div class="case__row case__row--block">
+									<dt>お悩みへのアプローチ</dt>
+									<dd>
+										<p class="case__approach-title">{c.approachTitle}</p>
+										<p class="case__approach-body">{c.approachBody}</p>
+									</dd>
+								</div>
+							</dl>
+						</article>
+					))
+				}
+			</div>
+
+			<div class="case__nav">
+				<button type="button" class="case__nav-btn" data-case-prev aria-label="前の事例">‹</button>
+				<div class="case__dots" data-case-dots>
+					{cases.map((_, i) => <button type="button" class="case__dot" data-case-dot data-index={i} aria-label={`事例${i + 1}`} />)}
+				</div>
+				<button type="button" class="case__nav-btn" data-case-next aria-label="次の事例">›</button>
+			</div>
+		</div>
+	</div>
+</section>
+
+<script>
+	document.querySelectorAll<HTMLElement>("[data-case-slider]").forEach((slider) => {
+		const panels = Array.from(slider.querySelectorAll<HTMLElement>("[data-case-panel]"));
+		const dots = Array.from(slider.querySelectorAll<HTMLElement>("[data-case-dot]"));
+		let current = 0;
+
+		function show(index: number) {
+			current = (index + panels.length) % panels.length;
+			panels.forEach((panel, i) => {
+				panel.style.display = i === current ? "" : "none";
+			});
+			dots.forEach((dot, i) => dot.classList.toggle("is-active", i === current));
+		}
+
+		slider.querySelector("[data-case-prev]")?.addEventListener("click", () => show(current - 1));
+		slider.querySelector("[data-case-next]")?.addEventListener("click", () => show(current + 1));
+		dots.forEach((dot, i) => dot.addEventListener("click", () => show(i)));
+
+		show(0);
+	});
+</script>
+
+<style>
+	.case {
+		background: var(--color-bg-pale-3);
+		padding-block: 60px 90px;
+	}
+
+	.case__card {
+		background: #fff;
+		border-radius: 6px;
+		overflow: hidden;
+		box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.15);
+		max-width: 900px;
+		margin-inline: auto;
+	}
+
+	.case__title {
+		background: var(--color-primary);
+		color: #fff;
+		text-align: center;
+		font-family: var(--font-heading);
+		font-weight: 700;
+		font-size: 18px;
+		letter-spacing: 0.03em;
+		padding: 18px 16px;
+		margin: 0;
+	}
+
+	.case__images {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		gap: 12px;
+		padding: 20px 20px 0;
+	}
+
+	.case__image-wrap {
+		position: relative;
+	}
+
+	.case__image-wrap :global(img) {
+		width: 100%;
+		height: auto;
+		border-radius: 2px;
+	}
+
+	.case__tag {
+		position: absolute;
+		bottom: 8px;
+		left: 0;
+		height: 28px;
+		display: flex;
+		align-items: center;
+		padding-inline: 12px 20px;
+		clip-path: polygon(0 0, 85% 0, 100% 100%, 0% 100%);
+		color: #fff;
+		font-family: var(--font-en);
+		font-size: 14px;
+		letter-spacing: 0.05em;
+	}
+
+	.case__tag--before {
+		background: var(--color-text-sub);
+	}
+
+	.case__tag--after {
+		background: var(--color-primary);
+	}
+
+	.case__desc {
+		padding: 20px;
+		margin: 0;
+		display: flex;
+		flex-direction: column;
+		gap: 12px;
+	}
+
+	.case__row {
+		display: flex;
+		align-items: center;
+		flex-wrap: wrap;
+		gap: 8px;
+	}
+
+	.case__row--block {
+		align-items: flex-start;
+		flex-direction: column;
+	}
+
+	.case__row dt {
+		background: var(--color-bg-pale-2);
+		color: var(--color-primary-dark);
+		font-family: var(--font-heading);
+		font-weight: 700;
+		font-size: 14px;
+		padding: 6px 14px;
+		border-radius: 2px;
+		white-space: nowrap;
+	}
+
+	.case__row dd {
+		margin: 0;
+		font-size: 15px;
+		line-height: 1.7;
+	}
+
+	.case__approach-title {
+		color: var(--color-primary);
+		font-family: var(--font-heading);
+		font-weight: 700;
+		font-size: 17px;
+		margin: 0 0 8px;
+	}
+
+	.case__approach-body {
+		margin: 0;
+		font-size: 14px;
+		line-height: 1.8;
+	}
+
+	.case__nav {
+		margin-top: 24px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		gap: 20px;
+	}
+
+	.case__nav-btn {
+		width: 44px;
+		height: 44px;
+		border-radius: 50%;
+		border: none;
+		background: var(--color-primary);
+		color: #fff;
+		font-size: 22px;
+		line-height: 1;
+		cursor: pointer;
+		box-shadow: 0 0 8px rgba(0, 0, 0, 0.2);
+	}
+
+	.case__dots {
+		display: flex;
+		gap: 8px;
+	}
+
+	.case__dot {
+		width: 32px;
+		height: 4px;
+		border: none;
+		background: var(--color-border-gray);
+		cursor: pointer;
+		padding: 0;
+	}
+
+	.case__dot.is-active {
+		background: var(--color-primary);
+	}
+
+	@media (min-width: 640px) {
+		.case__row dd {
+			font-size: 16px;
+		}
+	}
+</style>

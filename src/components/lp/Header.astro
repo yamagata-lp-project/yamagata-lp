@@ -1,0 +1,92 @@
+---
+const TEL = "0120-442-9999";
+---
+
+<header class="header">
+	<div class="header__inner">
+		<div class="header__brand">
+			<p class="header__logo">山形不用品回収サービス</p>
+			<p class="header__tagline">山形県内の不用品お片付けはお任せください</p>
+		</div>
+		<nav class="header__nav" aria-label="お問い合わせ">
+			<a href={`tel:${TEL.replace(/-/g, "")}`} class="btn-cta btn-cta--phone">
+				電話でお問い合わせ
+			</a>
+			<a href="https://line.me/" class="btn-cta btn-cta--line" target="_blank" rel="noopener">
+				LINEでお問い合わせ
+			</a>
+		</nav>
+	</div>
+</header>
+
+<style>
+	.header {
+		position: sticky;
+		top: 0;
+		z-index: 100;
+		background: #fff;
+		box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+	}
+
+	.header__inner {
+		max-width: 1400px;
+		margin-inline: auto;
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 16px;
+		padding: 12px 20px;
+		flex-wrap: wrap;
+	}
+
+	.header__logo {
+		font-family: var(--font-logo);
+		font-size: 20px;
+		font-weight: 500;
+		color: #000;
+		letter-spacing: 0.02em;
+	}
+
+	.header__tagline {
+		font-family: var(--font-heading);
+		font-size: 12px;
+		font-weight: 500;
+		color: #022442;
+		margin-top: 2px;
+	}
+
+	.header__nav {
+		display: flex;
+		align-items: center;
+		gap: 12px;
+		flex-wrap: wrap;
+	}
+
+	.header__nav .btn-cta {
+		height: 42px;
+		padding-inline: 18px;
+		font-size: 12px;
+	}
+
+	@media (max-width: 767px) {
+		.header__nav {
+			display: none;
+		}
+	}
+
+	@media (min-width: 768px) {
+		.header__logo {
+			font-size: 24px;
+		}
+
+		.header__tagline {
+			font-size: 13px;
+		}
+
+		.header__nav .btn-cta {
+			height: 48px;
+			padding-inline: 24px;
+			font-size: 13px;
+		}
+	}
+</style>
