@@ -40,7 +40,7 @@ const plans = [
 					<li class="pricing__item">
 						<p class="pricing__name">{plan.name}</p>
 						<p class="pricing__desc" style="white-space:pre-line;">{plan.desc}</p>
-						<Image src={plan.img} alt={plan.name} width={280} height={200} class="pricing__truck" />
+						<Image src={plan.img} alt={plan.name} width={280} height={210} class="pricing__truck" />
 						<p class="pricing__price">
 							{plan.price}<span class="pricing__price-unit">円</span>
 							<span class="pricing__price-tax">(税込)</span>
@@ -101,6 +101,7 @@ const plans = [
 	.pricing__desc {
 		font-size: 15px;
 		line-height: 1.7;
+		min-height: calc(1.7em * 2);
 		color: var(--color-text);
 		margin-bottom: 16px;
 	}
