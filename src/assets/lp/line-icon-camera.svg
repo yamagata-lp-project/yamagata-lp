@@ -1,0 +1,14 @@
+<svg viewBox="0 0 50 50" xmlns="http://www.w3.org/2000/svg">
+	<defs>
+		<mask id="camera-lens">
+			<rect width="50" height="50" fill="white" />
+			<circle cx="25" cy="29" r="7.5" fill="black" />
+		</mask>
+	</defs>
+	<path
+		fill="black"
+		mask="url(#camera-lens)"
+		d="M18 10a3 3 0 0 0-2.6 1.5L14 14H8a4 4 0 0 0-4 4v20a4 4 0 0 0 4 4h34a4 4 0 0 0 4-4V18a4 4 0 0 0-4-4h-6l-1.4-2.5A3 3 0 0 0 32 10H18Z"
+	/>
+	<circle cx="25" cy="29" r="5.2" fill="black" />
+</svg>

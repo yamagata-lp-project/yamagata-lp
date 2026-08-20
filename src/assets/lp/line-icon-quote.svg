@@ -1,0 +1,13 @@
+<svg viewBox="0 0 50 50" xmlns="http://www.w3.org/2000/svg">
+	<defs>
+		<mask id="quote-check">
+			<rect width="50" height="50" fill="white" />
+			<path d="M22.6 25.4 17.8 20.6 15 23.4l7.6 7.6L36 17.6 33.2 14.8 22.6 25.4Z" fill="black" />
+		</mask>
+	</defs>
+	<path
+		fill="black"
+		mask="url(#quote-check)"
+		d="M8 8a4 4 0 0 0-4 4v20a4 4 0 0 0 4 4h4v7a1 1 0 0 0 1.66.75L21.4 36H42a4 4 0 0 0 4-4V12a4 4 0 0 0-4-4H8Z"
+	/>
+</svg>
