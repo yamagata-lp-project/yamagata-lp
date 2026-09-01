@@ -134,8 +134,8 @@ import { Image } from "astro:assets";
 
 	.hero__badges {
 		display: grid;
-		grid-template-columns: 1fr;
-		gap: 12px;
+		grid-template-columns: repeat(3, 1fr);
+		gap: 8px;
 		max-width: 720px;
 		margin-inline: auto;
 	}
@@ -144,7 +144,7 @@ import { Image } from "astro:assets";
 		background: #fff;
 		color: var(--color-text);
 		border-radius: 4px;
-		padding: 14px 12px;
+		padding: 10px 5px;
 		display: flex;
 		flex-direction: column;
 		align-items: center;
@@ -152,25 +152,43 @@ import { Image } from "astro:assets";
 	}
 
 	.hero__badge-small {
-		font-size: 14px;
+		font-size: 10px;
 		line-height: 1.4;
+		text-align: center;
 	}
 
 	.hero__badge-big {
 		color: var(--color-accent-red);
-		font-size: 22px;
+		font-size: 15px;
 		font-weight: 700;
 		line-height: 1.4;
+		white-space: nowrap;
 	}
 
 	.hero__badge-mid {
-		font-size: 16px;
+		font-size: 10px;
 	}
 
 	@media (min-width: 640px) {
 		.hero__badges {
-			grid-template-columns: repeat(3, 1fr);
+			gap: 12px;
 			max-width: none;
+		}
+
+		.hero__badge {
+			padding: 14px 12px;
+		}
+
+		.hero__badge-small {
+			font-size: 14px;
+		}
+
+		.hero__badge-big {
+			font-size: 22px;
+		}
+
+		.hero__badge-mid {
+			font-size: 16px;
 		}
 	}
 

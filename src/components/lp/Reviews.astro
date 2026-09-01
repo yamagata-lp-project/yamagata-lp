@@ -1,0 +1,267 @@
+---
+import face1 from "../../assets/lp/face1.png";
+import face2 from "../../assets/lp/face2.png";
+import face3 from "../../assets/lp/face3.png";
+import face4 from "../../assets/lp/face4.png";
+import face5 from "../../assets/lp/face5.png";
+import { Image } from "astro:assets";
+
+const faces = [face1, face2, face3, face4, face5];
+
+const rating = {
+	score: "4.9",
+	count: 390,
+};
+
+const reviews = [
+	{
+		rating: 5,
+		title: "電話した当日に来てくれて助かりました",
+		body: "急に片付けが必要になり困っていましたが、電話した日のうちに対応していただけました。スタッフの方の対応も丁寧で安心してお任せできました。",
+		name: "S.K様",
+		area: "山形市",
+	},
+	{
+		rating: 5,
+		title: "見積もりより安く済んで満足です",
+		body: "引っ越し前の不用品をまとめて回収してもらいました。事前の見積もりも明確で、追加料金もなく安心できました。",
+		name: "M.T様",
+		area: "天童市",
+	},
+	{
+		rating: 4,
+		title: "丁寧な対応に感謝しています",
+		body: "長年片付けられなかった部屋でしたが、嫌な顔ひとつせず作業していただきました。部屋がきれいになり本当に感謝しています。",
+		name: "A.N様",
+		area: "上山市",
+	},
+	{
+		rating: 5,
+		title: "気持ちに寄り添った対応でした",
+		body: "遺品整理をお願いしましたが、一つ一つ丁寧に扱っていただき、こちらの気持ちにも配慮した対応で助かりました。",
+		name: "H.O様",
+		area: "山形市",
+	},
+	{
+		rating: 5,
+		title: "重いソファもすぐに運んでくれました",
+		body: "一人では運べなかった大型ソファを回収していただきました。作業も早く、床や壁を傷つけないよう配慮していただけました。",
+		name: "Y.I様",
+		area: "寒河江市",
+	},
+	{
+		rating: 4,
+		title: "急な依頼にも対応してもらえました",
+		body: "オフィスの移転に伴う不用品の処分をお願いしました。急な依頼にもかかわらず柔軟に対応いただき助かりました。",
+		name: "K.F様",
+		area: "山形市",
+	},
+];
+---
+
+<section class="reviews">
+	<div class="l-container">
+		<div class="section-heading">
+			<p class="section-heading__en">Voice</p>
+			<p class="section-heading__ja">お客様の声</p>
+		</div>
+
+		<div class="reviews__rating">
+			<span class="reviews__rating-source">Google</span>
+			<span class="reviews__rating-score">{rating.score}</span>
+			<span class="reviews__rating-stars" aria-hidden="true">
+				{Array.from({ length: 5 }).map(() => <span class="reviews__star reviews__star--full">★</span>)}
+			</span>
+			<span class="reviews__rating-count">（{rating.count}件のクチコミ）</span>
+		</div>
+
+		<p class="reviews__hint">→ スライドしてご覧ください</p>
+
+		<ul class="reviews__list">
+			{
+				reviews.map((review, reviewIndex) => (
+					<li class="reviews__card">
+						<div class="reviews__card-head">
+							<span class="reviews__avatar">
+								<Image src={faces[reviewIndex % faces.length]} alt="" width={96} height={96} />
+							</span>
+							<div class="reviews__card-person">
+								<p class="reviews__card-name">{review.name}（{review.area}）</p>
+								<div class="reviews__card-stars" aria-label={`評価${review.rating}`}>
+									{Array.from({ length: 5 }).map((_, i) => (
+										<span class={`reviews__star ${i < review.rating ? "reviews__star--full" : "reviews__star--empty"}`}>★</span>
+									))}
+								</div>
+							</div>
+						</div>
+						<p class="reviews__card-title">{review.title}</p>
+						<p class="reviews__card-body">{review.body}</p>
+					</li>
+				))
+			}
+		</ul>
+	</div>
+</section>
+
+<style>
+	.reviews {
+		background: #ffffff;
+		padding-block: 60px 70px;
+	}
+
+	.reviews__rating {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		justify-content: center;
+		gap: 8px;
+		margin-top: -8px;
+		margin-bottom: 10px;
+	}
+
+	.reviews__rating-source {
+		font-family: var(--font-heading);
+		font-weight: 700;
+		font-size: 15px;
+		color: #4285f4;
+	}
+
+	.reviews__rating-score {
+		font-family: var(--font-number);
+		font-weight: 700;
+		font-size: 26px;
+		color: var(--color-text);
+		line-height: 1;
+	}
+
+	.reviews__rating-stars {
+		display: inline-flex;
+		gap: 1px;
+	}
+
+	.reviews__star {
+		font-size: 18px;
+		line-height: 1;
+	}
+
+	.reviews__star--full {
+		color: #f5a623;
+	}
+
+	.reviews__star--empty {
+		color: #d9d9d9;
+	}
+
+	.reviews__rating-count {
+		font-family: var(--font-heading);
+		font-size: 13px;
+		color: var(--color-text-sub);
+	}
+
+	.reviews__hint {
+		text-align: center;
+		font-family: var(--font-heading);
+		font-size: 12px;
+		color: var(--color-text-sub);
+		margin-bottom: 16px;
+	}
+
+	.reviews__list {
+		display: flex;
+		gap: 16px;
+		overflow-x: auto;
+		scroll-snap-type: x mandatory;
+		padding-block: 4px 12px;
+		padding-inline: 4px;
+		-webkit-overflow-scrolling: touch;
+		scrollbar-width: none;
+	}
+
+	.reviews__list::-webkit-scrollbar {
+		display: none;
+	}
+
+	.reviews__card {
+		flex: 0 0 auto;
+		width: 260px;
+		scroll-snap-align: start;
+		background: #fff;
+		border: 1px solid var(--color-border-gray);
+		border-radius: 8px;
+		padding: 18px 16px;
+		box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.06);
+		display: flex;
+		flex-direction: column;
+		gap: 8px;
+	}
+
+	.reviews__card-head {
+		display: flex;
+		align-items: center;
+		gap: 10px;
+	}
+
+	.reviews__card-person {
+		display: flex;
+		flex-direction: column;
+		gap: 4px;
+	}
+
+	.reviews__card-stars {
+		display: flex;
+		gap: 1px;
+	}
+
+	.reviews__card-stars .reviews__star {
+		font-size: 15px;
+	}
+
+	.reviews__avatar {
+		flex-shrink: 0;
+		width: 48px;
+		height: 48px;
+		border-radius: 50%;
+		background: #d9d9d9;
+		overflow: hidden;
+		display: block;
+	}
+
+	.reviews__avatar :global(img) {
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+		display: block;
+	}
+
+	.reviews__card-title {
+		font-family: var(--font-heading);
+		font-weight: 700;
+		font-size: 15px;
+		color: var(--color-text);
+		line-height: 1.5;
+	}
+
+	.reviews__card-body {
+		font-size: 13px;
+		line-height: 1.7;
+		color: #444;
+		display: -webkit-box;
+		-webkit-line-clamp: 5;
+		-webkit-box-orient: vertical;
+		overflow: hidden;
+		min-height: calc(1.7em * 5);
+	}
+
+	.reviews__card-name {
+		font-family: var(--font-heading);
+		font-weight: 700;
+		font-size: 13px;
+		color: var(--color-text);
+	}
+
+	@media (min-width: 768px) {
+		.reviews__card {
+			width: 300px;
+		}
+	}
+</style>

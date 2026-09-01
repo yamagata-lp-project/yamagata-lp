@@ -1,5 +1,5 @@
 ---
-const TEL = "0120-442-XXXX";
+const TEL = "0120-442-999";
 ---
 
 <div class="sticky-cta" role="navigation" aria-label="お問い合わせ">
@@ -49,6 +49,10 @@ const TEL = "0120-442-XXXX";
 
 		.sticky-cta__btn--line {
 			background: var(--color-cta-line);
+		}
+
+		:global(body.is-menu-open) .sticky-cta {
+			display: none;
 		}
 	}
 </style>

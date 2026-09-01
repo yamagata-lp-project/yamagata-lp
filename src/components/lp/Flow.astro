@@ -2,21 +2,55 @@
 import flowBg from "../../assets/lp/flow-bg.webp";
 import iconPhone from "../../assets/lp/flow-icon-01.svg";
 import iconSurvey from "../../assets/lp/flow-icon-02.svg";
-import iconQuote from "../../assets/lp/flow-icon-03.svg";
-import iconSchedule from "../../assets/lp/flow-icon-04.svg";
+import iconComplete from "../../assets/lp/flow-icon-03.svg";
 import iconStart from "../../assets/lp/flow-icon-05.svg";
+import step1 from "../../assets/lp/step1-crop-v2.png";
+import step2 from "../../assets/lp/step2-crop-v2.png";
+import step3 from "../../assets/lp/step3-crop.png";
+import step4 from "../../assets/lp/step4-crop.png";
 import { Image } from "astro:assets";
 
 const steps = [
-	{ n: "01", label: "お問い合わせ", icon: iconPhone },
-	{ n: "02", label: "荷物状況に応じて\n電話見積もりor現地確認", icon: iconSurvey },
-	{ n: "03", label: "お見積もりのご提案", icon: iconQuote },
-	{ n: "04", label: "日程調整", icon: iconSchedule },
-	{ n: "05", label: "作業開始", icon: iconStart },
+	{
+		n: "01",
+		icon: iconPhone,
+		photo: step1,
+		photoW: 480,
+		photoH: 360,
+		title: "お問い合わせ",
+		desc: "電話・LINE・お問い合わせフォームの3つのうち、ご都合の良い方法からお問い合わせください。お見積りやご相談は完全無料です。",
+	},
+	{
+		n: "02",
+		icon: iconSurvey,
+		photo: step2,
+		photoW: 480,
+		photoH: 360,
+		title: "無料見積もり",
+		desc: "ご予約いただいた日時に現地見積もりにお伺いします。内容によっては、電話やLINEでもお見積り可能です。",
+	},
+	{
+		n: "03",
+		icon: iconStart,
+		photo: step3,
+		photoW: 480,
+		photoH: 254,
+		title: "作業開始",
+		desc: "お見積り内容にご納得いただけたら日程調整を行い、作業手配をいたします。お部屋を傷つけることなく進捗かつ迅速に社内スタッフが作業を行います。",
+	},
+	{
+		n: "04",
+		icon: iconComplete,
+		photo: step4,
+		photoW: 480,
+		photoH: 254,
+		title: "作業完了・お支払い",
+		desc: "作業完了後、その場でご精算いただきます。お支払い方法は、現金・クレジットカード・一部コード決済をご用意しております。",
+	},
 ];
 ---
 
-<section class="flow">
+<section id="flow" class="flow">
 	<Image src={flowBg} alt="" class="flow__bg" widths={[640, 1024, 1600]} sizes="100vw" />
 	<div class="flow__overlay"></div>
 
@@ -30,11 +64,17 @@ const steps = [
 			{
 				steps.map((step) => (
 					<li class="flow__step">
-						<span class="flow__number">{step.n}</span>
-						<span class="flow__icon">
-							<Image src={step.icon} alt="" width={28} height={28} />
-						</span>
-						<span class="flow__label" style="white-space:pre-line;">{step.label}</span>
+						<div class="flow__step-head">
+							<span class="flow__number">{step.n}</span>
+							<span class="flow__icon">
+								<Image src={step.icon} alt="" width={24} height={24} />
+							</span>
+						</div>
+						<p class="flow__title">{step.title}</p>
+						<div class="flow__photo">
+							<Image src={step.photo} alt={step.title} width={step.photoW} height={step.photoH} />
+						</div>
+						<p class="flow__desc">{step.desc}</p>
 					</li>
 				))
 			}
@@ -72,7 +112,7 @@ const steps = [
 	.flow__steps {
 		display: flex;
 		flex-direction: column;
-		gap: 12px;
+		gap: 16px;
 		max-width: 640px;
 		margin-inline: auto;
 	}
@@ -80,62 +120,83 @@ const steps = [
 	.flow__step {
 		background: #ffffff;
 		border-radius: 8px;
-		padding: 20px 16px;
+		padding: 24px 20px;
 		display: flex;
 		flex-direction: column;
 		align-items: center;
-		justify-content: center;
 		text-align: center;
-		gap: 8px;
-		min-height: 190px;
+		gap: 10px;
 		box-shadow: 3px 3px 6px rgba(0, 0, 0, 0.15);
+	}
+
+	.flow__step-head {
+		display: flex;
+		align-items: center;
+		gap: 10px;
 	}
 
 	.flow__number {
 		font-family: var(--font-en);
 		font-weight: 700;
-		font-size: 28px;
+		font-size: 26px;
 		letter-spacing: 0.05em;
 		color: var(--color-primary);
 	}
 
 	.flow__icon {
-		width: 44px;
-		height: 44px;
+		width: 40px;
+		height: 40px;
 		border-radius: 50%;
 		display: flex;
 		align-items: center;
 		justify-content: center;
 		background: var(--color-primary);
 		box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+		flex-shrink: 0;
 	}
 
 	.flow__icon :global(img) {
-		width: 24px;
-		height: 24px;
+		width: 22px;
+		height: 22px;
 		filter: brightness(0) invert(1);
 	}
 
-	.flow__label {
+	.flow__title {
 		font-family: var(--font-heading);
 		font-weight: 700;
-		font-size: 15px;
+		font-size: 17px;
 		letter-spacing: 0.03em;
-		line-height: 1.5;
 		color: #222;
+	}
+
+	.flow__photo {
+		width: 100%;
+		aspect-ratio: 4 / 3;
+		border-radius: 6px;
+		overflow: hidden;
+	}
+
+	.flow__photo :global(img) {
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+		display: block;
+	}
+
+	.flow__desc {
+		font-family: var(--font-heading);
+		font-size: 13px;
+		line-height: 1.7;
+		color: #444;
+		text-align: left;
 	}
 
 	@media (min-width: 900px) {
 		.flow__steps {
-			flex-direction: row;
-			align-items: stretch;
+			display: grid;
+			grid-template-columns: repeat(4, 1fr);
 			max-width: none;
-			gap: 16px;
-		}
-
-		.flow__step {
-			flex: 1;
-			justify-content: center;
+			gap: 20px;
 		}
 	}
 </style>

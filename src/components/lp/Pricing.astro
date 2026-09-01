@@ -50,7 +50,7 @@ const plans = [
 ];
 ---
 
-<section class="pricing">
+<section id="pricing" class="pricing">
 	<div class="l-container">
 		<div class="section-heading">
 			<p class="section-heading__en">Price</p>
@@ -165,9 +165,15 @@ const plans = [
 
 	@media (min-width: 768px) {
 		.pricing__list {
-			grid-template-columns: repeat(3, 1fr);
+			display: flex;
+			flex-wrap: wrap;
+			justify-content: center;
 			max-width: none;
 			gap: 32px;
+		}
+
+		.pricing__item {
+			flex: 0 0 calc((100% - 64px) / 3);
 		}
 
 		.pricing__note {

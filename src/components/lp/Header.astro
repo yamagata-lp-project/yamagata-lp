@@ -1,12 +1,19 @@
 ---
-const TEL = "0120-442-XXXX";
+const TEL = "0120-442-999";
+
+const navLinks = [
+	{ label: "料金プラン", href: "#pricing" },
+	{ label: "ご利用の流れ", href: "#flow" },
+	{ label: "作業事例", href: "#case" },
+	{ label: "よくある質問", href: "#faq" },
+];
 ---
 
 <header class="header">
 	<div class="header__inner">
 		<div class="header__brand">
 			<p class="header__logo">山形不用品回収サービス</p>
-			<p class="header__tagline">山形市内の不用品のお片付けはお任せ！</p>
+			<p class="header__tagline">山形県内の不用品のお片付けはお任せ！</p>
 		</div>
 		<nav class="header__nav" aria-label="お問い合わせ">
 			<a href={`tel:${TEL.replace(/-/g, "")}`} class="btn-cta btn-cta--phone">
@@ -16,8 +23,100 @@ const TEL = "0120-442-XXXX";
 				LINEでお問い合わせ
 			</a>
 		</nav>
+		<button
+			type="button"
+			class="header__menu-btn"
+			id="headerMenuToggle"
+			aria-label="メニューを開く"
+			aria-expanded="false"
+			aria-controls="headerMobileMenu"
+		>
+			<span class="header__menu-icon"></span>
+		</button>
+	</div>
+
+	<nav class="header__subnav" aria-label="サイト内リンク">
+		<ul class="header__subnav-list">
+			{
+				navLinks.map((link) => (
+					<li>
+						<a href={link.href}>{link.label}</a>
+					</li>
+				))
+			}
+		</ul>
+	</nav>
+
+	<div class="header__mobile-overlay" id="headerMobileOverlay"></div>
+
+	<div class="header__mobile-menu" id="headerMobileMenu" inert>
+		<div class="header__mobile-menu-top">
+			<button type="button" class="header__mobile-close" id="headerMobileClose" aria-label="メニューを閉じる">
+				&times;
+			</button>
+		</div>
+
+		<div class="header__mobile-cta">
+			<a href={`tel:${TEL.replace(/-/g, "")}`} class="btn-cta btn-cta--phone header__mobile-cta-btn">
+				電話でお問い合わせ
+				<span class="header__mobile-cta-tel">{TEL}</span>
+			</a>
+			<a
+				href="https://lin.ee/zZWo2lf"
+				class="btn-cta btn-cta--line header__mobile-cta-btn"
+				target="_blank"
+				rel="noopener"
+			>
+				LINEでお問い合わせ
+			</a>
+		</div>
+
+		<ul class="header__mobile-menu-list">
+			{
+				navLinks.map((link) => (
+					<li>
+						<a href={link.href} class="header__mobile-link">
+							{link.label}
+						</a>
+					</li>
+				))
+			}
+		</ul>
 	</div>
 </header>
+
+<script>
+	const menuToggle = document.getElementById("headerMenuToggle");
+	const mobileMenu = document.getElementById("headerMobileMenu");
+	const overlay = document.getElementById("headerMobileOverlay");
+	const closeBtn = document.getElementById("headerMobileClose");
+
+	const setOpen = (open: boolean) => {
+		mobileMenu?.classList.toggle("is-open", open);
+		overlay?.classList.toggle("is-open", open);
+		menuToggle?.classList.toggle("is-open", open);
+		menuToggle?.setAttribute("aria-expanded", String(open));
+		if (mobileMenu) {
+			if (open) {
+				mobileMenu.removeAttribute("inert");
+			} else {
+				mobileMenu.setAttribute("inert", "");
+			}
+		}
+		document.body.classList.toggle("is-menu-open", open);
+	};
+
+	menuToggle?.addEventListener("click", () => {
+		setOpen(!mobileMenu?.classList.contains("is-open"));
+	});
+
+	closeBtn?.addEventListener("click", () => setOpen(false));
+	overlay?.addEventListener("click", () => setOpen(false));
+
+	mobileMenu?.querySelectorAll("a").forEach((link) => {
+		link.addEventListener("click", () => setOpen(false));
+	});
+</script>
 
 <style>
 	.header {
@@ -68,9 +167,195 @@ const TEL = "0120-442-XXXX";
 		font-size: 12px;
 	}
 
+	/* PC sticky sub-navigation */
+	.header__subnav {
+		display: none;
+		border-top: 1px solid #eef1f5;
+	}
+
+	.header__subnav-list {
+		max-width: 1400px;
+		margin-inline: auto;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		gap: 32px;
+		padding: 10px 20px;
+	}
+
+	.header__subnav-list a {
+		font-family: var(--font-heading);
+		font-size: 14px;
+		font-weight: 700;
+		color: var(--color-text);
+		padding-block: 4px;
+		border-bottom: 2px solid transparent;
+		transition: color 0.2s ease, border-color 0.2s ease;
+	}
+
+	.header__subnav-list a:hover {
+		color: var(--color-primary);
+		border-color: var(--color-primary);
+	}
+
+	/* Mobile hamburger button */
+	.header__menu-btn {
+		display: none;
+		width: 40px;
+		height: 40px;
+		align-items: center;
+		justify-content: center;
+		background: none;
+		border: none;
+		padding: 0;
+		cursor: pointer;
+		flex-shrink: 0;
+	}
+
+	.header__menu-icon,
+	.header__menu-icon::before,
+	.header__menu-icon::after {
+		display: block;
+		width: 24px;
+		height: 2px;
+		background: var(--color-text);
+		border-radius: 2px;
+		transition: transform 0.2s ease, opacity 0.2s ease;
+	}
+
+	.header__menu-icon {
+		position: relative;
+	}
+
+	.header__menu-icon::before,
+	.header__menu-icon::after {
+		content: "";
+		position: absolute;
+		left: 0;
+	}
+
+	.header__menu-icon::before {
+		top: -7px;
+	}
+
+	.header__menu-icon::after {
+		top: 7px;
+	}
+
+	.header__menu-btn.is-open .header__menu-icon {
+		background: transparent;
+	}
+
+	.header__menu-btn.is-open .header__menu-icon::before {
+		top: 0;
+		transform: rotate(45deg);
+	}
+
+	.header__menu-btn.is-open .header__menu-icon::after {
+		top: 0;
+		transform: rotate(-45deg);
+	}
+
+	/* Overlay behind the slide-in panel */
+	.header__mobile-overlay {
+		position: fixed;
+		inset: 0;
+		background: rgba(0, 0, 0, 0.45);
+		z-index: 190;
+		opacity: 0;
+		pointer-events: none;
+		transition: opacity 0.25s ease;
+	}
+
+	.header__mobile-overlay.is-open {
+		opacity: 1;
+		pointer-events: auto;
+	}
+
+	/* Mobile slide-in menu panel (from the right) */
+	.header__mobile-menu {
+		position: fixed;
+		top: 0;
+		right: 0;
+		bottom: 0;
+		width: min(320px, 85vw);
+		background: #fff;
+		z-index: 200;
+		transform: translateX(100%);
+		transition: transform 0.3s ease;
+		overflow-y: auto;
+		box-shadow: -4px 0 20px rgba(0, 0, 0, 0.15);
+	}
+
+	.header__mobile-menu.is-open {
+		transform: translateX(0);
+	}
+
+	.header__mobile-menu-top {
+		display: flex;
+		justify-content: flex-end;
+		padding: 8px 12px 0;
+	}
+
+	.header__mobile-close {
+		width: 40px;
+		height: 40px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		background: none;
+		border: none;
+		font-size: 28px;
+		line-height: 1;
+		color: var(--color-text);
+		cursor: pointer;
+	}
+
+	.header__mobile-cta {
+		display: flex;
+		flex-direction: column;
+		gap: 12px;
+		padding: 4px 20px 20px;
+		border-bottom: 1px solid #eef1f5;
+	}
+
+	.header__mobile-cta-btn {
+		width: 100%;
+		height: auto;
+		flex-direction: column;
+		gap: 2px;
+		padding-block: 14px;
+	}
+
+	.header__mobile-cta-tel {
+		font-family: var(--font-number);
+		font-size: 17px;
+		font-weight: 700;
+		letter-spacing: 0.02em;
+	}
+
+	.header__mobile-menu-list {
+		display: flex;
+		flex-direction: column;
+	}
+
+	.header__mobile-link {
+		display: block;
+		padding: 14px 20px;
+		font-family: var(--font-heading);
+		font-size: 15px;
+		font-weight: 700;
+		color: var(--color-text);
+		border-bottom: 1px solid #eef1f5;
+	}
+
 	@media (max-width: 767px) {
 		.header__nav {
 			display: none;
+		}
+
+		.header__menu-btn {
+			display: flex;
 		}
 	}
 
@@ -87,6 +372,15 @@ const TEL = "0120-442-XXXX";
 			height: 48px;
 			padding-inline: 24px;
 			font-size: 13px;
+		}
+
+		.header__subnav {
+			display: block;
+		}
+
+		.header__mobile-overlay,
+		.header__mobile-menu {
+			display: none;
 		}
 	}
 </style>
