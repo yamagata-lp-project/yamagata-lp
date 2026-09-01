@@ -1,32 +1,54 @@
 ---
+import case1 from "../../assets/lp/case1.webp";
+import case2 from "../../assets/lp/case2.webp";
+import case3 from "../../assets/lp/case3.webp";
+import case4 from "../../assets/lp/case4.webp";
+import case5 from "../../assets/lp/case5.webp";
+import case6 from "../../assets/lp/case6.webp";
+import { Image } from "astro:assets";
+
 const cases = [
 	{
-		title: "引っ越し・退去に伴う即日回収",
-		situation: "",
-		duration: "",
-		cost: "",
-		comment: "",
+		title: "即日対応のご相談",
+		items: "ベッドフレーム、ソファなど",
+		duration: "15分",
+		cost: "9,900円",
+		photo: case1,
 	},
 	{
-		title: "お問い合わせから即日対応（スピード事例）",
-		situation: "",
-		duration: "",
-		cost: "",
-		comment: "",
+		title: "お引越しに伴う家電引取",
+		items: "冷蔵庫・洗濯機、モニター、電子レンジ",
+		duration: "15分",
+		cost: "16,500円",
+		photo: case2,
 	},
 	{
-		title: "一人暮らしのお片付け事例",
-		situation: "",
-		duration: "",
-		cost: "",
-		comment: "",
+		title: "日常のお片付けでのご利用",
+		items: "人形・収納など",
+		duration: "20分",
+		cost: "9,900円",
+		photo: case3,
 	},
 	{
-		title: "ご家族のお片付け事例（量感の参考に）",
-		situation: "",
-		duration: "",
-		cost: "",
-		comment: "",
+		title: "実家の家財整理でのご依頼",
+		items: "布団類、棚類、雑貨類",
+		duration: "1時間",
+		cost: "20,900円",
+		photo: case4,
+	},
+	{
+		title: "ご実家の大型家財撤去",
+		items: "大型タンス・本棚など",
+		duration: "2時間",
+		cost: "55,000円",
+		photo: case5,
+	},
+	{
+		title: "一軒家丸ごとお片付け",
+		items: "お部屋にあるすべてのお荷物",
+		duration: "1日",
+		cost: "143,000円",
+		photo: case6,
 	},
 ];
 ---
@@ -36,9 +58,8 @@ const cases = [
 		<div class="section-heading">
 			<p class="section-heading__en">Case</p>
 			<p class="section-heading__ja" style="color:#0060a6;">作業事例</p>
+			<p class="section-heading__lead">グループ全体で積み重ねてきた作業実績の一部をご紹介します</p>
 		</div>
-
-		<p class="case__hint">→ スワイプまたは矢印で他の事例をご覧いただけます</p>
 
 		<div class="case__slider" data-case-slider>
 			<ul class="case__list" data-case-track>
@@ -49,13 +70,13 @@ const cases = [
 								<span>{c.title}</span>
 							</h3>
 							<div class="case__body">
-								<div class="case__photo" aria-hidden="true">
-									<span>写真</span>
+								<div class="case__photo">
+									<Image src={c.photo} alt={`${c.title}の作業事例写真`} width={600} height={338} />
 								</div>
 								<dl class="case__desc">
 									<div class="case__row">
-										<dt>状況</dt>
-										<dd>{c.situation}</dd>
+										<dt>お荷物</dt>
+										<dd>{c.items}</dd>
 									</div>
 									<div class="case__row">
 										<dt>作業時間</dt>
@@ -64,10 +85,6 @@ const cases = [
 									<div class="case__row">
 										<dt>作業費用</dt>
 										<dd>{c.cost}</dd>
-									</div>
-									<div class="case__row case__row--block">
-										<dt>担当者のコメント</dt>
-										<dd>{c.comment}</dd>
 									</div>
 								</dl>
 							</div>
@@ -106,14 +123,6 @@ const cases = [
 	.case {
 		background: var(--color-bg-pale-3);
 		padding-block: 60px 90px;
-	}
-
-	.case__hint {
-		text-align: center;
-		font-family: var(--font-heading);
-		font-size: 12px;
-		color: var(--color-text-sub);
-		margin: 0 0 16px;
 	}
 
 	.case__slider {
@@ -179,17 +188,17 @@ const cases = [
 
 	.case__photo {
 		width: 100%;
-		aspect-ratio: 4 / 3;
+		aspect-ratio: 16 / 9;
 		background: #eef1f5;
-		border: 1px dashed #c3cad3;
 		border-radius: 6px;
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		color: #8a95a3;
-		font-family: var(--font-heading);
-		font-size: 13px;
-		letter-spacing: 0.05em;
+		overflow: hidden;
+	}
+
+	.case__photo :global(img) {
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+		display: block;
 	}
 
 	.case__desc {
@@ -204,11 +213,6 @@ const cases = [
 		align-items: center;
 		flex-wrap: wrap;
 		gap: 8px;
-	}
-
-	.case__row--block {
-		align-items: flex-start;
-		flex-direction: column;
 	}
 
 	.case__row dt {
@@ -227,22 +231,12 @@ const cases = [
 		margin: 0;
 		font-size: 14px;
 		line-height: 1.7;
-	}
-
-	.case__row:not(.case__row--block) dd {
 		flex: 1;
 		min-width: 60px;
 		min-height: 1.6em;
 		border-bottom: 1px dashed #d9d9d9;
 	}
 
-	.case__row--block dd {
-		width: 100%;
-		min-height: 4.8em;
-		border: 1px dashed #d9d9d9;
-		border-radius: 4px;
-		padding: 10px 12px;
-	}
 
 	.case__nav {
 		margin-top: 20px;

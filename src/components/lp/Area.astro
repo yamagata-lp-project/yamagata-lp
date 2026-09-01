@@ -1,0 +1,151 @@
+---
+const areaGroups = [
+	{
+		region: "村山地方",
+		cities: [
+			"山形市", "寒河江市", "上山市", "村山市", "天童市", "東根市", "尾花沢市",
+			"山辺町", "中山町", "河北町", "西川町", "朝日町", "大江町", "大石田町",
+		],
+	},
+	{
+		region: "最上地方",
+		cities: ["新庄市", "金山町", "最上町", "舟形町", "真室川町", "大蔵村", "鮭川村", "戸沢村"],
+	},
+	{
+		region: "置賜地方",
+		cities: ["米沢市", "長井市", "南陽市", "高畠町", "川西町", "小国町", "白鷹町", "飯豊町"],
+	},
+	{
+		region: "庄内地方",
+		cities: ["鶴岡市", "酒田市", "三川町", "庄内町", "遊佐町"],
+	},
+];
+---
+
+<section id="area" class="area">
+	<div class="l-container">
+		<div class="section-heading">
+			<p class="section-heading__en">Area</p>
+			<p class="section-heading__ja">対応エリア</p>
+			<p class="section-heading__lead">山形県内全域に対応しております</p>
+		</div>
+
+		<div class="area__list">
+			{
+				areaGroups.map((group) => (
+					<details class="area__item">
+						<summary class="area__summary">
+							<span class="area__region">{group.region}</span>
+							<span class="area__count">{group.cities.length}市町村</span>
+							<span class="area__chevron" aria-hidden="true">▼</span>
+						</summary>
+						<ul class="area__cities">
+							{group.cities.map((city) => <li>{city}</li>)}
+						</ul>
+					</details>
+				))
+			}
+		</div>
+	</div>
+</section>
+
+<style>
+	.area {
+		background: var(--color-bg-gray);
+		padding-block: 60px 90px;
+	}
+
+	.area__list {
+		display: flex;
+		flex-direction: column;
+		gap: 16px;
+		max-width: 900px;
+		margin-inline: auto;
+	}
+
+	.area__item {
+		background: #fff;
+		border: 1px solid var(--color-border-gray);
+		border-radius: 5px;
+		padding: 18px 20px;
+	}
+
+	.area__summary {
+		display: flex;
+		align-items: center;
+		gap: 12px;
+		cursor: pointer;
+		list-style: none;
+	}
+
+	.area__summary::-webkit-details-marker {
+		display: none;
+	}
+
+	.area__region {
+		font-family: var(--font-heading);
+		font-weight: 700;
+		font-size: 17px;
+		letter-spacing: 0.02em;
+		color: var(--color-text);
+	}
+
+	.area__count {
+		font-family: var(--font-heading);
+		font-size: 12px;
+		color: var(--color-text-sub);
+		background: var(--color-bg-pale-2);
+		border-radius: 999px;
+		padding: 3px 10px;
+	}
+
+	.area__chevron {
+		margin-left: auto;
+		font-size: 11px;
+		color: var(--color-primary);
+		transition: transform 0.2s ease;
+	}
+
+	.area__item[open] .area__chevron {
+		transform: rotate(180deg);
+	}
+
+	.area__cities {
+		margin: 16px 0 0;
+		padding-top: 16px;
+		border-top: 1px dashed #d9d9d9;
+		display: grid;
+		grid-template-columns: repeat(2, 1fr);
+		gap: 10px 16px;
+	}
+
+	.area__cities li {
+		font-size: 14px;
+		color: var(--color-text);
+		position: relative;
+		padding-left: 14px;
+	}
+
+	.area__cities li::before {
+		content: "";
+		position: absolute;
+		left: 0;
+		top: 0.65em;
+		width: 6px;
+		height: 6px;
+		border-radius: 50%;
+		background: var(--color-primary);
+	}
+
+	@media (min-width: 600px) {
+		.area__cities {
+			grid-template-columns: repeat(3, 1fr);
+		}
+	}
+
+	@media (min-width: 768px) {
+		.area__cities {
+			grid-template-columns: repeat(4, 1fr);
+		}
+	}
+</style>

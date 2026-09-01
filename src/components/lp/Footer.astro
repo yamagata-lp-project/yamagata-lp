@@ -1,18 +1,27 @@
 ---
+import { navLinks } from "../../data/navLinks";
+
 const TEL = "0120-442-999";
 ---
 
 <footer class="footer">
 	<div class="l-container footer__inner">
 		<p class="footer__logo">山形不用品回収サービス</p>
+		<nav class="footer__nav" aria-label="サイト内リンク">
+			<ul class="footer__nav-list">
+				{
+					navLinks.map((link) => (
+						<li>
+							<a href={link.href}>{link.label}</a>
+						</li>
+					))
+				}
+			</ul>
+		</nav>
 		<div class="footer__info">
 			<p>〒990-0038</p>
 			<p>山形県山形市幸町2-9</p>
 			<p><a href={`tel:${TEL.replace(/-/g, "")}`}>{TEL}</a></p>
-		</div>
-		<div class="footer__cta">
-			<a href={`tel:${TEL.replace(/-/g, "")}`} class="btn-cta btn-cta--phone">電話でお問い合わせ</a>
-			<a href="https://lin.ee/zZWo2lf" class="btn-cta btn-cta--line" target="_blank" rel="noopener">LINEでお問い合わせ</a>
 		</div>
 		<p class="footer__copyright">&copy; 山形不用品回収サービス</p>
 	</div>
@@ -38,6 +47,28 @@ const TEL = "0120-442-999";
 		color: #000;
 	}
 
+	.footer__nav-list {
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: center;
+		gap: 0 12px;
+	}
+
+	.footer__nav-list a {
+		display: inline-flex;
+		align-items: center;
+		min-height: 44px;
+		padding: 4px 8px;
+		font-family: var(--font-heading);
+		font-size: 14px;
+		font-weight: 700;
+		color: var(--color-text);
+	}
+
+	.footer__nav-list a:hover {
+		color: var(--color-primary);
+	}
+
 	.footer__info {
 		font-size: 14px;
 		line-height: 1.9;
@@ -46,13 +77,6 @@ const TEL = "0120-442-999";
 
 	.footer__info a {
 		font-weight: 700;
-	}
-
-	.footer__cta {
-		display: flex;
-		flex-wrap: wrap;
-		justify-content: center;
-		gap: 12px;
 	}
 
 	.footer__copyright {

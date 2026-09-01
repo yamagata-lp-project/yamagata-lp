@@ -1,9 +1,9 @@
 ---
-import face1 from "../../assets/lp/face1.png";
-import face2 from "../../assets/lp/face2.png";
-import face3 from "../../assets/lp/face3.png";
-import face4 from "../../assets/lp/face4.png";
-import face5 from "../../assets/lp/face5.png";
+import face1 from "../../assets/lp/face1.webp";
+import face2 from "../../assets/lp/face2.webp";
+import face3 from "../../assets/lp/face3.webp";
+import face4 from "../../assets/lp/face4.webp";
+import face5 from "../../assets/lp/face5.webp";
 import { Image } from "astro:assets";
 
 const faces = [face1, face2, face3, face4, face5];
@@ -16,50 +16,43 @@ const rating = {
 const reviews = [
 	{
 		rating: 5,
-		title: "電話した当日に来てくれて助かりました",
-		body: "急に片付けが必要になり困っていましたが、電話した日のうちに対応していただけました。スタッフの方の対応も丁寧で安心してお任せできました。",
+		title: "安心して即日依頼できました",
+		body: "朝一番に電話すると丁寧な対応で、すぐに折り返しの連絡がありました。午後一番には回収に来てもらえ、担当の前田さんは爽やかで丁寧な仕事ぶり。最後まで笑顔で対応してくださり、本当に助かりました。",
 		name: "S.K様",
 		area: "山形市",
 	},
 	{
 		rating: 5,
-		title: "見積もりより安く済んで満足です",
-		body: "引っ越し前の不用品をまとめて回収してもらいました。事前の見積もりも明確で、追加料金もなく安心できました。",
+		title: "料金通りで安心して引越せます！",
+		body: "他社に断られた和ダンスも快く引き受けてくれました。急な依頼にも関わらず料金は当初のウェブ表示通りで、3名のスタッフが声を掛け合いながら手際よく大量の荷物を運び出してくれ、安心してお任せできました。",
 		name: "M.T様",
 		area: "天童市",
 	},
 	{
-		rating: 4,
-		title: "丁寧な対応に感謝しています",
-		body: "長年片付けられなかった部屋でしたが、嫌な顔ひとつせず作業していただきました。部屋がきれいになり本当に感謝しています。",
+		rating: 5,
+		title: "家の中がスッキリしました！",
+		body: "口コミを見て軽トラ通常プランを依頼しました。LINE見積もりが分かりやすく、森様・村上様の作業はとてもスムーズ。マットレスや大型のダイニングテーブル、子供のおもちゃなども積んでいただき、家の中がスッキリしました。",
 		name: "A.N様",
 		area: "上山市",
 	},
 	{
 		rating: 5,
-		title: "気持ちに寄り添った対応でした",
-		body: "遺品整理をお願いしましたが、一つ一つ丁寧に扱っていただき、こちらの気持ちにも配慮した対応で助かりました。",
+		title: "実家を丁寧・スムーズに片付けてくれました",
+		body: "実家の片付けで新野さんにお世話になりました。事前連絡から作業完了まで丁寧でスムーズ。粗大ゴミの搬入後、トラックに空きがないか確認し、スペースいっぱいまで不用品を積んでくださりとても助かりました。",
 		name: "H.O様",
 		area: "山形市",
 	},
 	{
 		rating: 5,
-		title: "重いソファもすぐに運んでくれました",
-		body: "一人では運べなかった大型ソファを回収していただきました。作業も早く、床や壁を傷つけないよう配慮していただけました。",
+		title: "子育て中でもLINE見積もりで安心でした",
+		body: "引っ越しで出た不用品をLINEで丁寧にご提案いただき依頼しました。当日追加で出たゴミも急遽対応いただき、子育て中で返信の早いLINEのやり取りはとても安心。15分ほどでテキパキ運び出してくださり、また頼みたいです。",
 		name: "Y.I様",
 		area: "寒河江市",
-	},
-	{
-		rating: 4,
-		title: "急な依頼にも対応してもらえました",
-		body: "オフィスの移転に伴う不用品の処分をお願いしました。急な依頼にもかかわらず柔軟に対応いただき助かりました。",
-		name: "K.F様",
-		area: "山形市",
 	},
 ];
 ---
 
-<section class="reviews">
+<section id="reviews" class="reviews">
 	<div class="l-container">
 		<div class="section-heading">
 			<p class="section-heading__en">Voice</p>
@@ -75,33 +68,59 @@ const reviews = [
 			<span class="reviews__rating-count">（{rating.count}件のクチコミ）</span>
 		</div>
 
-		<p class="reviews__hint">→ スライドしてご覧ください</p>
-
-		<ul class="reviews__list">
-			{
-				reviews.map((review, reviewIndex) => (
-					<li class="reviews__card">
-						<div class="reviews__card-head">
-							<span class="reviews__avatar">
-								<Image src={faces[reviewIndex % faces.length]} alt="" width={96} height={96} />
-							</span>
-							<div class="reviews__card-person">
-								<p class="reviews__card-name">{review.name}（{review.area}）</p>
-								<div class="reviews__card-stars" aria-label={`評価${review.rating}`}>
-									{Array.from({ length: 5 }).map((_, i) => (
-										<span class={`reviews__star ${i < review.rating ? "reviews__star--full" : "reviews__star--empty"}`}>★</span>
-									))}
+		<div class="reviews__slider" data-reviews-slider>
+			<ul class="reviews__list" data-reviews-track>
+				{
+					reviews.map((review, reviewIndex) => (
+						<li class="reviews__card">
+							<div class="reviews__card-head">
+								<span class="reviews__avatar">
+									<Image src={faces[reviewIndex % faces.length]} alt="" width={96} height={96} />
+								</span>
+								<div class="reviews__card-person">
+									<p class="reviews__card-name">{review.name}（{review.area}）</p>
+									<div class="reviews__card-stars" aria-label={`評価${review.rating}`}>
+										{Array.from({ length: 5 }).map((_, i) => (
+											<span class={`reviews__star ${i < review.rating ? "reviews__star--full" : "reviews__star--empty"}`}>★</span>
+										))}
+									</div>
 								</div>
 							</div>
-						</div>
-						<p class="reviews__card-title">{review.title}</p>
-						<p class="reviews__card-body">{review.body}</p>
-					</li>
-				))
-			}
-		</ul>
+							<p class="reviews__card-title">{review.title}</p>
+							<p class="reviews__card-body">{review.body}</p>
+						</li>
+					))
+				}
+			</ul>
+
+			<div class="reviews__nav">
+				<button type="button" class="reviews__nav-btn" data-reviews-prev aria-label="前の口コミ">
+					‹
+				</button>
+				<button type="button" class="reviews__nav-btn" data-reviews-next aria-label="次の口コミ">
+					›
+				</button>
+			</div>
+		</div>
 	</div>
 </section>
+
+<script>
+	document.querySelectorAll<HTMLElement>("[data-reviews-slider]").forEach((slider) => {
+		const track = slider.querySelector<HTMLElement>("[data-reviews-track]");
+		if (!track) return;
+
+		const scrollByOne = (dir: number) => {
+			const card = track.querySelector<HTMLElement>(".reviews__card");
+			const gap = parseFloat(getComputedStyle(track).columnGap || "0");
+			const amount = card ? card.offsetWidth + gap : track.clientWidth;
+			track.scrollBy({ left: dir * amount, behavior: "smooth" });
+		};
+
+		slider.querySelector("[data-reviews-prev]")?.addEventListener("click", () => scrollByOne(-1));
+		slider.querySelector("[data-reviews-next]")?.addEventListener("click", () => scrollByOne(1));
+	});
+</script>
 
 <style>
 	.reviews {
@@ -156,14 +175,6 @@ const reviews = [
 		font-family: var(--font-heading);
 		font-size: 13px;
 		color: var(--color-text-sub);
-	}
-
-	.reviews__hint {
-		text-align: center;
-		font-family: var(--font-heading);
-		font-size: 12px;
-		color: var(--color-text-sub);
-		margin-bottom: 16px;
 	}
 
 	.reviews__list {
@@ -263,5 +274,26 @@ const reviews = [
 		.reviews__card {
 			width: 300px;
 		}
+	}
+
+	.reviews__nav {
+		margin-top: 4px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		gap: 20px;
+	}
+
+	.reviews__nav-btn {
+		width: 44px;
+		height: 44px;
+		border-radius: 50%;
+		border: none;
+		background: var(--color-primary);
+		color: #fff;
+		font-size: 22px;
+		line-height: 1;
+		cursor: pointer;
+		box-shadow: 0 0 8px rgba(0, 0, 0, 0.2);
 	}
 </style>
