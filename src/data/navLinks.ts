@@ -1,10 +1,10 @@
 export const navLinks = [
-	{ label: "お客様の声", href: "#reviews" },
-	{ label: "料金プラン", href: "#pricing" },
-	{ label: "ご利用の流れ", href: "#flow" },
-	{ label: "作業事例", href: "#case" },
-	{ label: "対応エリア", href: "#area" },
-	{ label: "よくある質問", href: "#faq" },
+	{ label: "お客様の声", href: "/#reviews" },
+	{ label: "料金プラン", href: "/#pricing" },
+	{ label: "ご利用の流れ", href: "/#flow" },
+	{ label: "作業事例", href: "/#case" },
+	{ label: "対応エリア", href: "/#area" },
+	{ label: "よくある質問", href: "/#faq" },
 ];
 
 export const legalLinks = [
