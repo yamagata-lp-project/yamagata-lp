@@ -11,7 +11,7 @@ const plans = [
 		img: truckLight,
 		name: "軽トラお手軽プラン",
 		desc: "軽トラの荷台の半分まで\n縦型洗濯機3台分ほど",
-		price: "9,900",
+		price: "9,000",
 		width: 280,
 		height: 210,
 	},
@@ -19,7 +19,7 @@ const plans = [
 		img: truckNormal,
 		name: "軽トラ通常プラン",
 		desc: "軽トラの屋根の高さまで\n縦型洗濯機6台分ほど",
-		price: "16,500",
+		price: "15,000",
 		width: 280,
 		height: 210,
 	},
@@ -27,7 +27,7 @@ const plans = [
 		img: truckFull,
 		name: "軽トラ満載プラン",
 		desc: "軽トラに入る限界まで",
-		price: "20,900",
+		price: "19,000",
 		width: 280,
 		height: 210,
 	},
@@ -35,7 +35,7 @@ const plans = [
 		img: truck15t,
 		name: "1.5tトラックプラン",
 		desc: "軽トラでは載りきらない\n大きな家具・家電もまとめて",
-		price: "44,000",
+		price: "40,000",
 		width: 280,
 		height: 164,
 	},
@@ -43,7 +43,7 @@ const plans = [
 		img: truck2t,
 		name: "2tトラックプラン",
 		desc: "お部屋まるごとのお片付けも\nこれ一台でまとめて対応",
-		price: "82,500",
+		price: "75,000",
 		width: 280,
 		height: 165,
 	},
@@ -67,7 +67,7 @@ const plans = [
 						<Image src={plan.img} alt={plan.name} width={plan.width} height={plan.height} class="pricing__truck" />
 						<p class="pricing__price">
 							{plan.price}<span class="pricing__price-unit">円</span>
-							<span class="pricing__price-tax">(税込)</span>
+							<span class="pricing__price-tax">(税抜)</span>
 						</p>
 					</li>
 				))
@@ -75,7 +75,8 @@ const plans = [
 		</ul>
 
 		<p class="pricing__note">
-			ご提示した金額が最終金額です。現地確認後、追加料金を頂くことは一切ございません。
+			ご提示した金額が最終金額です。現地確認後、追加料金を頂くことは一切ございません。<br />
+			表示価格は税抜となります。
 		</p>
 	</div>
 </section>
