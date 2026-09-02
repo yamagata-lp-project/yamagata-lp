@@ -1,5 +1,5 @@
 ---
-import { navLinks } from "../../data/navLinks";
+import { navLinks, legalLinks } from "../../data/navLinks";
 
 const TEL = "0120-442-999";
 ---
@@ -23,6 +23,17 @@ const TEL = "0120-442-999";
 			<p>山形県山形市幸町2-9</p>
 			<p><a href={`tel:${TEL.replace(/-/g, "")}`}>{TEL}</a></p>
 		</div>
+		<nav class="footer__legal-nav" aria-label="運営情報">
+			<ul class="footer__legal-list">
+				{
+					legalLinks.map((link) => (
+						<li>
+							<a href={link.href}>{link.label}</a>
+						</li>
+					))
+				}
+			</ul>
+		</nav>
 		<p class="footer__copyright">&copy; 山形不用品回収サービス</p>
 	</div>
 </footer>
@@ -77,6 +88,26 @@ const TEL = "0120-442-999";
 
 	.footer__info a {
 		font-weight: 700;
+	}
+
+	.footer__legal-list {
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: center;
+		gap: 4px 16px;
+	}
+
+	.footer__legal-list a {
+		display: inline-flex;
+		align-items: center;
+		min-height: 32px;
+		font-size: 12px;
+		color: var(--color-text-sub);
+		text-decoration: underline;
+	}
+
+	.footer__legal-list a:hover {
+		color: var(--color-primary);
 	}
 
 	.footer__copyright {

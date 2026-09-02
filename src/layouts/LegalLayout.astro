@@ -1,0 +1,192 @@
+---
+import Layout from "./Layout.astro";
+import Header from "../components/lp/Header.astro";
+import Footer from "../components/lp/Footer.astro";
+
+interface Props {
+	title: string;
+	description: string;
+	pageTitleEn: string;
+	pageTitleJa: string;
+}
+
+const { title, description, pageTitleEn, pageTitleJa } = Astro.props;
+---
+
+<Layout title={title} description={description}>
+	<Header />
+	<main class="legal">
+		<div class="l-container">
+			<nav class="legal__breadcrumb" aria-label="パンくずリスト">
+				<ol>
+					<li><a href="/">ホーム</a></li>
+					<li aria-current="page">{pageTitleJa}</li>
+				</ol>
+			</nav>
+			<div class="section-heading legal__heading">
+				<p class="section-heading__en">{pageTitleEn}</p>
+				<h1 class="section-heading__ja">{pageTitleJa}</h1>
+			</div>
+			<div class="legal__body">
+				<slot />
+			</div>
+		</div>
+	</main>
+	<Footer />
+</Layout>
+
+<style>
+	.legal {
+		padding-block: 32px 64px;
+	}
+
+	.legal__breadcrumb ol {
+		display: flex;
+		flex-wrap: wrap;
+		font-size: 13px;
+		color: var(--color-text-sub);
+		margin-bottom: 24px;
+	}
+
+	.legal__breadcrumb li {
+		display: flex;
+	}
+
+	.legal__breadcrumb li + li::before {
+		content: "/";
+		margin-inline: 6px;
+		color: var(--color-text-sub);
+	}
+
+	.legal__breadcrumb a {
+		color: var(--color-primary);
+	}
+
+	.legal__heading {
+		margin-bottom: 32px;
+	}
+
+	.legal__body {
+		max-width: 840px;
+		margin-inline: auto;
+	}
+
+	.legal__body :global(.legal-meta) {
+		font-size: 13px;
+		color: var(--color-text-sub);
+		text-align: right;
+		margin-bottom: 24px;
+	}
+
+	.legal__body :global(h2) {
+		font-family: var(--font-heading);
+		font-size: 18px;
+		font-weight: 700;
+		color: var(--color-primary-dark);
+		margin-top: 40px;
+		margin-bottom: 12px;
+		padding-bottom: 8px;
+		border-bottom: 2px solid var(--color-bg-pale-3);
+	}
+
+	.legal__body :global(h2:first-child) {
+		margin-top: 0;
+	}
+
+	.legal__body :global(p) {
+		font-size: 15px;
+		line-height: 1.9;
+		margin-bottom: 16px;
+	}
+
+	.legal__body :global(ul),
+	.legal__body :global(ol.legal-list) {
+		margin-bottom: 16px;
+		padding-left: 1.4em;
+	}
+
+	.legal__body :global(ul) {
+		list-style: disc;
+	}
+
+	.legal__body :global(ol.legal-list) {
+		list-style: decimal;
+	}
+
+	.legal__body :global(li) {
+		font-size: 15px;
+		line-height: 1.9;
+		margin-bottom: 6px;
+	}
+
+	.legal__body :global(.legal-contact) {
+		margin-top: 40px;
+		padding: 24px;
+		background: var(--color-bg-pale-1);
+		border-radius: 12px;
+	}
+
+	.legal__body :global(.legal-contact h2) {
+		margin-top: 0;
+		border-bottom: none;
+		padding-bottom: 0;
+	}
+
+	.legal__body :global(.legal-contact dt) {
+		font-weight: 700;
+		font-size: 13px;
+		color: var(--color-text-sub);
+		margin-top: 12px;
+	}
+
+	.legal__body :global(.legal-contact dt:first-child) {
+		margin-top: 0;
+	}
+
+	.legal__body :global(.legal-contact dd) {
+		font-size: 15px;
+		margin: 2px 0 0;
+	}
+
+	.legal__body :global(.legal-contact a) {
+		font-weight: 700;
+		color: var(--color-primary-dark);
+	}
+
+	.legal__body :global(table.legal-table) {
+		width: 100%;
+		border-collapse: collapse;
+		margin-bottom: 16px;
+	}
+
+	.legal__body :global(table.legal-table th),
+	.legal__body :global(table.legal-table td) {
+		text-align: left;
+		padding: 14px 16px;
+		border-bottom: 1px solid var(--color-bg-pale-3);
+		font-size: 15px;
+		line-height: 1.8;
+	}
+
+	.legal__body :global(table.legal-table th) {
+		width: 9em;
+		white-space: nowrap;
+		color: var(--color-primary-dark);
+		font-weight: 700;
+		background: var(--color-bg-pale-1);
+	}
+
+	@media (max-width: 480px) {
+		.legal__body :global(table.legal-table th) {
+			width: auto;
+			display: block;
+			border-bottom: none;
+			padding-bottom: 4px;
+		}
+
+		.legal__body :global(table.legal-table td) {
+			display: block;
+			padding-top: 4px;
+		}
+	}
+</style>

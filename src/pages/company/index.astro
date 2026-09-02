@@ -1,0 +1,41 @@
+---
+import LegalLayout from "../../layouts/LegalLayout.astro";
+
+const TEL = "0120-442-999";
+---
+
+<LegalLayout
+	title="会社概要｜山形不用品回収サービス"
+	description="山形不用品回収サービスの会社概要です。事業内容、所在地、営業時間などをご案内します。"
+	pageTitleEn="Company"
+	pageTitleJa="会社概要"
+>
+	<table class="legal-table">
+		<tbody>
+			<tr>
+				<th>事業者</th>
+				<td>山形不用品回収サービス</td>
+			</tr>
+			<tr>
+				<th>事業内容</th>
+				<td>不用品回収、遺品整理、特殊清掃、買取事業、海外輸出、リフォーム、ハウスクリーニング、リユース関連事業全般</td>
+			</tr>
+			<tr>
+				<th>電話番号</th>
+				<td><a href={`tel:${TEL.replace(/-/g, "")}`}>{TEL}</a></td>
+			</tr>
+			<tr>
+				<th>所在地</th>
+				<td>〒990-0038 山形県山形市幸町2-9</td>
+			</tr>
+			<tr>
+				<th>営業時間</th>
+				<td>9:00〜21:00</td>
+			</tr>
+			<tr>
+				<th>主要取引銀行</th>
+				<td>山形銀行、東邦銀行、七十七銀行</td>
+			</tr>
+		</tbody>
+	</table>
+</LegalLayout>

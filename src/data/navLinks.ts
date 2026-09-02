@@ -6,3 +6,9 @@ export const navLinks = [
 	{ label: "対応エリア", href: "#area" },
 	{ label: "よくある質問", href: "#faq" },
 ];
+
+export const legalLinks = [
+	{ label: "プライバシーポリシー", href: "/privacy/" },
+	{ label: "利用規約", href: "/terms/" },
+	{ label: "会社概要", href: "/company/" },
+];
