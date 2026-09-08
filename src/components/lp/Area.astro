@@ -1,9 +1,12 @@
 ---
+import { Image } from "astro:assets";
+import yamagataMap from "../../assets/lp/yamagataken-gazou.png";
+
 const areaGroups = [
 	{
 		region: "村山地方",
 		cities: [
-			"山形市", "寒河江市", "上山市", "村山市", "天童市", "東根市", "尾花沢市",
+			"山形市（最短30分）", "寒河江市", "上山市", "村山市", "天童市", "東根市", "尾花沢市",
 			"山辺町", "中山町", "河北町", "西川町", "朝日町", "大江町", "大石田町",
 		],
 	},
@@ -30,10 +33,24 @@ const areaGroups = [
 			<p class="section-heading__lead">山形県内全域に対応しております</p>
 		</div>
 
+		<Image
+			src={yamagataMap}
+			alt="山形県対応エリアマップ"
+			width={480}
+			class="area__illustration"
+		/>
+
+		<p class="area__lead-text">
+			山形県の<span class="area__lead-highlight">不用品回収・遺品整理・ゴミ屋敷片付け・オフィス撤去</span>は、山形不用品回収サービスへお任せください。<strong>山形市内なら30分以内、村山地方エリアであれば最短1時間</strong>で駆け付けます！
+		</p>
+		<p class="area__lead-text area__lead-text--spaced">
+			<strong>山形市・天童市は出張費無料、山形市内だと最短30分</strong>でお伺いします。
+		</p>
+
 		<div class="area__list">
 			{
-				areaGroups.map((group) => (
-					<details class="area__item">
+				areaGroups.map((group, i) => (
+					<details class="area__item" open={i === 0 ? true : undefined}>
 						<summary class="area__summary">
 							<span class="area__region">{group.region}</span>
 							<span class="area__count">{group.cities.length}市町村</span>
@@ -53,6 +70,32 @@ const areaGroups = [
 	.area {
 		background: var(--color-bg-gray);
 		padding-block: 60px 90px;
+	}
+
+	.area__illustration {
+		display: block;
+		width: 100%;
+		max-width: 340px;
+		height: auto;
+		margin: 0 auto 24px;
+	}
+
+	.area__lead-text {
+		max-width: 700px;
+		margin: 0 auto;
+		font-size: 14px;
+		line-height: 1.9;
+		color: var(--color-text);
+		text-align: center;
+	}
+
+	.area__lead-text--spaced {
+		margin-top: 1.9em;
+		margin-bottom: 40px;
+	}
+
+	.area__lead-highlight {
+		color: var(--color-accent-red);
 	}
 
 	.area__list {
@@ -146,6 +189,14 @@ const areaGroups = [
 	@media (min-width: 768px) {
 		.area__cities {
 			grid-template-columns: repeat(4, 1fr);
+		}
+
+		.area__illustration {
+			max-width: 480px;
+		}
+
+		.area__lead-text {
+			font-size: 15px;
 		}
 	}
 </style>

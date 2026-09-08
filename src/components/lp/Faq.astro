@@ -1,44 +1,73 @@
 ---
-const faqs = [
+const categories = [
 	{
-		q: "対応エリアはどこまででしょうか？",
-		a: "山形県内全域対応しております。遠方でも遠慮なくご相談ください。",
+		id: "area",
+		label: "対応範囲について",
+		color: "#4A90D9",
+		faqs: [
+			{
+				q: "対応エリアはどこまででしょうか？",
+				a: "山形県内全域対応しております。遠方でも遠慮なくご相談ください。",
+			},
+			{
+				q: "回収できない荷物はありますか？",
+				a: "ご自宅にある家財関係であれば基本的になんでも対応可能です。「特殊な荷物があるんだけど」という場合は、遠慮なくご相談ください。",
+			},
+			{
+				q: "不用品回収以外に、遺品整理やゴミ屋敷の片付けもお願いできますか？",
+				a: "はい、対応可能です。不用品回収のほか、遺品整理・ゴミ屋敷の片付け・特殊清掃・買取など幅広く承っております。また、不動産売却のご支援も可能です。まずはお気軽にお電話・LINEにてご相談ください。",
+			},
+			{
+				q: "作業中に家具や壁を傷つけられないか心配です",
+				a: "ご安心ください。万が一の作業中の損害に備え、最大5,000万円の賠償責任保険に加入しております。",
+			},
+		],
 	},
 	{
-		q: "即日対応はできるのでしょうか？",
-		a: "可能です。ただし、ご連絡いただくタイミングや時間帯によっては難しい場合もありますので、お急ぎの方は、なるべくお早目にご相談ください。",
+		id: "schedule",
+		label: "日程・予約について",
+		color: "#F5A623",
+		faqs: [
+			{
+				q: "即日対応はできるのでしょうか？",
+				a: "可能です。ただし、ご連絡いただくタイミングや時間帯によっては難しい場合もありますので、お急ぎの方は、なるべくお早目にご相談ください。",
+			},
+			{
+				q: "深夜・早朝でも対応してもらえますか？",
+				a: "可能です。ただし日時や状況によって対応が難しいケースもございますので、なるべくお早目にご相談いただけますと幸いです。",
+			},
+			{
+				q: "日程変更はできますか？",
+				a: "作業、お見積もりの日程変更はいつでも可能です。お客様のご都合に沿って対応させていただきます。",
+			},
+			{
+				q: "日時の指定はできますか？",
+				a: "はい、お見積り日・作業日ともにご指定可能です。お客様のご都合に合わせた作業枠をご案内しますので、ご希望があれば遠慮なくお知らせください。",
+			},
+		],
 	},
 	{
-		q: "深夜・早朝でも対応してもらえますか？",
-		a: "可能です。ただし日時や状況によって対応が難しいケースもございますので、なるべくお早目にご相談いただけますと幸いです。",
-	},
-	{
-		q: "見積もり後にキャンセルはできますか？",
-		a: "無料でキャンセル可能ですので、お気軽にお見積もりをご相談くださいませ。",
-	},
-	{
-		q: "回収できない荷物はありますか？",
-		a: "ご自宅にある家財関係であれば基本的になんでも対応可能です。「特殊な荷物があるんだけど」という場合は、遠慮なくご相談ください。",
-	},
-	{
-		q: "追加費用はかかりませんか？",
-		a: "はい、弊社のお見積もりは確定金額をお伝えしております。お見積もり時にご説明をしなかった費用を請求することはございません。",
-	},
-	{
-		q: "支払いはいつ・どんな方法ですか？",
-		a: "お支払いは作業終了後、その場で現金・クレジットカード・一部コード決済にて承ります。また、法人様の場合は、銀行振込にも対応しております。",
-	},
-	{
-		q: "日程変更はできますか？",
-		a: "作業、お見積もりの日程変更はいつでも可能です。お客様のご都合に沿って対応させていただきます。",
-	},
-	{
-		q: "不用品回収以外に、遺品整理やゴミ屋敷の片付けもお願いできますか？",
-		a: "はい、対応可能です。不用品回収のほか、遺品整理・ゴミ屋敷の片付け・特殊清掃・買取など幅広く承っております。また、不動産売却のご支援も可能です。まずはお気軽にお電話・LINEにてご相談ください。",
-	},
-	{
-		q: "作業中に家具や壁を傷つけられないか心配です",
-		a: "ご安心ください。万が一の作業中の損害に備え、最大5,000万円の賠償責任保険に加入しております。",
+		id: "price",
+		label: "料金・お支払いについて",
+		color: "#4CAF50",
+		faqs: [
+			{
+				q: "追加費用はかかりませんか？",
+				a: "はい、弊社のお見積もりは確定金額をお伝えしております。お見積もり時にご説明をしなかった費用を請求することはございません。",
+			},
+			{
+				q: "支払いはいつ・どんな方法ですか？",
+				a: "お支払いは作業終了後、その場で現金・クレジットカード・一部コード決済にて承ります。また、法人様の場合は、銀行振込にも対応しております。",
+			},
+			{
+				q: "見積もり後にキャンセルはできますか？",
+				a: "無料でキャンセル可能ですので、お気軽にお見積もりをご相談くださいませ。",
+			},
+			{
+				q: "立会無しでお見積りできますか？",
+				a: "はい、可能です。LINEでお写真をいただく・事前に鍵を開けていただく・お預かりするなど、お客様のご希望にあわせて対応いたします。遠方のお客様でもご安心ください。",
+			},
+		],
 	},
 ];
 ---
@@ -50,26 +79,102 @@ const faqs = [
 			<p class="section-heading__ja" style="color:#222;">よくあるご質問</p>
 		</div>
 
-		<div class="faq__list">
+		<div class="faq__tabs" role="tablist">
 			{
-				faqs.map((item) => (
-					<details class="faq__item">
-						<summary class="faq__summary">
-							<span class="faq__q">Q.</span>
-							<span class="faq__question">{item.q}</span>
-						</summary>
-						<p class="faq__answer">{item.a}</p>
-					</details>
+				categories.map((cat, i) => (
+					<button
+						type="button"
+						class="faq__tab"
+						data-category={cat.id}
+						aria-selected={i === 0 ? "true" : "false"}
+						style={`--cat-color: ${cat.color}`}
+					>
+						{cat.label}
+					</button>
 				))
 			}
 		</div>
+
+		{
+			categories.map((cat, i) => (
+				<div
+					class="faq__list"
+					data-category-panel={cat.id}
+					hidden={i === 0 ? undefined : true}
+					style={`--cat-color: ${cat.color}`}
+				>
+					{cat.faqs.map((item) => (
+						<details class="faq__item">
+							<summary class="faq__summary">
+								<span class="faq__q">Q.</span>
+								<span class="faq__question">{item.q}</span>
+							</summary>
+							<p class="faq__answer">{item.a}</p>
+						</details>
+					))}
+				</div>
+			))
+		}
 	</div>
 </section>
+
+<script>
+	const tabs = document.querySelectorAll<HTMLButtonElement>(".faq__tab");
+	const panels = document.querySelectorAll<HTMLElement>("[data-category-panel]");
+
+	tabs.forEach((tab) => {
+		tab.addEventListener("click", () => {
+			const target = tab.dataset.category;
+
+			tabs.forEach((t) => t.setAttribute("aria-selected", t === tab ? "true" : "false"));
+			panels.forEach((panel) => {
+				panel.hidden = panel.dataset.categoryPanel !== target;
+			});
+		});
+	});
+</script>
 
 <style>
 	.faq {
 		background: #fff;
 		padding-block: 60px 90px;
+	}
+
+	.faq__tabs {
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: center;
+		gap: 10px;
+		max-width: 900px;
+		margin: 0 auto 32px;
+	}
+
+	.faq__tab {
+		font-family: var(--font-heading);
+		font-size: 14px;
+		font-weight: 700;
+		letter-spacing: 0.02em;
+		color: var(--color-text);
+		background: var(--color-bg-gray);
+		border: 1px solid transparent;
+		border-radius: 999px;
+		padding: 10px 18px;
+		cursor: pointer;
+		transition:
+			background 0.2s,
+			color 0.2s,
+			border-color 0.2s;
+	}
+
+	.faq__tab:hover {
+		border-color: var(--cat-color, var(--color-primary));
+	}
+
+	.faq__tab[aria-selected="true"] {
+		background: var(--cat-color, var(--color-primary));
+		border-color: var(--cat-color, var(--color-primary));
+		color: #fff;
+		font-weight: 700;
 	}
 
 	.faq__list {
@@ -80,10 +185,20 @@ const faqs = [
 		margin-inline: auto;
 	}
 
+	.faq__list[hidden] {
+		display: none;
+	}
+
 	.faq__item {
 		background: var(--color-bg-gray);
 		border-radius: 5px;
 		padding: 20px;
+		border-left: 4px solid transparent;
+		transition: border-color 0.2s;
+	}
+
+	.faq__item[open] {
+		border-left-color: var(--cat-color, var(--color-primary));
 	}
 
 	.faq__summary {
@@ -102,7 +217,7 @@ const faqs = [
 		font-family: var(--font-en);
 		font-weight: 700;
 		font-size: 26px;
-		color: var(--color-primary);
+		color: var(--cat-color, var(--color-primary));
 		flex-shrink: 0;
 	}
 
@@ -121,6 +236,11 @@ const faqs = [
 	}
 
 	@media (min-width: 768px) {
+		.faq__tab {
+			font-size: 15px;
+			padding: 12px 24px;
+		}
+
 		.faq__q {
 			font-size: 32px;
 		}
