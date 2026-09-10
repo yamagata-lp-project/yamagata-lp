@@ -1,5 +1,7 @@
 ---
 import { navLinks } from "../../data/navLinks";
+import yamagataLogo from "../../assets/lp/yamagata-logo.png";
+import { Image } from "astro:assets";
 
 const TEL = "0120-442-999";
 ---
@@ -7,8 +9,9 @@ const TEL = "0120-442-999";
 <header class="header">
 	<div class="header__inner">
 		<div class="header__brand">
-			<a href="/" class="header__logo">山形不用品回収サービス</a>
-			<p class="header__tagline">山形県内の不用品のお片付けはお任せ！</p>
+			<a href="/" class="header__logo">
+				<Image src={yamagataLogo} alt="山形不用品回収サービス" width={620} height={134} />
+			</a>
 		</div>
 		<nav class="header__nav" aria-label="お問い合わせ">
 			<a href={`tel:${TEL.replace(/-/g, "")}`} class="btn-cta btn-cta--phone">
@@ -129,25 +132,19 @@ const TEL = "0120-442-999";
 		align-items: center;
 		justify-content: space-between;
 		gap: 16px;
-		padding: 12px 20px;
+		padding: 12px 20px 12px 12px;
 		flex-wrap: wrap;
 	}
 
 	.header__logo {
 		display: block;
-		font-family: var(--font-logo);
-		font-size: 20px;
-		font-weight: 500;
-		color: #000;
-		letter-spacing: 0.02em;
+		line-height: 0;
 	}
 
-	.header__tagline {
-		font-family: var(--font-heading);
-		font-size: 12px;
-		font-weight: 500;
-		color: #022442;
-		margin-top: 2px;
+	.header__logo :global(img) {
+		display: block;
+		width: auto;
+		height: 48px;
 	}
 
 	.header__nav {
@@ -356,12 +353,8 @@ const TEL = "0120-442-999";
 	}
 
 	@media (min-width: 768px) {
-		.header__logo {
-			font-size: 24px;
-		}
-
-		.header__tagline {
-			font-size: 13px;
+		.header__logo :global(img) {
+			height: 60px;
 		}
 
 		.header__nav .btn-cta {
