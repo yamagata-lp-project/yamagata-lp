@@ -59,7 +59,7 @@ const initialIndex = plans.length; // first card of the middle copy
 <section id="pricing" class="pricing">
 	<div class="l-container">
 		<div class="section-heading">
-			<p class="section-heading__en">Price</p>
+			<p class="section-heading__kicker">＼明確・分かりやすい／</p>
 			<p class="section-heading__ja">5つの料金プラン</p>
 			<p class="section-heading__lead">お荷物の量をヒアリングし、適切なプランをご案内いたします</p>
 		</div>
@@ -239,10 +239,17 @@ const initialIndex = plans.length; // first card of the middle copy
 
 	/* the class sits directly on the <img> the Image component renders, so
 	   this must target the class itself, not a `:global(img)` descendant */
+	/* the 5 source illustrations don't share one aspect ratio (the 1.5t/2t
+	   trucks are drawn on a shorter canvas), so a plain height:auto leaves
+	   them sitting higher than the others. Fixing the box height and
+	   bottom-anchoring the artwork keeps every truck's wheels on the same
+	   line regardless of its native proportions. */
 	.pricing__truck {
 		width: 100%;
-		max-width: 116px;
-		height: auto;
+		max-width: 162px;
+		height: 122px;
+		object-fit: contain;
+		object-position: bottom center;
 		margin-bottom: 12px;
 	}
 
@@ -383,7 +390,8 @@ const initialIndex = plans.length; // first card of the middle copy
 		}
 
 		.pricing__truck {
-			max-width: 240px;
+			max-width: 336px;
+			height: 252px;
 			margin-bottom: 16px;
 		}
 

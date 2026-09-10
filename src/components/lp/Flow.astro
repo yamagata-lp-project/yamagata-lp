@@ -56,7 +56,7 @@ const steps = [
 
 	<div class="l-container flow__inner">
 		<div class="section-heading">
-			<p class="section-heading__en" style="color:#fff;">Flow</p>
+			<p class="section-heading__kicker" style="color:#fff;">＼カンタン4STEP／</p>
 			<p class="section-heading__ja" style="color:#fff;">ご利用の流れ</p>
 		</div>
 
@@ -71,10 +71,12 @@ const steps = [
 							</span>
 						</div>
 						<p class="flow__title">{step.title}</p>
-						<div class="flow__photo">
-							<Image src={step.photo} alt={step.title} width={step.photoW} height={step.photoH} />
+						<div class="flow__body">
+							<div class="flow__photo">
+								<Image src={step.photo} alt={step.title} width={step.photoW} height={step.photoH} />
+							</div>
+							<p class="flow__desc">{step.desc}</p>
 						</div>
-						<p class="flow__desc">{step.desc}</p>
 					</li>
 				))
 			}
@@ -169,8 +171,16 @@ const steps = [
 		color: #222;
 	}
 
+	.flow__body {
+		align-self: stretch;
+		display: flex;
+		align-items: center;
+		gap: 12px;
+		text-align: left;
+	}
+
 	.flow__photo {
-		width: 100%;
+		flex: 0 0 42%;
 		aspect-ratio: 4 / 3;
 		border-radius: 6px;
 		overflow: hidden;
@@ -184,11 +194,12 @@ const steps = [
 	}
 
 	.flow__desc {
+		flex: 1;
+		min-width: 0;
 		font-family: var(--font-heading);
 		font-size: 13px;
 		line-height: 1.7;
 		color: #444;
-		text-align: left;
 	}
 
 	@media (min-width: 900px) {

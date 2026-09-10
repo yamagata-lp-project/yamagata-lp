@@ -2,7 +2,7 @@
 const categories = [
 	{
 		id: "area",
-		label: "対応範囲について",
+		label: "対応範囲に\n関する質問",
 		color: "#4A90D9",
 		faqs: [
 			{
@@ -25,7 +25,7 @@ const categories = [
 	},
 	{
 		id: "schedule",
-		label: "日程・予約について",
+		label: "日程・予約に\n関する質問",
 		color: "#F5A623",
 		faqs: [
 			{
@@ -48,7 +48,7 @@ const categories = [
 	},
 	{
 		id: "price",
-		label: "料金・お支払いについて",
+		label: "料金・お支払に\n関する質問",
 		color: "#4CAF50",
 		faqs: [
 			{
@@ -75,7 +75,7 @@ const categories = [
 <section id="faq" class="faq">
 	<div class="l-container">
 		<div class="section-heading">
-			<p class="section-heading__en">Faq</p>
+			<p class="section-heading__kicker">＼気になることはこちら／</p>
 			<p class="section-heading__ja" style="color:#222;">よくあるご質問</p>
 		</div>
 
@@ -142,23 +142,28 @@ const categories = [
 
 	.faq__tabs {
 		display: flex;
-		flex-wrap: wrap;
+		flex-wrap: nowrap;
 		justify-content: center;
-		gap: 10px;
+		gap: 6px;
 		max-width: 900px;
 		margin: 0 auto 32px;
 	}
 
 	.faq__tab {
+		flex: 1 1 0;
+		min-width: 0;
 		font-family: var(--font-heading);
-		font-size: 14px;
+		font-size: 11px;
 		font-weight: 700;
 		letter-spacing: 0.02em;
+		line-height: 1.3;
+		white-space: pre-line;
+		text-align: center;
 		color: var(--color-text);
 		background: var(--color-bg-gray);
 		border: 1px solid transparent;
 		border-radius: 999px;
-		padding: 10px 18px;
+		padding: 8px 6px;
 		cursor: pointer;
 		transition:
 			background 0.2s,
@@ -192,7 +197,7 @@ const categories = [
 	.faq__item {
 		background: var(--color-bg-gray);
 		border-radius: 5px;
-		padding: 20px;
+		padding: 12px 20px;
 		border-left: 4px solid transparent;
 		transition: border-color 0.2s;
 	}
@@ -216,7 +221,7 @@ const categories = [
 	.faq__q {
 		font-family: var(--font-en);
 		font-weight: 700;
-		font-size: 26px;
+		font-size: 22px;
 		color: var(--cat-color, var(--color-primary));
 		flex-shrink: 0;
 	}
@@ -224,7 +229,7 @@ const categories = [
 	.faq__question {
 		font-family: var(--font-heading);
 		font-weight: 700;
-		font-size: 17px;
+		font-size: 15px;
 		letter-spacing: 0.02em;
 	}
 
@@ -237,16 +242,18 @@ const categories = [
 
 	@media (min-width: 768px) {
 		.faq__tab {
+			flex: 0 1 auto;
 			font-size: 15px;
 			padding: 12px 24px;
+			white-space: pre-line;
 		}
 
 		.faq__q {
-			font-size: 32px;
+			font-size: 28px;
 		}
 
 		.faq__question {
-			font-size: 20px;
+			font-size: 18px;
 		}
 
 		.faq__answer {

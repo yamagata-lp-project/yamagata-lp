@@ -19,43 +19,49 @@ const reviews = [
 		title: "安心して即日依頼できました",
 		body: "朝一番に電話すると丁寧な対応で、すぐに折り返しの連絡がありました。午後一番には回収に来てもらえ、担当の前田さんは爽やかで丁寧な仕事ぶり。最後まで笑顔で対応してくださり、本当に助かりました。",
 		name: "S.K様",
-		area: "山形市",
+		area: "山形市白山",
 	},
 	{
 		rating: 5,
 		title: "料金通りで安心して引越せます！",
 		body: "他社に断られた和ダンスも快く引き受けてくれました。急な依頼にも関わらず料金は当初のウェブ表示通りで、3名のスタッフが声を掛け合いながら手際よく大量の荷物を運び出してくれ、安心してお任せできました。",
 		name: "M.T様",
-		area: "天童市",
+		area: "山形市香澄町",
 	},
 	{
 		rating: 5,
 		title: "家の中がスッキリしました！",
 		body: "口コミを見て軽トラ通常プランを依頼しました。LINE見積もりが分かりやすく、森様・村上様の作業はとてもスムーズ。マットレスや大型のダイニングテーブル、子供のおもちゃなども積んでいただき、家の中がスッキリしました。",
 		name: "A.N様",
-		area: "上山市",
+		area: "山形市花楯",
 	},
 	{
 		rating: 5,
 		title: "実家を丁寧・スムーズに片付けてくれました",
 		body: "実家の片付けで新野さんにお世話になりました。事前連絡から作業完了まで丁寧でスムーズ。粗大ゴミの搬入後、トラックに空きがないか確認し、スペースいっぱいまで不用品を積んでくださりとても助かりました。",
 		name: "H.O様",
-		area: "山形市",
+		area: "山形市東青田",
 	},
 	{
 		rating: 5,
 		title: "子育て中でもLINE見積もりで安心でした",
 		body: "引っ越しで出た不用品をLINEで丁寧にご提案いただき依頼しました。当日追加で出たゴミも急遽対応いただき、子育て中で返信の早いLINEのやり取りはとても安心。15分ほどでテキパキ運び出してくださり、また頼みたいです。",
 		name: "Y.I様",
-		area: "寒河江市",
+		area: "山形市白山",
 	},
 ];
+
+// Render 3 copies back-to-back so the carousel can loop infinitely: the
+// middle copy is what's shown initially, and the JS below silently jumps
+// between copies at the edges to fake an endless loop.
+const loopedReviews = [...reviews, ...reviews, ...reviews];
+const initialIndex = reviews.length; // first card of the middle copy
 ---
 
 <section id="reviews" class="reviews">
 	<div class="l-container">
 		<div class="section-heading">
-			<p class="section-heading__en">Voice</p>
+			<p class="section-heading__kicker">＼リアルな声をご紹介／</p>
 			<p class="section-heading__ja">お客様の声</p>
 		</div>
 
@@ -68,10 +74,10 @@ const reviews = [
 			<span class="reviews__rating-count">（{rating.count}件のクチコミ）</span>
 		</div>
 
-		<div class="reviews__slider" data-reviews-slider>
+		<div class="reviews__slider" data-reviews-slider data-review-count={reviews.length} data-initial-index={initialIndex}>
 			<ul class="reviews__list" data-reviews-track>
 				{
-					reviews.map((review, reviewIndex) => (
+					loopedReviews.map((review, reviewIndex) => (
 						<li class="reviews__card">
 							<div class="reviews__card-head">
 								<span class="reviews__avatar">
@@ -110,15 +116,62 @@ const reviews = [
 		const track = slider.querySelector<HTMLElement>("[data-reviews-track]");
 		if (!track) return;
 
-		const scrollByOne = (dir: number) => {
-			const card = track.querySelector<HTMLElement>(".reviews__card");
-			const gap = parseFloat(getComputedStyle(track).columnGap || "0");
-			const amount = card ? card.offsetWidth + gap : track.clientWidth;
-			track.scrollBy({ left: dir * amount, behavior: "smooth" });
+		const count = Number(slider.dataset.reviewCount || "0");
+		const cards = Array.from(track.querySelectorAll<HTMLElement>(".reviews__card"));
+		if (!count || cards.length !== count * 3) return;
+
+		let currentIndex = Number(slider.dataset.initialIndex || count);
+
+		// align the card's left edge with the track's left edge (matches the
+		// existing scroll-snap-align: start look), measured via
+		// getBoundingClientRect since offsetLeft is relative to the nearest
+		// positioned ancestor, not the scroll track
+		const alignOn = (index: number, smooth: boolean) => {
+			const card = cards[index];
+			if (!card) return;
+			const cardRect = card.getBoundingClientRect();
+			const trackRect = track.getBoundingClientRect();
+			const target = cardRect.left - trackRect.left + track.scrollLeft;
+			track.scrollTo({ left: target, behavior: smooth ? "smooth" : "instant" });
 		};
 
-		slider.querySelector("[data-reviews-prev]")?.addEventListener("click", () => scrollByOne(-1));
-		slider.querySelector("[data-reviews-next]")?.addEventListener("click", () => scrollByOne(1));
+		// keep the index inside the middle copy [count, count*2 - 1]; if a
+		// run of clicks pushed it into an outer clone, silently snap back by
+		// one full loop (identical content, so it's visually seamless)
+		const resyncIfNeeded = () => {
+			if (currentIndex >= count * 2) {
+				currentIndex -= count;
+				alignOn(currentIndex, false);
+			} else if (currentIndex < count) {
+				currentIndex += count;
+				alignOn(currentIndex, false);
+			}
+		};
+
+		let settleTimer: ReturnType<typeof setTimeout>;
+		track.addEventListener("scroll", () => {
+			clearTimeout(settleTimer);
+			settleTimer = setTimeout(resyncIfNeeded, 150);
+		});
+
+		const go = (dir: number) => {
+			currentIndex += dir;
+			// always retarget an absolute position (rather than a relative
+			// scrollBy) so rapid repeated clicks each land exactly one card
+			// further instead of compounding on an in-flight animation
+			alignOn(currentIndex, true);
+		};
+
+		slider.querySelector("[data-reviews-prev]")?.addEventListener("click", () => go(-1));
+		slider.querySelector("[data-reviews-next]")?.addEventListener("click", () => go(1));
+
+		// align the initial card without animation, then re-align on resize
+		alignOn(currentIndex, false);
+		let resizeTimer: ReturnType<typeof setTimeout>;
+		window.addEventListener("resize", () => {
+			clearTimeout(resizeTimer);
+			resizeTimer = setTimeout(() => alignOn(currentIndex, false), 150);
+		});
 	});
 </script>
 
