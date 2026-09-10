@@ -48,6 +48,12 @@ const plans = [
 		height: 165,
 	},
 ];
+
+// Render 3 copies back-to-back so the slider can loop infinitely: the
+// middle copy is what's shown initially, and the JS below silently jumps
+// between copies at the edges to fake an endless loop.
+const loopedPlans = [...plans, ...plans, ...plans];
+const initialIndex = plans.length; // first card of the middle copy
 ---
 
 <section id="pricing" class="pricing">
@@ -58,21 +64,36 @@ const plans = [
 			<p class="section-heading__lead">お荷物の量をヒアリングし、適切なプランをご案内いたします</p>
 		</div>
 
-		<ul class="pricing__list">
-			{
-				plans.map((plan) => (
-					<li class="pricing__item">
-						<p class="pricing__name">{plan.name}</p>
-						<p class="pricing__desc" style="white-space:pre-line;">{plan.desc}</p>
-						<Image src={plan.img} alt={plan.name} width={plan.width} height={plan.height} class="pricing__truck" />
-						<p class="pricing__price">
-							{plan.price}<span class="pricing__price-unit">円</span>
-							<span class="pricing__price-tax">(税抜)</span>
-						</p>
-					</li>
-				))
-			}
-		</ul>
+		<div class="pricing__slider" data-pricing-slider data-plan-count={plans.length} data-initial-index={initialIndex}>
+			<ul class="pricing__list" data-pricing-track>
+				{
+					loopedPlans.map((plan, i) => (
+						<li class="pricing__item" data-copy={Math.floor(i / plans.length)}>
+							<p class="pricing__name">{plan.name}</p>
+							<p class="pricing__desc" style="white-space:pre-line;">{plan.desc}</p>
+							<Image src={plan.img} alt={plan.name} width={plan.width} height={plan.height} class="pricing__truck" />
+							<p class="pricing__price">
+								{plan.price}<span class="pricing__price-unit">円</span>
+								<span class="pricing__price-tax">(税抜)</span>
+							</p>
+						</li>
+					))
+				}
+			</ul>
+
+			<div class="pricing__nav">
+				<button type="button" class="pricing__nav-btn pricing__nav-btn--prev" data-pricing-prev aria-label="前のプラン">
+					<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+						<polyline points="15 5 8 12 15 19" />
+					</svg>
+				</button>
+				<button type="button" class="pricing__nav-btn pricing__nav-btn--next" data-pricing-next aria-label="次のプラン">
+					<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+						<polyline points="9 5 16 12 9 19" />
+					</svg>
+				</button>
+			</div>
+		</div>
 
 		<p class="pricing__note">
 			ご提示した金額が最終金額です。現地確認後、追加料金を頂くことは一切ございません。<br />
@@ -81,6 +102,74 @@ const plans = [
 	</div>
 </section>
 
+<script>
+	document.querySelectorAll<HTMLElement>("[data-pricing-slider]").forEach((slider) => {
+		// the infinite-loop slider only applies at mobile widths; PC shows a
+		// static grid (see the >=768px CSS), so skip wiring it up there
+		if (window.matchMedia("(min-width: 768px)").matches) return;
+
+		const track = slider.querySelector<HTMLElement>("[data-pricing-track]");
+		if (!track) return;
+
+		const count = Number(slider.dataset.planCount || "0");
+		const cards = Array.from(track.querySelectorAll<HTMLElement>(".pricing__item"));
+		if (!count || cards.length !== count * 3) return;
+
+		let currentIndex = Number(slider.dataset.initialIndex || count);
+
+		const centerOn = (index: number, smooth: boolean) => {
+			const card = cards[index];
+			if (!card) return;
+			// measure via getBoundingClientRect rather than offsetLeft: offsetLeft
+			// is relative to the nearest positioned ancestor (here, the section),
+			// not the scroll track, so it can't be used directly against scrollLeft
+			const cardRect = card.getBoundingClientRect();
+			const trackRect = track.getBoundingClientRect();
+			const cardLeftInTrack = cardRect.left - trackRect.left + track.scrollLeft;
+			const target = cardLeftInTrack + card.offsetWidth / 2 - track.clientWidth / 2;
+			track.scrollTo({ left: target, behavior: smooth ? "smooth" : "instant" });
+		};
+
+		// keep the index inside the middle copy [count, count*2 - 1]; if a
+		// run of clicks pushed it into an outer clone, silently snap back by
+		// one full loop (identical content, so it's visually seamless)
+		const resyncIfNeeded = () => {
+			if (currentIndex >= count * 2) {
+				currentIndex -= count;
+				centerOn(currentIndex, false);
+			} else if (currentIndex < count) {
+				currentIndex += count;
+				centerOn(currentIndex, false);
+			}
+		};
+
+		let settleTimer: ReturnType<typeof setTimeout>;
+		track.addEventListener("scroll", () => {
+			clearTimeout(settleTimer);
+			settleTimer = setTimeout(resyncIfNeeded, 150);
+		});
+
+		const go = (dir: number) => {
+			currentIndex += dir;
+			// always retarget an absolute position (rather than a relative
+			// scrollBy) so rapid repeated clicks each land exactly one card
+			// further instead of compounding on an in-flight animation
+			centerOn(currentIndex, true);
+		};
+
+		slider.querySelector("[data-pricing-prev]")?.addEventListener("click", () => go(-1));
+		slider.querySelector("[data-pricing-next]")?.addEventListener("click", () => go(1));
+
+		// center the initial card without animation, then re-center on resize
+		centerOn(currentIndex, false);
+		let resizeTimer: ReturnType<typeof setTimeout>;
+		window.addEventListener("resize", () => {
+			clearTimeout(resizeTimer);
+			resizeTimer = setTimeout(() => centerOn(currentIndex, false), 150);
+		});
+	});
+</script>
+
 <style>
 	.pricing {
 		background: var(--color-bg-pale-1);
@@ -88,19 +177,36 @@ const plans = [
 		position: relative;
 	}
 
+	.pricing__slider {
+		max-width: 100%;
+		margin-inline: auto;
+	}
+
 	.pricing__list {
-		display: grid;
-		grid-template-columns: 1fr;
-		gap: 24px;
-		max-width: 420px;
-		margin: 0 auto 24px;
+		display: flex;
+		gap: 14px;
+		overflow-x: auto;
+		scroll-snap-type: x mandatory;
+		padding-block: 4px 12px;
+		padding-inline: 4px;
+		-webkit-overflow-scrolling: touch;
+		scrollbar-width: none;
+		margin: 0 auto;
+		list-style: none;
+	}
+
+	.pricing__list::-webkit-scrollbar {
+		display: none;
 	}
 
 	.pricing__item {
+		flex: 0 0 auto;
+		width: 236px;
+		scroll-snap-align: center;
 		background: #fff;
 		border: 1px solid #d9d9d9;
 		border-radius: 4px;
-		padding: 24px 20px;
+		padding: 16px 12px;
 		display: flex;
 		flex-direction: column;
 		align-items: center;
@@ -111,50 +217,52 @@ const plans = [
 	.pricing__item:hover,
 	.pricing__item:active,
 	.pricing__item:focus-within {
-		transform: translateY(-8px);
-		box-shadow: 0 16px 28px rgba(3, 129, 220, 0.2);
+		transform: translateY(-6px);
+		box-shadow: 0 12px 20px rgba(3, 129, 220, 0.2);
 	}
 
 	.pricing__name {
 		font-family: var(--font-heading);
 		font-weight: 900;
-		font-size: 24px;
+		font-size: 15px;
+		color: var(--color-text);
+		margin-bottom: 8px;
+	}
+
+	.pricing__desc {
+		font-size: 11px;
+		line-height: 1.6;
+		min-height: calc(1.6em * 2);
 		color: var(--color-text);
 		margin-bottom: 12px;
 	}
 
-	.pricing__desc {
-		font-size: 15px;
-		line-height: 1.7;
-		min-height: calc(1.7em * 2);
-		color: var(--color-text);
-		margin-bottom: 16px;
-	}
-
-	.pricing__truck :global(img) {
+	/* the class sits directly on the <img> the Image component renders, so
+	   this must target the class itself, not a `:global(img)` descendant */
+	.pricing__truck {
 		width: 100%;
-		max-width: 240px;
+		max-width: 116px;
 		height: auto;
-		margin-bottom: 16px;
+		margin-bottom: 12px;
 	}
 
 	.pricing__price {
 		font-family: var(--font-number);
 		font-weight: 700;
-		font-size: 40px;
+		font-size: 22px;
 		color: var(--color-accent-red);
 		line-height: 1;
 	}
 
 	.pricing__price-unit {
-		font-size: 28px;
+		font-size: 15px;
 	}
 
 	.pricing__price-tax {
 		font-family: var(--font-heading);
-		font-size: 16px;
+		font-size: 11px;
 		color: var(--color-accent-red);
-		margin-left: 6px;
+		margin-left: 4px;
 	}
 
 	.pricing__note {
@@ -164,17 +272,136 @@ const plans = [
 		color: var(--color-text);
 	}
 
+	.pricing__nav {
+		margin-top: 4px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		gap: 32px;
+	}
+
+	.pricing__nav-btn {
+		width: 40px;
+		height: 40px;
+		padding: 0;
+		border: none;
+		border-radius: 50%;
+		background: transparent;
+		color: var(--color-primary);
+		cursor: pointer;
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		transition: background-color 0.2s ease;
+	}
+
+	.pricing__nav-btn:hover,
+	.pricing__nav-btn:focus-visible,
+	.pricing__nav-btn:active {
+		background: rgba(3, 129, 220, 0.1);
+	}
+
+	.pricing__nav-btn svg {
+		width: 20px;
+		height: 20px;
+		animation: pricing-nav-hint 1.8s ease-in-out infinite;
+	}
+
+	.pricing__nav-btn--prev svg {
+		animation-name: pricing-nav-hint-prev;
+	}
+
+	.pricing__nav-btn--next svg {
+		animation-name: pricing-nav-hint-next;
+	}
+
+	@keyframes pricing-nav-hint-prev {
+		0%,
+		100% {
+			transform: translateX(0);
+		}
+		50% {
+			transform: translateX(-4px);
+		}
+	}
+
+	@keyframes pricing-nav-hint-next {
+		0%,
+		100% {
+			transform: translateX(0);
+		}
+		50% {
+			transform: translateX(4px);
+		}
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.pricing__nav-btn svg {
+			animation: none;
+		}
+	}
+
+	/* PC: back to the original static grid (3 up top, 2 below) instead of
+	   the slider — only the middle (non-clone) copy of cards is shown */
 	@media (min-width: 768px) {
+		.pricing__slider {
+			max-width: none;
+		}
+
 		.pricing__list {
-			display: flex;
 			flex-wrap: wrap;
 			justify-content: center;
+			overflow-x: visible;
+			scroll-snap-type: none;
 			max-width: none;
 			gap: 32px;
+			padding: 0;
 		}
 
 		.pricing__item {
 			flex: 0 0 calc((100% - 64px) / 3);
+			width: auto;
+			scroll-snap-align: none;
+			padding: 24px 20px;
+		}
+
+		.pricing__item[data-copy="0"],
+		.pricing__item[data-copy="2"] {
+			display: none;
+		}
+
+		.pricing__name {
+			font-size: 24px;
+			margin-bottom: 12px;
+		}
+
+		.pricing__desc {
+			font-size: 15px;
+			line-height: 1.7;
+			min-height: calc(1.7em * 2);
+			margin-bottom: 16px;
+		}
+
+		.pricing__truck {
+			max-width: 240px;
+			margin-bottom: 16px;
+		}
+
+		.pricing__price {
+			font-size: 40px;
+		}
+
+		.pricing__price-unit {
+			font-size: 28px;
+		}
+
+		.pricing__price-tax {
+			font-size: 16px;
+			margin-left: 6px;
+		}
+
+		.pricing__nav {
+			display: none;
 		}
 
 		.pricing__note {
