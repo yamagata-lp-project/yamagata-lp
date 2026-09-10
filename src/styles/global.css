@@ -119,8 +119,8 @@ p {
 
 .section-heading__ja {
 	font-family: var(--font-heading);
-	font-weight: 700;
-	font-size: clamp(26px, 4vw, 40px);
+	font-weight: 900;
+	font-size: clamp(28px, 4.4vw, 44px);
 	color: var(--color-primary);
 	letter-spacing: 0.05em;
 	position: relative;
@@ -128,14 +128,33 @@ p {
 }
 
 .section-heading__kicker {
+	position: relative;
+	display: inline-block;
 	font-family: var(--font-heading);
 	font-weight: 700;
 	font-size: clamp(13px, 1.6vw, 15px);
-	color: var(--color-primary);
+	color: var(--color-text);
 	letter-spacing: 0.05em;
 	line-height: 1;
-	margin: 0 0 8px;
+	background: #fff;
+	border: 2px solid #ffc107;
+	border-radius: 999px;
+	padding: 7px 20px;
+	margin: 0 0 12px;
 	user-select: none;
+}
+
+.section-heading__kicker::after {
+	content: "";
+	position: absolute;
+	left: 50%;
+	bottom: -7px;
+	width: 10px;
+	height: 10px;
+	background: #fff;
+	border-right: 2px solid #ffc107;
+	border-bottom: 2px solid #ffc107;
+	transform: translateX(-50%) rotate(45deg);
 }
 
 .section-heading__kicker + .section-heading__ja {

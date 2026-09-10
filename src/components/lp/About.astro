@@ -1,0 +1,221 @@
+---
+import { Image } from "astro:assets";
+import yamagataJisseki from "../../assets/lp/yamagata-jisseki.webp";
+import komattaImg from "../../assets/lp/komatta.webp";
+
+const worries = [
+	"重い、運べない、車がない",
+	"引越しで不要な荷物に困っている",
+	"実家の片付けを進めたい",
+	"空き家整理に困っている",
+	"オフィスや倉庫を整理したい　など",
+];
+---
+
+<section id="about" class="about">
+	<div class="l-container">
+		<div class="section-heading">
+			<p class="section-heading__kicker">山形県の対応実績No.1に挑戦中!</p>
+			<p class="section-heading__ja">不用品に困ったら<br />山形不用品回収サービス!</p>
+		</div>
+
+		<p class="about__catch"><span class="about__catch-marker">安いだけじゃない、真心込めた丁寧・スピーディな対応!</span></p>
+
+		<div class="about__photo">
+			<Image src={yamagataJisseki} alt="山形不用品回収サービスの対応実績" width={1280} height={720} />
+		</div>
+
+		<p class="about__text">
+			山形不用品回収サービスは、荷物のお片付けでお困りのすべての方に手を差し伸べられる、<strong class="about__text-accent">幅広いサービス展開と山形県No.1の親切対応を目指しています</strong>。
+		</p>
+
+		<div class="about__worries">
+			<p class="about__worries-title">
+				<span class="about__worries-marker">こんなお悩みありませんか?</span>
+			</p>
+			<div class="about__worries-bubbles">
+				{
+					worries.map((worry) => (
+						<p class="about__worry-bubble">{worry}</p>
+					))
+				}
+			</div>
+			<div class="about__worries-figure">
+				<Image src={komattaImg} alt="" width={788} height={599} />
+			</div>
+		</div>
+
+		<p class="about__text">私たちは上記のお悩みにすべて寄り添います。</p>
+
+		<p class="about__text">
+			作業スタッフはもちろん、見積もりスタッフ・受付窓口スタッフなど<strong>全員が社内で研修・実務を積んだ熟練スタッフ</strong>。日々ご利用者様からフィードバックをいただき、それを社内全体・各個人へ共有することで、日々成長を積み重ねています。
+		</p>
+
+		<p class="about__text">
+			豊富な現場経験で培ったチームワークで、一人一人のお困りごとの解決をサポートいたします。
+		</p>
+	</div>
+</section>
+
+<style>
+	.about {
+		background: var(--color-bg-pale-2);
+		padding-block: 60px 90px;
+	}
+
+	.about__catch {
+		max-width: 700px;
+		margin: 0 auto 24px;
+		font-family: var(--font-heading);
+		font-weight: 700;
+		font-size: 16px;
+		line-height: 1.7;
+		text-align: center;
+		color: var(--color-primary-dark);
+	}
+
+	.about__catch-marker {
+		background: linear-gradient(180deg, transparent 60%, #ffe066 60%);
+	}
+
+	.about__photo {
+		max-width: 700px;
+		margin: 0 auto 24px;
+		border-radius: 8px;
+		overflow: hidden;
+	}
+
+	.about__photo :global(img) {
+		width: 100%;
+		height: auto;
+		display: block;
+	}
+
+	.about__text {
+		max-width: 700px;
+		margin: 0 auto 24px;
+		font-size: 14px;
+		line-height: 1.9;
+		color: var(--color-text);
+	}
+
+	.about__text-accent {
+		color: var(--color-accent-red);
+	}
+
+	.about__worries {
+		max-width: 700px;
+		margin: 0 auto 24px;
+		background: #fff;
+		border-radius: 16px;
+		padding: 28px 20px 24px;
+		box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.06);
+	}
+
+	.about__worries-title {
+		margin: 0 0 20px;
+		font-family: var(--font-heading);
+		font-weight: 900;
+		font-size: 17px;
+		text-align: center;
+		color: var(--color-text);
+	}
+
+	.about__worries-marker {
+		background: linear-gradient(180deg, transparent 60%, #ffe066 60%);
+	}
+
+	.about__worries-bubbles {
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: center;
+		gap: 16px 10px;
+		margin-bottom: 8px;
+	}
+
+	.about__worry-bubble {
+		position: relative;
+		flex: 0 1 calc(50% - 10px);
+		margin: 0;
+		background: #fff;
+		border: 2px solid var(--color-primary);
+		border-radius: 16px;
+		padding: 14px 12px 18px;
+		font-family: var(--font-heading);
+		font-weight: 700;
+		font-size: 12px;
+		line-height: 1.6;
+		text-align: center;
+		color: var(--color-text);
+		box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.1);
+	}
+
+	.about__worry-bubble::before {
+		content: "";
+		position: absolute;
+		bottom: -11px;
+		left: 50%;
+		transform: translateX(-50%);
+		border-width: 11px 9px 0 9px;
+		border-style: solid;
+		border-color: var(--color-primary) transparent transparent transparent;
+	}
+
+	.about__worry-bubble::after {
+		content: "";
+		position: absolute;
+		bottom: -8px;
+		left: 50%;
+		transform: translateX(-50%);
+		border-width: 8px 7px 0 7px;
+		border-style: solid;
+		border-color: #fff transparent transparent transparent;
+	}
+
+	.about__worries-figure {
+		max-width: 130px;
+		margin: 20px auto 0;
+	}
+
+	.about__worries-figure :global(img) {
+		width: 100%;
+		height: auto;
+		display: block;
+	}
+
+	@media (min-width: 768px) {
+		.about__catch {
+			font-size: 20px;
+		}
+
+		.about__photo {
+			max-width: 780px;
+		}
+
+		.about__text {
+			font-size: 16px;
+			max-width: 780px;
+		}
+
+		.about__worries {
+			max-width: 780px;
+			padding: 48px 56px 40px;
+		}
+
+		.about__worries-title {
+			font-size: 22px;
+			margin-bottom: 28px;
+		}
+
+		.about__worry-bubble {
+			flex: 0 1 calc(33.333% - 14px);
+			font-size: 14px;
+			padding: 18px 16px 22px;
+		}
+
+		.about__worries-figure {
+			max-width: 180px;
+			margin-top: 28px;
+		}
+	}
+</style>

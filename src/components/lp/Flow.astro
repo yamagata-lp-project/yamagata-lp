@@ -56,33 +56,126 @@ const steps = [
 
 	<div class="l-container flow__inner">
 		<div class="section-heading">
-			<p class="section-heading__kicker" style="color:#fff;">＼カンタン4STEP／</p>
+			<p class="section-heading__kicker">カンタン4STEP</p>
 			<p class="section-heading__ja" style="color:#fff;">ご利用の流れ</p>
 		</div>
 
-		<ol class="flow__steps">
-			{
-				steps.map((step) => (
-					<li class="flow__step">
-						<div class="flow__step-head">
-							<span class="flow__number">{step.n}</span>
-							<span class="flow__icon">
-								<Image src={step.icon} alt="" width={24} height={24} />
-							</span>
-						</div>
-						<p class="flow__title">{step.title}</p>
-						<div class="flow__body">
-							<div class="flow__photo">
-								<Image src={step.photo} alt={step.title} width={step.photoW} height={step.photoH} />
+		<div class="flow__slider" data-flow-slider>
+			<ol class="flow__steps" data-flow-track>
+				<li class="flow__spacer" aria-hidden="true" />
+				{
+					steps.map((step) => (
+						<li class="flow__step">
+							<div class="flow__step-head">
+								<span class="flow__number">{step.n}</span>
+								<span class="flow__icon">
+									<Image src={step.icon} alt="" width={24} height={24} />
+								</span>
 							</div>
-							<p class="flow__desc">{step.desc}</p>
-						</div>
-					</li>
-				))
-			}
-		</ol>
+							<p class="flow__title">{step.title}</p>
+							<div class="flow__body">
+								<div class="flow__photo">
+									<Image src={step.photo} alt={step.title} width={step.photoW} height={step.photoH} />
+								</div>
+								<p class="flow__desc">{step.desc}</p>
+							</div>
+						</li>
+					))
+				}
+				<li class="flow__spacer" aria-hidden="true" />
+			</ol>
+
+			<div class="flow__nav">
+				<button type="button" class="flow__nav-btn flow__nav-btn--prev" data-flow-prev aria-label="前のステップ">
+					<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+						<polyline points="15 5 8 12 15 19" />
+					</svg>
+				</button>
+				<button type="button" class="flow__nav-btn flow__nav-btn--next" data-flow-next aria-label="次のステップ">
+					<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+						<polyline points="9 5 16 12 9 19" />
+					</svg>
+				</button>
+			</div>
+		</div>
 	</div>
 </section>
+
+<script>
+	document.querySelectorAll<HTMLElement>("[data-flow-slider]").forEach((slider) => {
+		const track = slider.querySelector<HTMLElement>("[data-flow-track]");
+		if (!track) return;
+
+		const prevBtn = slider.querySelector<HTMLButtonElement>("[data-flow-prev]");
+		const nextBtn = slider.querySelector<HTMLButtonElement>("[data-flow-next]");
+		const cards = Array.from(track.querySelectorAll<HTMLElement>(".flow__step"));
+		if (!cards.length) return;
+
+		// find whichever card currently sits closest to the track's center
+		const getCenterIndex = () => {
+			const trackRect = track.getBoundingClientRect();
+			const centerX = trackRect.left + trackRect.width / 2;
+			let closest = 0;
+			let closestDist = Infinity;
+			cards.forEach((card, i) => {
+				const rect = card.getBoundingClientRect();
+				const dist = Math.abs(rect.left + rect.width / 2 - centerX);
+				if (dist < closestDist) {
+					closestDist = dist;
+					closest = i;
+				}
+			});
+			return closest;
+		};
+
+		const centerOn = (index: number, smooth: boolean) => {
+			const card = cards[index];
+			if (!card) return;
+			// measure via getBoundingClientRect rather than offsetLeft: offsetLeft
+			// is relative to the nearest positioned ancestor (here, the section),
+			// not the scroll track, so it can't be used directly against scrollLeft
+			const cardRect = card.getBoundingClientRect();
+			const trackRect = track.getBoundingClientRect();
+			const cardLeftInTrack = cardRect.left - trackRect.left + track.scrollLeft;
+			const target = cardLeftInTrack + card.offsetWidth / 2 - track.clientWidth / 2;
+			track.scrollTo({ left: target, behavior: smooth ? "smooth" : "instant" });
+		};
+
+		// no looping: disable prev/next once the centered card is the first/last
+		const updateNavState = () => {
+			if (!prevBtn || !nextBtn) return;
+			const index = getCenterIndex();
+			prevBtn.disabled = index <= 0;
+			nextBtn.disabled = index >= cards.length - 1;
+		};
+
+		const go = (dir: number) => {
+			const next = getCenterIndex() + dir;
+			centerOn(Math.min(cards.length - 1, Math.max(0, next)), true);
+		};
+
+		prevBtn?.addEventListener("click", () => go(-1));
+		nextBtn?.addEventListener("click", () => go(1));
+
+		let settleTimer: ReturnType<typeof setTimeout>;
+		track.addEventListener("scroll", () => {
+			clearTimeout(settleTimer);
+			settleTimer = setTimeout(updateNavState, 150);
+		});
+
+		// center the first card without animation, then re-center on resize
+		centerOn(0, false);
+		updateNavState();
+		let resizeTimer: ReturnType<typeof setTimeout>;
+		window.addEventListener("resize", () => {
+			clearTimeout(resizeTimer);
+			resizeTimer = setTimeout(() => {
+				centerOn(getCenterIndex(), false);
+				updateNavState();
+			}, 150);
+		});
+	});
+</script>
 
 <style>
 	.flow {
@@ -111,15 +204,38 @@ const steps = [
 		position: relative;
 	}
 
-	.flow__steps {
-		display: flex;
-		flex-direction: column;
-		gap: 16px;
+	.flow__slider {
 		max-width: 640px;
 		margin-inline: auto;
 	}
 
+	.flow__steps {
+		display: flex;
+		gap: 12px;
+		overflow-x: auto;
+		scroll-snap-type: x mandatory;
+		-webkit-overflow-scrolling: touch;
+		scrollbar-width: none;
+		margin: 0;
+		padding: 0;
+	}
+
+	.flow__steps::-webkit-scrollbar {
+		display: none;
+	}
+
+	/* real flex items (rather than container padding) reserve the space
+	   needed to center the first/last card — end-side padding on a
+	   scrolling flex container isn't reliably included in the scrollable
+	   area across browsers, which left card 04 unable to reach center */
+	.flow__spacer {
+		flex: 0 0 calc(12.5% - 12px);
+		scroll-snap-align: none;
+	}
+
 	.flow__step {
+		flex: 0 0 75%;
+		scroll-snap-align: center;
 		background: #ffffff;
 		border-radius: 8px;
 		padding: 24px 20px;
@@ -202,12 +318,66 @@ const steps = [
 		color: #444;
 	}
 
+	.flow__nav {
+		margin-top: 24px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		gap: 32px;
+	}
+
+	.flow__nav-btn {
+		width: 44px;
+		height: 44px;
+		padding: 0;
+		border: none;
+		border-radius: 50%;
+		background: #ffffff;
+		color: var(--color-primary);
+		cursor: pointer;
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		box-shadow: 0 0 8px rgba(0, 0, 0, 0.25);
+	}
+
+	.flow__nav-btn:disabled {
+		opacity: 0.35;
+		cursor: not-allowed;
+		box-shadow: none;
+	}
+
+	.flow__nav-btn svg {
+		width: 20px;
+		height: 20px;
+	}
+
+	/* PC: back to the original static grid instead of the slider */
 	@media (min-width: 900px) {
+		.flow__slider {
+			max-width: none;
+		}
+
 		.flow__steps {
 			display: grid;
 			grid-template-columns: repeat(4, 1fr);
 			max-width: none;
 			gap: 20px;
+			overflow-x: visible;
+			scroll-snap-type: none;
+		}
+
+		.flow__spacer {
+			display: none;
+		}
+
+		.flow__step {
+			flex: none;
+			scroll-snap-align: none;
+		}
+
+		.flow__nav {
+			display: none;
 		}
 	}
 </style>

@@ -18,6 +18,7 @@ const plans = [
 	{
 		img: truckNormal,
 		name: "軽トラ通常プラン",
+		badge: "＼一番人気!／",
 		desc: "軽トラの屋根の高さまで\n縦型洗濯機6台分ほど",
 		price: "15,000",
 		width: 280,
@@ -34,6 +35,7 @@ const plans = [
 	{
 		img: truck15t,
 		name: "1.5tトラックプラン",
+		badge: "＼コスパ最強!／",
 		desc: "軽トラでは載りきらない\n大きな家具・家電もまとめて",
 		price: "40,000",
 		width: 280,
@@ -59,9 +61,9 @@ const initialIndex = plans.length; // first card of the middle copy
 <section id="pricing" class="pricing">
 	<div class="l-container">
 		<div class="section-heading">
-			<p class="section-heading__kicker">＼明確・分かりやすい／</p>
+			<p class="section-heading__kicker">明確・分かりやすい</p>
 			<p class="section-heading__ja">5つの料金プラン</p>
-			<p class="section-heading__lead">物量を確認したうえで、お荷物が収まる最適なプランをご案内いたします</p>
+			<p class="section-heading__lead">物量を確認したうえで、お荷物が収まる最適なプランをご案内いたします。</p>
 		</div>
 
 		<div class="pricing__slider" data-pricing-slider data-plan-count={plans.length} data-initial-index={initialIndex}>
@@ -69,8 +71,12 @@ const initialIndex = plans.length; // first card of the middle copy
 				{
 					loopedPlans.map((plan, i) => (
 						<li class="pricing__item" data-copy={Math.floor(i / plans.length)}>
+							<p class="pricing__badge">{plan.badge}</p>
 							<p class="pricing__name">{plan.name}</p>
-							<p class="pricing__desc" style="white-space:pre-line;">{plan.desc}</p>
+							<div class="pricing__capacity">
+								<p class="pricing__capacity-label">積載量目安</p>
+								<p class="pricing__desc" style="white-space:pre-line;">{plan.desc}</p>
+							</div>
 							<Image src={plan.img} alt={plan.name} width={plan.width} height={plan.height} class="pricing__truck" />
 							<p class="pricing__price">
 								{plan.price}<span class="pricing__price-unit">円</span>
@@ -96,7 +102,7 @@ const initialIndex = plans.length; // first card of the middle copy
 		</div>
 
 		<p class="pricing__note">
-			ご提示した金額が最終金額です。現地確認後、追加料金を頂くことは一切ございません。
+			現地確認後、追加料金を頂くことは一切ございません。法律で定められたリサイクル製品・一部特殊品・オプション作業は別途費用となります。
 		</p>
 	</div>
 </section>
@@ -220,20 +226,63 @@ const initialIndex = plans.length; // first card of the middle copy
 		box-shadow: 0 12px 20px rgba(3, 129, 220, 0.2);
 	}
 
+	.pricing__badge {
+		min-height: 1.4em;
+		margin: 0 0 4px;
+		font-family: var(--font-heading);
+		font-weight: 700;
+		font-size: 11px;
+		line-height: 1.4;
+		color: var(--color-accent-red);
+	}
+
 	.pricing__name {
 		font-family: var(--font-heading);
 		font-weight: 900;
 		font-size: 15px;
 		color: var(--color-text);
-		margin-bottom: 8px;
+		margin-bottom: 14px;
+	}
+
+	.pricing__capacity {
+		position: relative;
+		width: 80%;
+		/* tall enough to fit 2 lines of .pricing__desc (11px * 1.6 * 2 + the
+		   box's own padding) so 1-line plans get the same box height as
+		   2-line plans, keeping the truck image and price aligned below */
+		min-height: 56px;
+		background: var(--color-bg-pale-2);
+		border: 1px solid var(--color-border-gray);
+		border-radius: 4px;
+		padding: 12px 8px 6px;
+		margin-bottom: 12px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
+
+	.pricing__capacity-label {
+		position: absolute;
+		top: -7px;
+		left: -6px;
+		margin: 0;
+		background: var(--color-primary);
+		border-radius: 999px;
+		padding: 3px 8px;
+		font-family: var(--font-heading);
+		font-weight: 700;
+		font-size: 9px;
+		line-height: 1;
+		letter-spacing: 0.02em;
+		color: #fff;
+		white-space: nowrap;
 	}
 
 	.pricing__desc {
 		font-size: 11px;
 		line-height: 1.6;
-		min-height: calc(1.6em * 2);
 		color: var(--color-text);
-		margin-bottom: 12px;
+		margin: 0;
 	}
 
 	/* the class sits directly on the <img> the Image component renders, so
@@ -376,16 +425,35 @@ const initialIndex = plans.length; // first card of the middle copy
 			display: none;
 		}
 
+		.pricing__badge {
+			font-size: 14px;
+		}
+
 		.pricing__name {
 			font-size: 24px;
-			margin-bottom: 12px;
+			margin-bottom: 18px;
+		}
+
+		.pricing__capacity {
+			/* tall enough to fit 2 lines of .pricing__desc (15px * 1.7 * 2 +
+			   the box's own padding) so all cards align below regardless of
+			   1-line vs 2-line description text */
+			min-height: 78px;
+			padding: 16px 10px 8px;
+			margin-bottom: 16px;
+		}
+
+		.pricing__capacity-label {
+			top: -9px;
+			left: -7px;
+			padding: 4px 12px;
+			font-size: 11px;
 		}
 
 		.pricing__desc {
 			font-size: 15px;
 			line-height: 1.7;
-			min-height: calc(1.7em * 2);
-			margin-bottom: 16px;
+			margin: 0;
 		}
 
 		.pricing__truck {

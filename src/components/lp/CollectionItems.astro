@@ -1,0 +1,511 @@
+---
+import tumihodaiPhoto from "../../assets/lp/tumihodai-sanko.webp";
+import { Image } from "astro:assets";
+import { Icon } from "astro-icon/components";
+
+const categories = [
+	{
+		id: "appliance",
+		label: "家電",
+		color: "#4A90D9",
+		items: [
+			{ name: "冷蔵庫・冷凍庫", icon: "lucide:refrigerator" },
+			{ name: "洗濯機・乾燥機", icon: "lucide:washing-machine" },
+			{ name: "テレビ", icon: "lucide:tv" },
+			{ name: "エアコン", icon: "lucide:wind" },
+			{ name: "電子レンジ", icon: "lucide:microwave" },
+			{ name: "掃除機", icon: "lucide:robot-vacuum" },
+			{ name: "パソコン・OA機器", icon: "lucide:monitor" },
+			{ name: "照明器具", icon: "lucide:lightbulb" },
+		],
+	},
+	{
+		id: "furniture",
+		label: "家具",
+		color: "#F5A623",
+		items: [
+			{ name: "ソファ", icon: "lucide:sofa" },
+			{ name: "ベッド・マットレス", icon: "lucide:bed-double" },
+			{ name: "タンス・食器棚", icon: "lucide:archive" },
+			{ name: "本棚", icon: "lucide:library" },
+			{ name: "テーブル・チェア", icon: "lucide:armchair" },
+			{ name: "鏡台・ドレッサー", icon: "lucide:mirror-rectangular" },
+			{ name: "カーペット・ラグ", icon: "lucide:layers" },
+			{ name: "学習机", icon: "lucide:lamp-desk" },
+		],
+	},
+	{
+		id: "other",
+		label: "その他",
+		color: "#4CAF50",
+		items: [
+			{ name: "自転車", icon: "lucide:bike" },
+			{ name: "布団・寝具", icon: "lucide:bed-single" },
+			{ name: "食器類", icon: "lucide:utensils" },
+			{ name: "衣類・靴", icon: "lucide:shirt" },
+			{ name: "本・雑誌", icon: "lucide:book" },
+			{ name: "おもちゃ・ぬいぐるみ", icon: "lucide:toy-brick" },
+			{ name: "スポーツ用品", icon: "lucide:volleyball" },
+			{ name: "雑貨・小物類", icon: "lucide:package" },
+		],
+	},
+];
+
+const allItemCategories = [
+	{
+		name: "家具",
+		items: [
+			"ソファ", "ベッド", "マットレス", "タンス", "食器棚", "本棚", "テーブル", "チェア",
+			"鏡台", "ドレッサー", "カーペット", "ラグ", "学習机", "座椅子", "収納棚", "下駄箱", "こたつ", "座卓",
+		],
+	},
+	{
+		name: "家電",
+		items: [
+			"冷蔵庫", "洗濯機", "乾燥機", "テレビ", "エアコン", "電子レンジ", "掃除機", "パソコン",
+			"モニター", "照明器具", "炊飯器", "電気ケトル", "ドライヤー", "加湿器", "空気清浄機", "扇風機",
+		],
+	},
+	{
+		name: "雑貨",
+		items: [
+			"食器類", "鍋・フライパン", "カトラリー", "カーテン", "タオル", "雑貨小物", "時計", "鏡",
+			"傘", "収納ケース", "ハンガー", "調理器具", "キッチン用品",
+		],
+	},
+	{
+		name: "趣味嗜好品",
+		items: [
+			"ゴルフクラブ", "釣り具", "楽器", "ギター", "ピアノ", "スポーツ用品", "キャンプ用品", "自転車",
+			"コレクション品", "フィギュア", "レコード", "CD・DVD",
+		],
+	},
+	{
+		name: "仕事道具・OA機器",
+		items: [
+			"プリンター", "シュレッダー", "事務椅子", "デスク", "書類棚", "パソコン周辺機器", "電話機", "FAX",
+			"金属製ロッカー", "業務用什器",
+		],
+	},
+	{
+		name: "本・書類・雑誌",
+		items: ["書籍", "雑誌", "漫画", "辞書", "参考書", "アルバム", "書類", "新聞", "カタログ"],
+	},
+	{
+		name: "園芸・エクステリア用品",
+		items: [
+			"植木鉢", "プランター", "物置", "ウッドデッキ材", "脚立", "園芸用品", "ホース", "剪定バサミ",
+			"自転車置き場", "フェンス材",
+		],
+	},
+	{
+		name: "子供用品・ベビー用品",
+		items: [
+			"ベビーカー", "チャイルドシート", "おもちゃ", "ぬいぐるみ", "学習机", "ランドセル", "子供服",
+			"ベビーベッド", "絵本",
+		],
+	},
+	{
+		name: "金庫・大型特殊品",
+		items: ["金庫", "ピアノ", "神棚", "仏壇", "大型水槽", "大型プリンター", "業務用エアコン室外機"],
+	},
+	{
+		name: "季節家電・季節用品",
+		items: ["こたつ", "扇風機", "ストーブ", "加湿器", "クリスマスツリー", "こいのぼり", "雛人形", "電気毛布"],
+	},
+];
+---
+
+<section id="items" class="items">
+	<div class="l-container">
+		<div class="section-heading">
+			<p class="section-heading__kicker">1点から大量まで</p>
+			<p class="section-heading__ja">回収対応品目</p>
+			<p class="section-heading__lead">
+				冷蔵庫・洗濯機・マットレス・ベッドフレーム・自転車など、ご家庭で出るお荷物を1点からまとめて回収します。料金は無料お見積もりにて明確にご案内します。
+			</p>
+		</div>
+
+		<div class="items__tabs" role="tablist">
+			{
+				categories.map((cat, i) => (
+					<button
+						type="button"
+						class="items__tab"
+						data-category={cat.id}
+						aria-selected={i === 0 ? "true" : "false"}
+						style={`--cat-color: ${cat.color}`}
+					>
+						{cat.label}
+					</button>
+				))
+			}
+		</div>
+
+		{
+			categories.map((cat, i) => (
+				<div
+					class="items__grid"
+					data-category-panel={cat.id}
+					hidden={i === 0 ? undefined : true}
+					style={`--cat-color: ${cat.color}`}
+				>
+					{cat.items.map((item) => (
+						<div class="items__card">
+							<Icon name={item.icon} class="items__icon" aria-hidden="true" />
+							<p class="items__name">{item.name}</p>
+						</div>
+					))}
+				</div>
+			))
+		}
+
+		<div class="items__highlight">
+			<p class="section-heading__kicker">実は割安</p>
+			<h3 class="items__highlight-title"><span class="items__highlight-marker">積み放題ならなんでもまとめて回収</span></h3>
+			<div class="items__highlight-photo">
+				<Image src={tumihodaiPhoto} alt="積み放題プランのイメージ" width={1108} height={623} />
+			</div>
+			<p class="items__highlight-text">
+				写真のように、家具・家電・その他雑貨品などまとめて回収させていただく<strong>「積み放題プラン」が一番人気</strong>です。積み放題プランなら、物を積めるほど1品あたりの費用単価が下がるため、<strong class="items__highlight-accent">非常におトク！</strong>
+			</p>
+		</div>
+
+		<details class="items__accordion">
+			<summary class="items__accordion-summary">
+				<span class="items__accordion-title">すべての回収品目一覧</span>
+				<span class="items__accordion-chevron" aria-hidden="true">▼</span>
+			</summary>
+			<div class="items__accordion-grid">
+				{
+					allItemCategories.map((cat) => (
+						<div class="items__accordion-card">
+							<p class="items__accordion-card-title">{cat.name}</p>
+							<div class="items__accordion-tags">
+								{cat.items.map((item) => (
+									<span class="items__accordion-tag">{item}</span>
+								))}
+							</div>
+						</div>
+					))
+				}
+			</div>
+			<p class="items__accordion-note">
+				ここに記載がない品物も承りますので、遠慮なくご相談ください。法律で定められたリサイクル製品・一部特殊品・オプション作業は別途費用となります。詳細金額は、お見積もりでしっかりと明示いたします。
+			</p>
+		</details>
+	</div>
+</section>
+
+<script>
+	const tabs = document.querySelectorAll<HTMLButtonElement>(".items__tab");
+	const panels = document.querySelectorAll<HTMLElement>("[data-category-panel]");
+
+	tabs.forEach((tab) => {
+		tab.addEventListener("click", () => {
+			const target = tab.dataset.category;
+
+			tabs.forEach((t) => t.setAttribute("aria-selected", t === tab ? "true" : "false"));
+			panels.forEach((panel) => {
+				panel.hidden = panel.dataset.categoryPanel !== target;
+			});
+		});
+	});
+</script>
+
+<style>
+	.items {
+		background: #fff;
+		padding-block: 60px 90px;
+	}
+
+	.items__tabs {
+		display: flex;
+		flex-wrap: nowrap;
+		justify-content: center;
+		gap: 6px;
+		max-width: 480px;
+		margin: 0 auto 32px;
+	}
+
+	.items__tab {
+		flex: 1 1 0;
+		min-width: 0;
+		font-family: var(--font-heading);
+		font-size: 14px;
+		font-weight: 700;
+		letter-spacing: 0.02em;
+		text-align: center;
+		color: var(--color-text);
+		background: var(--color-bg-gray);
+		border: 1px solid transparent;
+		border-radius: 999px;
+		padding: 10px 6px;
+		cursor: pointer;
+		transition:
+			background 0.2s,
+			color 0.2s,
+			border-color 0.2s;
+	}
+
+	.items__tab:hover {
+		border-color: var(--cat-color, var(--color-primary));
+	}
+
+	.items__tab[aria-selected="true"] {
+		background: var(--cat-color, var(--color-primary));
+		border-color: var(--cat-color, var(--color-primary));
+		color: #fff;
+	}
+
+	.items__grid {
+		display: grid;
+		grid-template-columns: repeat(2, 1fr);
+		gap: 12px;
+		max-width: 900px;
+		margin-inline: auto;
+	}
+
+	.items__grid[hidden] {
+		display: none;
+	}
+
+	.items__card {
+		background: var(--color-bg-gray);
+		border-radius: 8px;
+		padding: 20px 10px;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: 10px;
+		text-align: center;
+	}
+
+	.items__icon {
+		width: 50px;
+		height: 50px;
+		color: var(--cat-color, var(--color-primary));
+	}
+
+	.items__name {
+		font-family: var(--font-heading);
+		font-weight: 700;
+		font-size: 13px;
+		line-height: 1.5;
+		color: var(--color-text);
+	}
+
+	.items__highlight {
+		margin-top: 20px;
+		max-width: 900px;
+		margin-inline: auto;
+		background: #f5f5f5;
+		border: 3px solid var(--color-primary);
+		border-radius: 8px;
+		padding: 24px 20px;
+		box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.08);
+		text-align: center;
+	}
+
+	.items__highlight-title {
+		margin: 0 0 16px;
+		font-family: var(--font-heading);
+		font-weight: 700;
+		font-size: 17px;
+		letter-spacing: 0.02em;
+		text-align: center;
+		color: var(--color-primary-dark);
+	}
+
+	.items__highlight-marker {
+		background: linear-gradient(180deg, transparent 60%, #ffe066 60%);
+	}
+
+	.items__highlight-photo {
+		width: 100%;
+		aspect-ratio: 16 / 9;
+		border-radius: 6px;
+		overflow: hidden;
+		margin-bottom: 16px;
+	}
+
+	.items__highlight-photo :global(img) {
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+		display: block;
+	}
+
+	.items__highlight-text {
+		margin: 0;
+		font-size: 14px;
+		line-height: 1.8;
+		color: var(--color-text);
+		text-align: left;
+	}
+
+	.items__highlight-accent {
+		color: var(--color-accent-red);
+	}
+
+	.items__accordion {
+		margin-top: 20px;
+		max-width: 900px;
+		margin-inline: auto;
+	}
+
+	.items__accordion-summary {
+		display: flex;
+		align-items: center;
+		gap: 12px;
+		background: #fff;
+		border: 1px solid var(--color-border-gray);
+		border-radius: 8px;
+		padding: 16px 20px;
+		cursor: pointer;
+		list-style: none;
+	}
+
+	.items__accordion-summary::-webkit-details-marker {
+		display: none;
+	}
+
+	.items__accordion-title {
+		font-family: var(--font-heading);
+		font-weight: 700;
+		font-size: 15px;
+		color: var(--color-text);
+	}
+
+	.items__accordion-chevron {
+		margin-left: auto;
+		font-size: 11px;
+		color: var(--color-primary);
+		transition: transform 0.2s ease;
+	}
+
+	.items__accordion[open] .items__accordion-chevron {
+		transform: rotate(180deg);
+	}
+
+	.items__accordion-grid {
+		margin-top: 16px;
+		display: grid;
+		grid-template-columns: repeat(2, 1fr);
+		gap: 12px;
+	}
+
+	.items__accordion-card {
+		background: var(--color-bg-gray);
+		border-radius: 8px;
+		padding: 16px 14px;
+	}
+
+	.items__accordion-card-title {
+		margin: 0 0 10px;
+		font-family: var(--font-heading);
+		font-weight: 700;
+		font-size: 13px;
+		color: var(--color-primary-dark);
+	}
+
+	.items__accordion-tags {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 6px;
+	}
+
+	.items__accordion-tag {
+		background: #fff;
+		border: 1px solid var(--color-border-gray);
+		border-radius: 999px;
+		padding: 3px 9px;
+		font-size: 11px;
+		line-height: 1.6;
+		color: var(--color-text);
+		white-space: nowrap;
+	}
+
+	.items__accordion-note {
+		margin: 16px 0 0;
+		font-size: 12px;
+		line-height: 1.7;
+		color: var(--color-text-sub);
+		text-align: center;
+	}
+
+	@media (min-width: 600px) {
+		.items__grid {
+			grid-template-columns: repeat(4, 1fr);
+		}
+	}
+
+	@media (min-width: 768px) {
+		.items__tab {
+			font-size: 16px;
+			padding: 12px 24px;
+		}
+
+		.items__icon {
+			width: 65px;
+			height: 65px;
+		}
+
+		.items__name {
+			font-size: 14px;
+		}
+
+		.items__card {
+			padding: 28px 16px;
+		}
+
+		.items__highlight {
+			margin-top: 32px;
+			padding: 32px 40px;
+		}
+
+		.items__highlight-title {
+			font-size: 22px;
+			margin-bottom: 20px;
+		}
+
+		.items__highlight-text {
+			font-size: 16px;
+		}
+
+		.items__accordion {
+			margin-top: 32px;
+		}
+
+		.items__accordion-summary {
+			padding: 20px 24px;
+		}
+
+		.items__accordion-title {
+			font-size: 18px;
+		}
+
+		.items__accordion-grid {
+			grid-template-columns: repeat(3, 1fr);
+			gap: 16px;
+		}
+
+		.items__accordion-card {
+			padding: 20px 18px;
+		}
+
+		.items__accordion-card-title {
+			font-size: 15px;
+		}
+
+		.items__accordion-tag {
+			font-size: 13px;
+			padding: 4px 12px;
+		}
+
+		.items__accordion-note {
+			margin-top: 20px;
+			font-size: 14px;
+		}
+	}
+</style>

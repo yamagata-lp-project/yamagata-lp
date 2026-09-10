@@ -1,6 +1,6 @@
 ---
 import { navLinks } from "../../data/navLinks";
-import yamagataLogo from "../../assets/lp/yamagata-logo.png";
+import yamagataLogo from "../../assets/lp/yamagatahuyohin-lp.webp";
 import { Image } from "astro:assets";
 
 const TEL = "0120-442-999";
@@ -10,7 +10,7 @@ const TEL = "0120-442-999";
 	<div class="header__inner">
 		<div class="header__brand">
 			<a href="/" class="header__logo">
-				<Image src={yamagataLogo} alt="山形不用品回収サービス" width={620} height={134} />
+				<Image src={yamagataLogo} alt="山形不用品回収サービス" width={1758} height={395} />
 			</a>
 		</div>
 		<nav class="header__nav" aria-label="お問い合わせ">
@@ -139,6 +139,9 @@ const TEL = "0120-442-999";
 	.header__logo {
 		display: block;
 		line-height: 0;
+		background: #fff;
+		padding: 6px 10px;
+		border-radius: 6px;
 	}
 
 	.header__logo :global(img) {
