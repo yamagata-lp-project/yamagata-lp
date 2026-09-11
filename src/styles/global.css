@@ -67,7 +67,7 @@ body {
 
 @media (max-width: 767px) {
 	body {
-		padding-bottom: 56px;
+		padding-bottom: 69px;
 	}
 }
 
@@ -159,6 +159,10 @@ p {
 
 .section-heading__kicker + .section-heading__ja {
 	margin-top: 0;
+}
+
+.section-heading__ja-accent {
+	color: var(--color-accent-red);
 }
 
 .section-heading__lead {
