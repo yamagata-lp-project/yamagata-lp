@@ -90,7 +90,7 @@ const cases = [
 									</div>
 									<div class="case__row">
 										<dt>作業費用</dt>
-										<dd>{c.cost}</dd>
+										<dd class="case__cost">{c.cost}</dd>
 									</div>
 								</dl>
 								<div class="case__comment">
@@ -245,6 +245,12 @@ const cases = [
 		min-width: 60px;
 		min-height: 1.6em;
 		border-bottom: 1px dashed #d9d9d9;
+	}
+
+	.case__row dd.case__cost {
+		font-weight: 700;
+		font-size: 17px;
+		color: var(--color-accent-red);
 	}
 
 	.case__comment {
