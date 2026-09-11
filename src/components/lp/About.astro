@@ -1,18 +1,13 @@
 ---
 import { Image } from "astro:assets";
-import yamagataJisseki from "../../assets/lp/yamagata-jisseki.webp";
-import komattaImg from "../../assets/lp/komatta.webp";
-
-const worries = [
-	"重い、運べない、車がない",
-	"引越しで不要な荷物に困っている",
-	"実家の片付けを進めたい",
-	"空き家整理に困っている",
-	"オフィスや倉庫を整理したい　など",
-];
+import yamagataKaishaGazou from "../../assets/lp/yamagata-kaisha-gazou.webp";
+import komattahitoImg from "../../assets/lp/komattahito.png";
+import yamagataKeshiki from "../../assets/lp/yamagata-keshiki.webp";
 ---
 
 <section id="about" class="about">
+	<Image src={yamagataKeshiki} alt="" class="about__bg" widths={[640, 1024, 1600, 2000]} sizes="100vw" />
+	<div class="about__overlay"></div>
 	<div class="l-container">
 		<div class="section-heading">
 			<p class="section-heading__kicker">山形県の対応実績No.1に挑戦中!</p>
@@ -22,45 +17,77 @@ const worries = [
 		<p class="about__catch"><span class="about__catch-marker">安いだけじゃない、真心込めた丁寧・スピーディな対応!</span></p>
 
 		<div class="about__photo">
-			<Image src={yamagataJisseki} alt="山形不用品回収サービスの対応実績" width={1280} height={720} />
+			<Image src={yamagataKaishaGazou} alt="山形不用品回収サービスの対応実績" width={1280} height={720} />
 		</div>
 
-		<p class="about__text">
-			山形不用品回収サービスは、荷物のお片付けでお困りのすべての方に手を差し伸べられる、<strong class="about__text-accent">幅広いサービス展開と山形県No.1の親切対応を目指しています</strong>。
-		</p>
+		<div class="about__panel">
+			<p class="about__text"><strong>「誰に頼めばいいか分からない」「対応してもらえるか不安」</strong></p>
 
-		<div class="about__worries">
-			<p class="about__worries-title">
-				<span class="about__worries-marker">こんなお悩みありませんか?</span>
+			<p class="about__text">
+				そんな山形県内のお困りごとに、私たちがすぐに駆けつけます。引越し・実家の片付け・空き家整理・オフィス撤去まで、山形県内No.1の親切対応を目指し、一件一件丁寧に向き合っています。
 			</p>
-			<div class="about__worries-bubbles">
-				{
-					worries.map((worry) => (
-						<p class="about__worry-bubble">{worry}</p>
-					))
-				}
+
+			<div class="about__worries">
+				<p class="about__worries-title">
+					<span class="about__worries-marker">こんなお悩みありませんか?</span>
+				</p>
+				<div class="about__worries-layout">
+					<p class="about__worry-bubble about__worry-bubble--1">
+						<strong class="about__worry-accent">大きい家具・家電</strong>が自分では運び出せない
+					</p>
+					<p class="about__worry-bubble about__worry-bubble--2">
+						<strong class="about__worry-accent">引っ越しまで</strong>に不用品を処分しきれない
+					</p>
+					<div class="about__worries-figure">
+						<Image src={komattahitoImg} alt="" width={612} height={408} />
+					</div>
+					<p class="about__worry-bubble about__worry-bubble--3">
+						<strong class="about__worry-accent">実家の片付け</strong>をどこから始めればいいか分からない
+					</p>
+					<p class="about__worry-bubble about__worry-bubble--4">
+						<strong class="about__worry-accent">空き家</strong>をどうにかしたいが手が回らない
+					</p>
+				</div>
 			</div>
-			<div class="about__worries-figure">
-				<Image src={komattaImg} alt="" width={788} height={599} />
-			</div>
+
+			<p class="about__text">
+				こうしたお悩みも、しっかりとヒアリングしたうえで、あなたに合った方法をご提案します。受付窓口から見積もり、作業まで、すべて<span class="about__text-marker">社内研修と経験を積んだ熟練スタッフが対応</span>。お客様の声は月1回全社で共有し、対応品質を磨き続けています。
+			</p>
+
+			<p class="about__text">
+				数多くの現場で培ったチームワークで、<span class="about__text-marker">お困りごとを迅速・丁寧に解決いたします</span>。
+			</p>
 		</div>
-
-		<p class="about__text">私たちは上記のお悩みにすべて寄り添います。</p>
-
-		<p class="about__text">
-			作業スタッフはもちろん、見積もりスタッフ・受付窓口スタッフなど<strong>全員が社内で研修・実務を積んだ熟練スタッフ</strong>。日々ご利用者様からフィードバックをいただき、それを社内全体・各個人へ共有することで、日々成長を積み重ねています。
-		</p>
-
-		<p class="about__text">
-			豊富な現場経験で培ったチームワークで、一人一人のお困りごとの解決をサポートいたします。
-		</p>
 	</div>
 </section>
 
 <style>
 	.about {
+		position: relative;
+		z-index: 0;
 		background: var(--color-bg-pale-2);
 		padding-block: 60px 90px;
+		overflow: hidden;
+	}
+
+	.about__bg {
+		position: absolute;
+		inset: 0;
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+		z-index: -2;
+	}
+
+	.about__overlay {
+		position: absolute;
+		inset: 0;
+		background: linear-gradient(180deg, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.42) 50%, rgba(255, 255, 255, 0.5));
+		z-index: -1;
+	}
+
+	.about .section-heading__ja {
+		text-shadow: 0 1px 3px rgba(255, 255, 255, 0.9), 0 2px 16px rgba(255, 255, 255, 0.8), 0 0 4px rgba(255, 255, 255, 0.9);
 	}
 
 	.about__catch {
@@ -91,6 +118,18 @@ const worries = [
 		display: block;
 	}
 
+	.about__panel {
+		max-width: 820px;
+		margin: 0 auto;
+		background: rgba(255, 255, 255, 0.85);
+		border-radius: 16px;
+		padding: 24px 20px;
+	}
+
+	.about__panel > :last-child {
+		margin-bottom: 0;
+	}
+
 	.about__text {
 		max-width: 700px;
 		margin: 0 auto 24px;
@@ -99,17 +138,13 @@ const worries = [
 		color: var(--color-text);
 	}
 
-	.about__text-accent {
-		color: var(--color-accent-red);
+	.about__text-marker {
+		background: linear-gradient(180deg, transparent 60%, #ffe066 60%);
 	}
 
 	.about__worries {
-		max-width: 700px;
+		max-width: 900px;
 		margin: 0 auto 24px;
-		background: #fff;
-		border-radius: 16px;
-		padding: 28px 20px 24px;
-		box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.06);
 	}
 
 	.about__worries-title {
@@ -125,62 +160,69 @@ const worries = [
 		background: linear-gradient(180deg, transparent 60%, #ffe066 60%);
 	}
 
-	.about__worries-bubbles {
-		display: flex;
-		flex-wrap: wrap;
-		justify-content: center;
-		gap: 16px 10px;
-		margin-bottom: 8px;
-	}
-
-	.about__worry-bubble {
+	/* mobile: bubbles overlap the corners of the photo instead of stacking
+	   above/below it, so the layout is a relative box the bubbles are
+	   absolutely positioned within, sized around the centered figure */
+	.about__worries-layout {
 		position: relative;
-		flex: 0 1 calc(50% - 10px);
-		margin: 0;
-		background: #fff;
-		border: 2px solid var(--color-primary);
-		border-radius: 16px;
-		padding: 14px 12px 18px;
-		font-family: var(--font-heading);
-		font-weight: 700;
-		font-size: 12px;
-		line-height: 1.6;
-		text-align: center;
-		color: var(--color-text);
-		box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.1);
-	}
-
-	.about__worry-bubble::before {
-		content: "";
-		position: absolute;
-		bottom: -11px;
-		left: 50%;
-		transform: translateX(-50%);
-		border-width: 11px 9px 0 9px;
-		border-style: solid;
-		border-color: var(--color-primary) transparent transparent transparent;
-	}
-
-	.about__worry-bubble::after {
-		content: "";
-		position: absolute;
-		bottom: -8px;
-		left: 50%;
-		transform: translateX(-50%);
-		border-width: 8px 7px 0 7px;
-		border-style: solid;
-		border-color: #fff transparent transparent transparent;
+		max-width: 300px;
+		margin: 0 auto;
+		padding-block: 46px 54px;
 	}
 
 	.about__worries-figure {
-		max-width: 130px;
-		margin: 20px auto 0;
+		width: 60%;
+		margin-inline: auto;
+		position: relative;
+		z-index: 1;
 	}
 
 	.about__worries-figure :global(img) {
 		width: 100%;
 		height: auto;
 		display: block;
+	}
+
+	.about__worry-bubble {
+		position: absolute;
+		z-index: 2;
+		width: 44%;
+		margin: 0;
+		background: #fff;
+		border: 2px solid var(--color-primary);
+		border-radius: 12px;
+		padding: 8px 10px;
+		font-family: var(--font-heading);
+		font-weight: 700;
+		font-size: 10.5px;
+		line-height: 1.4;
+		text-align: center;
+		color: var(--color-text);
+		box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.15);
+	}
+
+	.about__worry-accent {
+		color: var(--color-accent-red);
+	}
+
+	.about__worry-bubble--1 {
+		top: 14px;
+		left: 0;
+	}
+
+	.about__worry-bubble--2 {
+		bottom: 20px;
+		left: 0;
+	}
+
+	.about__worry-bubble--3 {
+		top: 2px;
+		right: 0;
+	}
+
+	.about__worry-bubble--4 {
+		bottom: 30px;
+		right: 0;
 	}
 
 	@media (min-width: 768px) {
@@ -192,14 +234,18 @@ const worries = [
 			max-width: 780px;
 		}
 
+		.about__panel {
+			max-width: 960px;
+			padding: 48px 56px;
+		}
+
 		.about__text {
 			font-size: 16px;
 			max-width: 780px;
 		}
 
 		.about__worries {
-			max-width: 780px;
-			padding: 48px 56px 40px;
+			max-width: 900px;
 		}
 
 		.about__worries-title {
@@ -207,15 +253,56 @@ const worries = [
 			margin-bottom: 28px;
 		}
 
-		.about__worry-bubble {
-			flex: 0 1 calc(33.333% - 14px);
-			font-size: 14px;
-			padding: 18px 16px 22px;
+		.about__worries-layout {
+			display: grid;
+			grid-template-columns: 1fr minmax(240px, 320px) 1fr;
+			grid-template-areas:
+				"b1 img b3"
+				"b2 img b4";
+			align-items: center;
+			gap: 24px 32px;
+			max-width: none;
+			margin: 0;
+			padding-block: 0;
 		}
 
 		.about__worries-figure {
-			max-width: 180px;
-			margin-top: 28px;
+			grid-area: img;
+			width: auto;
+			max-width: 320px;
+		}
+
+		.about__worry-bubble {
+			position: static;
+			z-index: auto;
+			width: auto;
+			font-size: 15px;
+			padding: 18px 20px;
+			border-radius: 16px;
+		}
+
+		.about__worry-bubble--1 {
+			grid-area: b1;
+			top: auto;
+			left: auto;
+		}
+
+		.about__worry-bubble--2 {
+			grid-area: b2;
+			bottom: auto;
+			left: auto;
+		}
+
+		.about__worry-bubble--3 {
+			grid-area: b3;
+			top: auto;
+			right: auto;
+		}
+
+		.about__worry-bubble--4 {
+			grid-area: b4;
+			bottom: auto;
+			right: auto;
 		}
 	}
 </style>
