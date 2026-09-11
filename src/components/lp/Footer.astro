@@ -1,4 +1,7 @@
 ---
+import yamagataLogo from "../../assets/lp/yamagatahuyohin-lp.webp";
+import { Image } from "astro:assets";
+
 const TEL = "0120-442-999";
 const ADDRESS = "山形県山形市幸町2-9";
 const MAP_SRC = `https://www.google.com/maps?q=${encodeURIComponent(ADDRESS)}&output=embed`;
@@ -65,7 +68,9 @@ const footerColumns = [
 		<div class="footer__divider" role="separator" />
 
 		<div class="footer__bottom">
-			<p class="footer__logo">山形不用品回収サービス</p>
+			<a href="/" class="footer__logo">
+				<Image src={yamagataLogo} alt="山形不用品回収サービス" width={1758} height={395} />
+			</a>
 			<div class="footer__info">
 				<p>〒990-0038</p>
 				<p>{ADDRESS}</p>
@@ -145,20 +150,20 @@ const footerColumns = [
 	}
 
 	.footer__logo {
-		font-family: var(--font-logo);
-		font-size: 20px;
-		color: #000;
-		margin: 0;
+		display: block;
+		line-height: 0;
+	}
+
+	.footer__logo :global(img) {
+		display: block;
+		width: auto;
+		height: 40px;
 	}
 
 	.footer__info {
 		font-size: 14px;
 		line-height: 1.9;
 		color: var(--color-text);
-	}
-
-	.footer__info a {
-		font-weight: 700;
 	}
 
 	.footer__copyright {
