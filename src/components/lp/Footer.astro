@@ -1,39 +1,78 @@
 ---
-import { navLinks, legalLinks } from "../../data/navLinks";
-
 const TEL = "0120-442-999";
+const ADDRESS = "山形県山形市幸町2-9";
+const MAP_SRC = `https://www.google.com/maps?q=${encodeURIComponent(ADDRESS)}&output=embed`;
+
+const footerColumns = [
+	{
+		title: "不用品回収が初めての方へ",
+		links: [
+			{ label: "作業実績・料金例", href: "/#pricing" },
+			{ label: "お客様の声", href: "/#reviews" },
+			{ label: "不用品回収の対応エリア", href: "/#area" },
+			{ label: "よくある質問", href: "/#faq" },
+		],
+	},
+	{
+		title: "サービス案内",
+		links: [
+			{ label: "不用品回収", href: "/#items" },
+			{ label: "丸ごとお片付け", href: "/#services" },
+			{ label: "遺品整理", href: "/#services" },
+			{ label: "ゴミ屋敷片付け", href: "/#services" },
+			{ label: "特殊清掃", href: "/#services" },
+		],
+	},
+	{
+		title: "運営会社",
+		links: [
+			{ label: "会社概要", href: "/company/" },
+			{ label: "プライバシーポリシー", href: "/privacy/" },
+			{ label: "利用規約", href: "/terms/" },
+		],
+	},
+];
 ---
 
 <footer class="footer">
-	<div class="l-container footer__inner">
-		<p class="footer__logo">山形不用品回収サービス</p>
-		<nav class="footer__nav" aria-label="サイト内リンク">
-			<ul class="footer__nav-list">
-				{
-					navLinks.map((link) => (
-						<li>
-							<a href={link.href}>{link.label}</a>
-						</li>
-					))
-				}
-			</ul>
-		</nav>
-		<div class="footer__info">
-			<p>〒990-0038</p>
-			<p>山形県山形市幸町2-9</p>
-			<p><a href={`tel:${TEL.replace(/-/g, "")}`}>{TEL}</a></p>
+	<div class="l-container">
+		<div class="footer__top">
+			{
+				footerColumns.map((col) => (
+					<nav class="footer__col" aria-label={col.title}>
+						<p class="footer__col-title">{col.title}</p>
+						<ul class="footer__col-list">
+							{col.links.map((link) => (
+								<li>
+									<a href={link.href}>{link.label}</a>
+								</li>
+							))}
+						</ul>
+					</nav>
+				))
+			}
+
+			<div class="footer__map">
+				<iframe
+					src={MAP_SRC}
+					loading="lazy"
+					referrerpolicy="no-referrer-when-downgrade"
+					title="山形不用品回収サービスの所在地"
+				/>
+			</div>
 		</div>
-		<nav class="footer__legal-nav" aria-label="運営情報">
-			<ul class="footer__legal-list">
-				{
-					legalLinks.map((link) => (
-						<li>
-							<a href={link.href}>{link.label}</a>
-						</li>
-					))
-				}
-			</ul>
-		</nav>
+
+		<div class="footer__divider" role="separator" />
+
+		<div class="footer__bottom">
+			<p class="footer__logo">山形不用品回収サービス</p>
+			<div class="footer__info">
+				<p>〒990-0038</p>
+				<p>{ADDRESS}</p>
+				<p><a href={`tel:${TEL.replace(/-/g, "")}`}>{TEL}</a></p>
+			</div>
+		</div>
+
 		<p class="footer__copyright">&copy; 山形不用品回収サービス</p>
 	</div>
 </footer>
@@ -44,40 +83,72 @@ const TEL = "0120-442-999";
 		padding-block: 48px 24px;
 	}
 
-	.footer__inner {
+	.footer__top {
+		display: flex;
+		flex-direction: column;
+		gap: 32px;
+	}
+
+	.footer__col-title {
+		font-family: var(--font-heading);
+		font-weight: 700;
+		font-size: 15px;
+		color: var(--color-text);
+		margin: 0 0 12px;
+	}
+
+	.footer__col-list {
+		display: flex;
+		flex-direction: column;
+		gap: 4px;
+	}
+
+	.footer__col-list a {
+		display: inline-flex;
+		align-items: center;
+		min-height: 32px;
+		font-family: var(--font-heading);
+		font-size: 13px;
+		color: var(--color-text-sub);
+	}
+
+	.footer__col-list a:hover {
+		color: var(--color-primary);
+	}
+
+	.footer__map {
+		width: 100%;
+		aspect-ratio: 4 / 3;
+		border-radius: 8px;
+		overflow: hidden;
+		border: 1px solid var(--color-border-gray);
+	}
+
+	.footer__map iframe {
+		width: 100%;
+		height: 100%;
+		border: 0;
+		display: block;
+	}
+
+	.footer__divider {
+		border-top: 1px solid var(--color-border-gray);
+		margin-block: 32px 20px;
+	}
+
+	.footer__bottom {
 		display: flex;
 		flex-direction: column;
 		align-items: center;
-		gap: 20px;
+		gap: 12px;
 		text-align: center;
 	}
 
 	.footer__logo {
 		font-family: var(--font-logo);
-		font-size: 22px;
+		font-size: 20px;
 		color: #000;
-	}
-
-	.footer__nav-list {
-		display: flex;
-		flex-wrap: wrap;
-		justify-content: center;
-		gap: 0 12px;
-	}
-
-	.footer__nav-list a {
-		display: inline-flex;
-		align-items: center;
-		min-height: 44px;
-		padding: 4px 8px;
-		font-family: var(--font-heading);
-		font-size: 14px;
-		font-weight: 700;
-		color: var(--color-text);
-	}
-
-	.footer__nav-list a:hover {
-		color: var(--color-primary);
+		margin: 0;
 	}
 
 	.footer__info {
@@ -90,29 +161,30 @@ const TEL = "0120-442-999";
 		font-weight: 700;
 	}
 
-	.footer__legal-list {
-		display: flex;
-		flex-wrap: wrap;
-		justify-content: center;
-		gap: 4px 16px;
-	}
-
-	.footer__legal-list a {
-		display: inline-flex;
-		align-items: center;
-		min-height: 32px;
-		font-size: 12px;
-		color: var(--color-text-sub);
-		text-decoration: underline;
-	}
-
-	.footer__legal-list a:hover {
-		color: var(--color-primary);
-	}
-
 	.footer__copyright {
 		font-size: 12px;
 		color: var(--color-text-sub);
-		margin-top: 12px;
+		text-align: center;
+		margin-top: 20px;
+	}
+
+	@media (min-width: 768px) {
+		.footer__top {
+			flex-direction: row;
+			align-items: start;
+			gap: 40px;
+		}
+
+		.footer__col {
+			flex: 1 1 0;
+			min-width: 0;
+		}
+
+		.footer__map {
+			flex: 1 1 0;
+			max-width: 320px;
+			aspect-ratio: auto;
+			height: 190px;
+		}
 	}
 </style>
