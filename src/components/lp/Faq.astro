@@ -191,20 +191,35 @@ const categories = [
 			<p class="section-heading__lead">よくお客様からいただくご質問をまとめました。他に気になる点があれば、遠慮なくお問い合わせください。</p>
 		</div>
 
-		<div class="faq__tabs" role="tablist">
-			{
-				categories.map((cat, i) => (
-					<button
-						type="button"
-						class="faq__tab"
-						data-category={cat.id}
-						aria-selected={i === 0 ? "true" : "false"}
-						style={`--cat-color: ${cat.color}`}
-					>
-						{cat.label}
-					</button>
-				))
-			}
+		<div class="faq__tabs-slider" data-faq-tabs-slider>
+			<div class="faq__tabs" role="tablist" data-faq-tabs-track>
+				{
+					categories.map((cat, i) => (
+						<button
+							type="button"
+							class="faq__tab"
+							data-category={cat.id}
+							aria-selected={i === 0 ? "true" : "false"}
+							style={`--cat-color: ${cat.color}`}
+						>
+							{cat.label}
+						</button>
+					))
+				}
+			</div>
+
+			<div class="faq__tabs-nav">
+				<button type="button" class="faq__tabs-nav-btn faq__tabs-nav-btn--prev" data-faq-tabs-prev aria-label="前のカテゴリ">
+					<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+						<polyline points="15 5 8 12 15 19" />
+					</svg>
+				</button>
+				<button type="button" class="faq__tabs-nav-btn faq__tabs-nav-btn--next" data-faq-tabs-next aria-label="次のカテゴリ">
+					<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+						<polyline points="9 5 16 12 9 19" />
+					</svg>
+				</button>
+			</div>
 		</div>
 
 		{
@@ -244,6 +259,30 @@ const categories = [
 			});
 		});
 	});
+
+	document.querySelectorAll<HTMLElement>("[data-faq-tabs-slider]").forEach((slider) => {
+		const track = slider.querySelector<HTMLElement>("[data-faq-tabs-track]");
+		if (!track) return;
+
+		const chips = Array.from(track.querySelectorAll<HTMLElement>(".faq__tab"));
+		if (!chips.length) return;
+
+		// scroll so the next/prev chip's left edge aligns with the track's
+		// left edge, i.e. advance by exactly one chip per click
+		const scrollByChip = (dir: number) => {
+			const trackRect = track.getBoundingClientRect();
+			let index = chips.findIndex((chip) => chip.getBoundingClientRect().left >= trackRect.left - 1);
+			if (index === -1) index = dir > 0 ? chips.length - 1 : 0;
+			const targetIndex = Math.min(chips.length - 1, Math.max(0, index + dir));
+			const chip = chips[targetIndex];
+			const chipRect = chip.getBoundingClientRect();
+			const target = chipRect.left - trackRect.left + track.scrollLeft;
+			track.scrollTo({ left: target, behavior: "smooth" });
+		};
+
+		slider.querySelector("[data-faq-tabs-prev]")?.addEventListener("click", () => scrollByChip(-1));
+		slider.querySelector("[data-faq-tabs-next]")?.addEventListener("click", () => scrollByChip(1));
+	});
 </script>
 
 <style>
@@ -252,18 +291,31 @@ const categories = [
 		padding-block: 60px 90px;
 	}
 
+	.faq__tabs-slider {
+		max-width: 900px;
+		margin: 0 auto;
+	}
+
 	.faq__tabs {
 		display: flex;
-		flex-wrap: wrap;
-		justify-content: center;
-		gap: 8px;
-		max-width: 900px;
-		margin: 0 auto 32px;
+		flex-wrap: nowrap;
+		overflow-x: auto;
+		scroll-snap-type: x proximity;
+		-webkit-overflow-scrolling: touch;
+		scrollbar-width: none;
+		gap: 10px;
+		margin: 0;
+		padding: 4px 4px 8px;
+	}
+
+	.faq__tabs::-webkit-scrollbar {
+		display: none;
 	}
 
 	.faq__tab {
-		flex: 0 1 calc(50% - 4px);
-		min-width: 0;
+		flex: 0 0 auto;
+		scroll-snap-align: start;
+		min-width: 116px;
 		font-family: var(--font-heading);
 		font-size: 11px;
 		font-weight: 700;
@@ -275,7 +327,7 @@ const categories = [
 		background: var(--color-bg-gray);
 		border: 1px solid transparent;
 		border-radius: 999px;
-		padding: 8px 6px;
+		padding: 10px 16px;
 		cursor: pointer;
 		transition:
 			background 0.2s,
@@ -292,6 +344,40 @@ const categories = [
 		border-color: var(--cat-color, var(--color-primary));
 		color: #fff;
 		font-weight: 700;
+	}
+
+	.faq__tabs-nav {
+		margin: 0 0 32px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		gap: 32px;
+	}
+
+	.faq__tabs-nav-btn {
+		width: 40px;
+		height: 40px;
+		padding: 0;
+		border: none;
+		border-radius: 50%;
+		background: transparent;
+		color: var(--color-primary);
+		cursor: pointer;
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		transition: background-color 0.2s ease;
+	}
+
+	.faq__tabs-nav-btn:hover,
+	.faq__tabs-nav-btn:focus-visible,
+	.faq__tabs-nav-btn:active {
+		background: rgba(3, 129, 220, 0.1);
+	}
+
+	.faq__tabs-nav-btn svg {
+		width: 20px;
+		height: 20px;
 	}
 
 	.faq__list {
@@ -354,7 +440,8 @@ const categories = [
 
 	@media (min-width: 768px) {
 		.faq__tab {
-			flex: 0 1 auto;
+			flex: 0 0 auto;
+			min-width: 0;
 			font-size: 15px;
 			padding: 12px 24px;
 			white-space: pre-line;
