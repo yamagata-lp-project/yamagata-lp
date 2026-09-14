@@ -138,10 +138,33 @@ const initialIndex = plans.length; // first card of the middle copy
 			track.scrollTo({ left: target, behavior: smooth ? "smooth" : "instant" });
 		};
 
-		// keep the index inside the middle copy [count, count*2 - 1]; if a
-		// run of clicks pushed it into an outer clone, silently snap back by
-		// one full loop (identical content, so it's visually seamless)
+		// find whichever card currently sits closest to the track's center;
+		// needed because manual touch-swipe scrolling changes the on-screen
+		// card without ever updating `currentIndex` (that only happened via
+		// the prev/next button handlers), which let finger-swiping scroll
+		// straight through into the 2nd/3rd cloned copy undetected
+		const getCenterIndex = () => {
+			const trackRect = track.getBoundingClientRect();
+			const centerX = trackRect.left + trackRect.width / 2;
+			let closest = 0;
+			let closestDist = Infinity;
+			cards.forEach((card, i) => {
+				const rect = card.getBoundingClientRect();
+				const dist = Math.abs(rect.left + rect.width / 2 - centerX);
+				if (dist < closestDist) {
+					closestDist = dist;
+					closest = i;
+				}
+			});
+			return closest;
+		};
+
+		// keep the index inside the middle copy [count, count*2 - 1]; if
+		// scrolling (by button or by touch) left it in an outer clone,
+		// silently snap back by one full loop (identical content, so it's
+		// visually seamless)
 		const resyncIfNeeded = () => {
+			currentIndex = getCenterIndex();
 			if (currentIndex >= count * 2) {
 				currentIndex -= count;
 				centerOn(currentIndex, false);
