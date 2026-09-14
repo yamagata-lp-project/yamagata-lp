@@ -1,0 +1,492 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import Header from "../../components/lp/Header.astro";
+import Footer from "../../components/lp/Footer.astro";
+import StickyMobileCta from "../../components/lp/StickyMobileCta.astro";
+
+const volumeOptions = ["軽トラックサイズ", "軽トラック以上", "不明・わからない"];
+
+const timeSlots = ["特になし", "午前", "午後"];
+---
+
+<Layout
+	title="お見積り・ご相談フォーム｜山形不用品回収サービス"
+	description="山形不用品回収サービスの無料お見積り・ご相談フォームです。かんたんにご入力いただけます。"
+>
+	<Header />
+
+	<main class="estimate">
+		<div class="l-container">
+			<nav class="estimate__breadcrumb" aria-label="パンくずリスト">
+				<ol>
+					<li><a href="/">ホーム</a></li>
+					<li aria-current="page">お見積り・ご相談フォーム</li>
+				</ol>
+			</nav>
+
+			<div class="section-heading estimate__heading">
+				<p class="section-heading__kicker">24時間受付</p>
+				<h1 class="section-heading__ja">お見積り・ご相談フォーム</h1>
+				<p class="section-heading__lead">所要時間約2分・下記フォームにご入力ください</p>
+			</div>
+
+			<p class="estimate__intro">
+				以下のフォームにご入力ください。内容を確認後、スタッフよりご希望の方法からご連絡いたします。
+			</p>
+
+			<form class="estimate__form" data-estimate-form>
+				<!-- 1. 基本情報 -->
+				<section class="estimate__section">
+					<h2 class="estimate__section-title">1. 基本情報</h2>
+
+					<div class="estimate__field">
+						<label class="estimate__label" for="name">お名前<span class="estimate__required">必須</span></label>
+						<input class="estimate__input" type="text" id="name" name="name" autocomplete="name" placeholder="例：山形 太郎" required />
+					</div>
+
+					<div class="estimate__field">
+						<span class="estimate__label">ご希望のご連絡方法<span class="estimate__required">必須</span></span>
+						<div class="estimate__radio-group">
+							<label class="estimate__radio">
+								<input type="radio" name="contactMethod" value="電話" required />
+								<span>電話</span>
+							</label>
+							<label class="estimate__radio">
+								<input type="radio" name="contactMethod" value="メール" required />
+								<span>メール</span>
+							</label>
+						</div>
+					</div>
+
+					<div class="estimate__field">
+						<label class="estimate__label" for="phone">電話番号<span class="estimate__required">必須</span></label>
+						<input class="estimate__input" type="tel" id="phone" name="phone" autocomplete="tel" placeholder="例：090-1234-5678" required />
+					</div>
+
+					<div class="estimate__field">
+						<label class="estimate__label" for="email">メールアドレス<span class="estimate__required">必須</span></label>
+						<input class="estimate__input" type="email" id="email" name="email" autocomplete="email" placeholder="例：yamagata@example.com" required />
+					</div>
+				</section>
+
+				<!-- 2. 回収先について -->
+				<section class="estimate__section">
+					<h2 class="estimate__section-title">2. 回収先について</h2>
+
+					<div class="estimate__field">
+						<span class="estimate__label">お住まい<span class="estimate__required">必須</span></span>
+						<div class="estimate__radio-group">
+							<label class="estimate__radio">
+								<input type="radio" name="residence" value="山形市内" data-residence-toggle required />
+								<span>山形市内</span>
+							</label>
+							<label class="estimate__radio">
+								<input type="radio" name="residence" value="山形市外" data-residence-toggle required />
+								<span>山形市外</span>
+							</label>
+						</div>
+						<div class="estimate__field estimate__field--nested" data-residence-detail hidden>
+							<label class="estimate__label" for="residenceCity">市区町村<span class="estimate__required">必須</span></label>
+							<input class="estimate__input" type="text" id="residenceCity" name="residenceCity" placeholder="例：天童市" data-residence-input />
+						</div>
+					</div>
+
+					<div class="estimate__field">
+						<label class="estimate__label" for="floor">お部屋の階数<span class="estimate__required">必須</span></label>
+						<input class="estimate__input" type="text" id="floor" name="floor" placeholder="例：3階" required />
+					</div>
+
+					<div class="estimate__field">
+						<span class="estimate__label">エレベーターの有無<span class="estimate__required">必須</span></span>
+						<div class="estimate__radio-group">
+							<label class="estimate__radio">
+								<input type="radio" name="elevator" value="あり" required />
+								<span>あり</span>
+							</label>
+							<label class="estimate__radio">
+								<input type="radio" name="elevator" value="なし" required />
+								<span>なし</span>
+							</label>
+						</div>
+					</div>
+				</section>
+
+				<!-- 3. 回収物について -->
+				<section class="estimate__section">
+					<h2 class="estimate__section-title">3. 回収物について</h2>
+
+					<div class="estimate__field">
+						<label class="estimate__label" for="volume">物量の目安<span class="estimate__required">必須</span></label>
+						<select class="estimate__input" id="volume" name="volume" required>
+							<option value="" disabled selected>選択してください</option>
+							{volumeOptions.map((v) => <option value={v}>{v}</option>)}
+						</select>
+					</div>
+
+					<div class="estimate__field">
+						<label class="estimate__label" for="items">回収する物<span class="estimate__required">必須</span></label>
+						<textarea class="estimate__input estimate__textarea" id="items" name="items" rows="4" placeholder="例：ソファ、タンス、段ボール10箱分の不用品など" required></textarea>
+					</div>
+				</section>
+
+				<!-- 4. 回収希望日・備考 -->
+				<section class="estimate__section">
+					<h2 class="estimate__section-title">4. 回収希望日・備考</h2>
+
+					<div class="estimate__field">
+						<span class="estimate__label">第一希望日時<span class="estimate__required">必須</span></span>
+						<div class="estimate__date-row">
+							<input class="estimate__input" type="date" id="date1" name="date1" data-estimate-date required />
+							<select class="estimate__input" id="time1" name="time1" required>
+								<option value="" disabled selected>時間帯を選択</option>
+								{timeSlots.map((t) => <option value={t}>{t}</option>)}
+							</select>
+						</div>
+					</div>
+
+					<div class="estimate__field">
+						<span class="estimate__label">第二希望日時<span class="estimate__optional">任意</span></span>
+						<div class="estimate__date-row">
+							<input class="estimate__input" type="date" id="date2" name="date2" data-estimate-date />
+							<select class="estimate__input" id="time2" name="time2">
+								<option value="" disabled selected>時間帯を選択</option>
+								{timeSlots.map((t) => <option value={t}>{t}</option>)}
+							</select>
+						</div>
+					</div>
+
+					<div class="estimate__field">
+						<label class="estimate__label" for="note">備考<span class="estimate__optional">任意</span></label>
+						<textarea class="estimate__input estimate__textarea" id="note" name="note" rows="4" placeholder="ご質問・ご要望などございましたらご記入ください"></textarea>
+					</div>
+
+					<div class="estimate__field">
+						<label class="estimate__checkbox estimate__checkbox--privacy">
+							<input type="checkbox" id="privacy" name="privacy" required />
+							<span>
+								<a href="/privacy/" target="_blank" rel="noopener">プライバシーポリシー</a>に同意する<span class="estimate__required">必須</span>
+							</span>
+						</label>
+					</div>
+				</section>
+
+				<div class="estimate__submit-row">
+					<button type="submit" class="estimate__submit-btn">無料お見積りを送信</button>
+				</div>
+			</form>
+		</div>
+	</main>
+
+	<Footer />
+	<StickyMobileCta />
+</Layout>
+
+<script>
+	const form = document.querySelector<HTMLFormElement>("[data-estimate-form]");
+	if (form) {
+		// today's date as the minimum selectable value for both date pickers
+		const todayStr = new Date().toISOString().slice(0, 10);
+		form.querySelectorAll<HTMLInputElement>("[data-estimate-date]").forEach((input) => {
+			input.min = todayStr;
+		});
+
+		// residence radio: reveal/require the city field only when "山形市外" is selected
+		const residenceDetail = form.querySelector<HTMLElement>("[data-residence-detail]");
+		const residenceInput = form.querySelector<HTMLInputElement>("[data-residence-input]");
+		form.querySelectorAll<HTMLInputElement>("[data-residence-toggle]").forEach((toggle) => {
+			toggle.addEventListener("change", () => {
+				if (!residenceDetail || !residenceInput) return;
+				const isOutside = toggle.value === "山形市外" && toggle.checked;
+				residenceDetail.hidden = !isOutside;
+				residenceInput.required = isOutside;
+				if (!isOutside) residenceInput.value = "";
+			});
+		});
+
+		// all fields live on one page now, so the browser's native constraint
+		// validation (triggered on submit) checks everything in one pass
+		form.addEventListener("submit", (e) => {
+			e.preventDefault();
+			window.location.href = "/estimate/thanks/";
+		});
+	}
+</script>
+
+<style>
+	.estimate {
+		background: var(--color-bg-pale-1);
+		padding-block: 32px 90px;
+	}
+
+	.estimate__breadcrumb ol {
+		display: flex;
+		flex-wrap: wrap;
+		font-size: 13px;
+		color: var(--color-text-sub);
+		margin-bottom: 24px;
+	}
+
+	.estimate__breadcrumb li {
+		display: flex;
+	}
+
+	.estimate__breadcrumb li + li::before {
+		content: "/";
+		margin-inline: 6px;
+		color: var(--color-text-sub);
+	}
+
+	.estimate__breadcrumb a {
+		color: var(--color-primary);
+	}
+
+	.estimate__heading {
+		margin-bottom: 16px;
+	}
+
+	.estimate__intro {
+		max-width: 640px;
+		margin: 0 auto 32px;
+		font-size: 14px;
+		line-height: 1.8;
+		color: var(--color-text);
+		text-align: center;
+	}
+
+	.estimate__form {
+		max-width: 640px;
+		margin-inline: auto;
+		display: flex;
+		flex-direction: column;
+		gap: 20px;
+	}
+
+	.estimate__section {
+		background: #fff;
+		border-radius: 16px;
+		padding: 28px 20px;
+		box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.06);
+	}
+
+	.estimate__section-title {
+		font-family: var(--font-heading);
+		font-weight: 900;
+		font-size: 18px;
+		color: var(--color-primary-dark);
+		margin: 0 0 24px;
+		padding-bottom: 12px;
+		border-bottom: 2px solid var(--color-bg-pale-3);
+	}
+
+	.estimate__field {
+		margin-bottom: 24px;
+	}
+
+	.estimate__field:last-child {
+		margin-bottom: 0;
+	}
+
+	.estimate__label {
+		display: inline-flex;
+		align-items: center;
+		gap: 8px;
+		font-family: var(--font-heading);
+		font-weight: 700;
+		font-size: 14px;
+		color: var(--color-text);
+		margin-bottom: 10px;
+	}
+
+	.estimate__required,
+	.estimate__optional {
+		font-family: var(--font-heading);
+		font-weight: 700;
+		font-size: 11px;
+		line-height: 1;
+		padding: 4px 8px;
+		border-radius: 999px;
+		white-space: nowrap;
+	}
+
+	.estimate__required {
+		color: #fff;
+		background: var(--color-accent-red);
+	}
+
+	.estimate__optional {
+		color: var(--color-text-sub);
+		background: var(--color-bg-gray);
+	}
+
+	.estimate__input {
+		display: block;
+		width: 100%;
+		height: 48px;
+		padding-inline: 14px;
+		font-family: var(--font-body);
+		font-size: 15px;
+		color: var(--color-text);
+		background: #fff;
+		border: 1px solid var(--color-border-gray);
+		border-radius: 8px;
+	}
+
+	.estimate__input:focus {
+		outline: 2px solid var(--color-primary-light);
+		outline-offset: 1px;
+	}
+
+	.estimate__textarea {
+		height: auto;
+		padding-block: 12px;
+		resize: vertical;
+		line-height: 1.7;
+	}
+
+	.estimate__field--nested {
+		margin-top: 14px;
+		margin-bottom: 0;
+		padding-top: 14px;
+		border-top: 1px dashed var(--color-border-gray);
+	}
+
+	select.estimate__input {
+		appearance: none;
+		background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23555' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+		background-repeat: no-repeat;
+		background-position: right 14px center;
+		background-size: 16px;
+		padding-right: 38px;
+	}
+
+	.estimate__radio-group {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 10px;
+	}
+
+	.estimate__radio {
+		flex: 1 1 120px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		gap: 8px;
+		height: 48px;
+		font-family: var(--font-heading);
+		font-weight: 700;
+		font-size: 14px;
+		color: var(--color-text);
+		background: #fff;
+		border: 2px solid var(--color-primary-pale);
+		border-radius: 8px;
+		box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.08);
+		cursor: pointer;
+		transition: background 0.2s, border-color 0.2s, color 0.2s, box-shadow 0.2s;
+	}
+
+	.estimate__radio:hover {
+		border-color: var(--color-primary);
+	}
+
+	.estimate__radio:has(input:checked) {
+		background: var(--color-primary);
+		border-color: var(--color-primary);
+		color: #fff;
+		box-shadow: 2px 2px 6px rgba(3, 129, 220, 0.35);
+	}
+
+	.estimate__radio input {
+		position: absolute;
+		width: 1px;
+		height: 1px;
+		overflow: hidden;
+		clip: rect(0 0 0 0);
+	}
+
+	.estimate__checkbox {
+		display: flex;
+		align-items: center;
+		gap: 10px;
+		font-family: var(--font-heading);
+		font-weight: 700;
+		font-size: 14px;
+		color: var(--color-text);
+		cursor: pointer;
+	}
+
+	.estimate__checkbox input {
+		width: 20px;
+		height: 20px;
+		accent-color: var(--color-primary);
+		flex-shrink: 0;
+	}
+
+	.estimate__date-row {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 10px;
+	}
+
+	.estimate__date-row .estimate__input {
+		flex: 1 1 160px;
+	}
+
+	.estimate__checkbox--privacy {
+		font-weight: 400;
+		font-size: 14px;
+		line-height: 1.6;
+	}
+
+	.estimate__checkbox--privacy a {
+		color: var(--color-primary);
+		text-decoration: underline;
+	}
+
+	.estimate__submit-row {
+		margin-top: 4px;
+	}
+
+	.estimate__submit-btn {
+		display: block;
+		width: 100%;
+		height: 56px;
+		border: none;
+		border-radius: 999px;
+		background: var(--color-accent-red);
+		color: #fff;
+		font-family: var(--font-heading);
+		font-weight: 700;
+		font-size: 16px;
+		letter-spacing: 0.04em;
+		box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.15);
+		cursor: pointer;
+		transition: opacity 0.2s;
+	}
+
+	.estimate__submit-btn:hover {
+		opacity: 0.85;
+	}
+
+	@media (min-width: 768px) {
+		.estimate {
+			padding-block: 48px 100px;
+		}
+
+		.estimate__intro {
+			font-size: 15px;
+		}
+
+		.estimate__section {
+			padding: 40px 48px;
+		}
+
+		.estimate__section-title {
+			font-size: 22px;
+		}
+
+		.estimate__submit-btn {
+			height: 64px;
+			font-size: 17px;
+		}
+	}
+</style>

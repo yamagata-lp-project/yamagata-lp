@@ -1,0 +1,124 @@
+---
+import Layout from "../../../layouts/Layout.astro";
+import Header from "../../../components/lp/Header.astro";
+import Footer from "../../../components/lp/Footer.astro";
+
+const TEL = "0120-442-999";
+---
+
+<Layout
+	title="送信完了しました｜山形不用品回収サービス"
+	description="お見積り・ご相談フォームの送信が完了しました。"
+>
+	<Header />
+
+	<main class="thanks">
+		<div class="l-container">
+			<div class="thanks__card">
+				<span class="thanks__icon" aria-hidden="true">
+					<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+						<polyline points="20 6 9 17 4 12" />
+					</svg>
+				</span>
+				<h1 class="thanks__title">送信完了しました</h1>
+				<p class="thanks__text">
+					お見積り・ご相談のお申し込みありがとうございます。内容を確認のうえ、担当者より折り返しご連絡いたします。
+				</p>
+				<p class="thanks__note">
+					お急ぎの場合は、お電話・LINEにて直接お問い合わせください。
+				</p>
+
+				<div class="thanks__actions">
+					<a href={`tel:${TEL.replace(/-/g, "")}`} class="btn-cta btn-cta--phone">電話でお問い合わせ</a>
+					<a href="https://lin.ee/zZWo2lf" class="btn-cta btn-cta--line" target="_blank" rel="noopener">LINEでお問い合わせ</a>
+				</div>
+
+				<a href="/" class="thanks__home">トップページへ戻る</a>
+			</div>
+		</div>
+	</main>
+
+	<Footer />
+</Layout>
+
+<style>
+	.thanks {
+		background: var(--color-bg-pale-1);
+		padding-block: 60px 100px;
+		min-height: 60vh;
+	}
+
+	.thanks__card {
+		max-width: 560px;
+		margin-inline: auto;
+		background: #fff;
+		border-radius: 16px;
+		padding: 48px 28px;
+		text-align: center;
+		box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.06);
+	}
+
+	.thanks__icon {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		width: 64px;
+		height: 64px;
+		border-radius: 50%;
+		background: var(--color-primary);
+		color: #fff;
+		margin-bottom: 20px;
+	}
+
+	.thanks__icon svg {
+		width: 32px;
+		height: 32px;
+	}
+
+	.thanks__title {
+		font-family: var(--font-heading);
+		font-weight: 900;
+		font-size: 24px;
+		color: var(--color-primary-dark);
+		margin: 0 0 16px;
+	}
+
+	.thanks__text {
+		font-size: 15px;
+		line-height: 1.9;
+		color: var(--color-text);
+		margin-bottom: 8px;
+	}
+
+	.thanks__note {
+		font-size: 13px;
+		line-height: 1.8;
+		color: var(--color-text-sub);
+		margin-bottom: 28px;
+	}
+
+	.thanks__actions {
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: center;
+		gap: 12px;
+		margin-bottom: 24px;
+	}
+
+	.thanks__home {
+		display: inline-block;
+		font-size: 14px;
+		color: var(--color-primary);
+		text-decoration: underline;
+	}
+
+	@media (min-width: 768px) {
+		.thanks__card {
+			padding: 64px 48px;
+		}
+
+		.thanks__title {
+			font-size: 28px;
+		}
+	}
+</style>
