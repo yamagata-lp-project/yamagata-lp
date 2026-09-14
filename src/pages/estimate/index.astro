@@ -124,8 +124,50 @@ const timeSlots = ["特になし", "午前", "午後"];
 					</div>
 
 					<div class="estimate__field">
-						<label class="estimate__label" for="items">回収する物<span class="estimate__required">必須</span></label>
-						<textarea class="estimate__input estimate__textarea" id="items" name="items" rows="4" placeholder="例：ソファ、タンス、段ボール10箱分の不用品など" required></textarea>
+						<span class="estimate__label">回収希望の荷物<span class="estimate__optional">任意</span></span>
+						<div class="estimate__checkbox-grid">
+							<label class="estimate__checkbox">
+								<input type="checkbox" name="desiredItems" value="冷蔵庫(1ドア)" />
+								<span>冷蔵庫(1ドア)</span>
+							</label>
+							<label class="estimate__checkbox">
+								<input type="checkbox" name="desiredItems" value="冷蔵庫(2ドア)" />
+								<span>冷蔵庫(2ドア)</span>
+							</label>
+							<label class="estimate__checkbox">
+								<input type="checkbox" name="desiredItems" value="冷蔵庫(3ドア以上)" />
+								<span>冷蔵庫(3ドア以上)</span>
+							</label>
+							<label class="estimate__checkbox">
+								<input type="checkbox" name="desiredItems" value="洗濯機(縦型)" />
+								<span>洗濯機(縦型)</span>
+							</label>
+							<label class="estimate__checkbox">
+								<input type="checkbox" name="desiredItems" value="洗濯機(ドラム式)" />
+								<span>洗濯機(ドラム式)</span>
+							</label>
+							<label class="estimate__checkbox">
+								<input type="checkbox" name="desiredItems" value="マットレス(スプリング/コイル入り)" />
+								<span>マットレス(スプリング/コイル入り)</span>
+							</label>
+							<label class="estimate__checkbox">
+								<input type="checkbox" name="desiredItems" value="マットレス(スプリング/コイル無し)" />
+								<span>マットレス(スプリング/コイル無し)</span>
+							</label>
+							<label class="estimate__checkbox">
+								<input type="checkbox" name="desiredItems" value="ベッドフレーム(収納付き)" />
+								<span>ベッドフレーム(収納付き)</span>
+							</label>
+							<label class="estimate__checkbox">
+								<input type="checkbox" name="desiredItems" value="ベッドフレーム(収納無し)" />
+								<span>ベッドフレーム(収納無し)</span>
+							</label>
+						</div>
+					</div>
+
+					<div class="estimate__field">
+						<label class="estimate__label" for="items">回収希望の荷物(その他)<span class="estimate__optional">任意</span></label>
+						<textarea class="estimate__input estimate__textarea" id="items" name="items" rows="4" placeholder="例：2人掛けソファ、タンスなど"></textarea>
 					</div>
 				</section>
 
@@ -421,6 +463,15 @@ const timeSlots = ["特になし", "午前", "午後"];
 		flex-shrink: 0;
 	}
 
+	.estimate__checkbox-grid {
+		display: grid;
+		grid-template-columns: 1fr;
+		gap: 12px;
+		background: var(--color-bg-pale-2);
+		border-radius: 8px;
+		padding: 16px;
+	}
+
 	.estimate__date-row {
 		display: flex;
 		flex-wrap: wrap;
@@ -482,6 +533,10 @@ const timeSlots = ["特になし", "午前", "午後"];
 
 		.estimate__section-title {
 			font-size: 22px;
+		}
+
+		.estimate__checkbox-grid {
+			grid-template-columns: 1fr 1fr;
 		}
 
 		.estimate__submit-btn {
