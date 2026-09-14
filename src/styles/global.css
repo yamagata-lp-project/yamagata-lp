@@ -177,9 +177,10 @@ p {
 	display: inline-flex;
 	align-items: center;
 	justify-content: center;
+	gap: 8px;
 	height: 48px;
 	padding-inline: 24px;
-	border-radius: 50px;
+	border-radius: 4px;
 	font-family: var(--font-heading);
 	font-weight: 700;
 	font-size: 13px;
@@ -195,4 +196,18 @@ p {
 
 .btn-cta--line {
 	background: var(--color-cta-line);
+}
+
+.btn-cta--form {
+	background: var(--color-primary);
+}
+
+.btn-cta__icon {
+	width: 20px;
+	height: 20px;
+	flex-shrink: 0;
+}
+
+.btn-cta__icon--phone {
+	filter: brightness(0) invert(1);
 }

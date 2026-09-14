@@ -1,4 +1,9 @@
 ---
+import iconPhone from "../../assets/lp/flow-icon-01.svg";
+import iconLine from "../../assets/lp/LINE_Brand_icon.webp";
+import { Image } from "astro:assets";
+import { Icon } from "astro-icon/components";
+
 const TEL = "0120-442-999";
 ---
 
@@ -8,8 +13,18 @@ const TEL = "0120-442-999";
 			お悩みは今すぐ解決できます<br />まずはお気軽にご相談ください
 		</p>
 		<div class="final-cta__buttons">
-			<a href={`tel:${TEL.replace(/-/g, "")}`} class="btn-cta btn-cta--phone">電話でお問い合わせ</a>
-			<a href="https://lin.ee/zZWo2lf" class="btn-cta btn-cta--line" target="_blank" rel="noopener">LINEでお問い合わせ</a>
+			<a href={`tel:${TEL.replace(/-/g, "")}`} class="btn-cta btn-cta--phone">
+				<Image src={iconPhone} alt="" width={22} height={22} class="btn-cta__icon btn-cta__icon--phone" />
+				電話で無料相談
+			</a>
+			<a href="https://lin.ee/zZWo2lf" class="btn-cta btn-cta--line" target="_blank" rel="noopener">
+				<Image src={iconLine} alt="" width={28} height={28} class="btn-cta__icon" />
+				LINEで見積もり
+			</a>
+			<a href="/estimate/" class="btn-cta btn-cta--form">
+				<Icon name="lucide:mail" class="btn-cta__icon" aria-hidden="true" />
+				メールで無料相談
+			</a>
 		</div>
 	</div>
 </section>

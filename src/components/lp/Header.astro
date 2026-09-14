@@ -1,7 +1,10 @@
 ---
 import { navLinks } from "../../data/navLinks";
 import yamagataLogo from "../../assets/lp/yamagatahuyohin-lp.webp";
+import iconPhone from "../../assets/lp/flow-icon-01.svg";
+import iconLine from "../../assets/lp/LINE_Brand_icon.webp";
 import { Image } from "astro:assets";
+import { Icon } from "astro-icon/components";
 
 const TEL = "0120-442-999";
 ---
@@ -19,6 +22,9 @@ const TEL = "0120-442-999";
 			</a>
 			<a href="https://lin.ee/zZWo2lf" class="btn-cta btn-cta--line" target="_blank" rel="noopener">
 				LINEでお問い合わせ
+			</a>
+			<a href="/estimate/" class="btn-cta btn-cta--form">
+				フォームでお問い合わせ
 			</a>
 		</nav>
 		<button
@@ -56,8 +62,11 @@ const TEL = "0120-442-999";
 
 		<div class="header__mobile-cta">
 			<a href={`tel:${TEL.replace(/-/g, "")}`} class="btn-cta btn-cta--phone header__mobile-cta-btn">
-				電話でお問い合わせ
-				<span class="header__mobile-cta-tel">{TEL}</span>
+				<Image src={iconPhone} alt="" width={22} height={22} class="btn-cta__icon btn-cta__icon--phone" />
+				<span class="header__mobile-cta-text">
+					電話でお問い合わせ
+					<span class="header__mobile-cta-tel">{TEL}</span>
+				</span>
 			</a>
 			<a
 				href="https://lin.ee/zZWo2lf"
@@ -65,7 +74,12 @@ const TEL = "0120-442-999";
 				target="_blank"
 				rel="noopener"
 			>
+				<Image src={iconLine} alt="" width={26} height={26} class="btn-cta__icon" />
 				LINEでお問い合わせ
+			</a>
+			<a href="/estimate/" class="btn-cta btn-cta--form header__mobile-cta-btn">
+				<Icon name="lucide:mail" class="btn-cta__icon" aria-hidden="true" />
+				フォームでお問い合わせ
 			</a>
 		</div>
 
@@ -318,9 +332,17 @@ const TEL = "0120-442-999";
 	.header__mobile-cta-btn {
 		width: 100%;
 		height: auto;
+		justify-content: flex-start;
+		text-align: left;
+		gap: 12px;
+		padding: 14px 16px;
+	}
+
+	.header__mobile-cta-text {
+		display: flex;
 		flex-direction: column;
-		gap: 2px;
-		padding-block: 14px;
+		align-items: flex-start;
+		line-height: 1.3;
 	}
 
 	.header__mobile-cta-tel {
