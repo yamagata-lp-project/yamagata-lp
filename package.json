@@ -12,8 +12,10 @@
     "astro": "astro"
   },
   "dependencies": {
+    "@astrojs/vercel": "^11.0.10",
     "@iconify-json/lucide": "^1.2.131",
     "astro": "^7.2.4",
-    "astro-icon": "^1.2.0"
+    "astro-icon": "^1.2.0",
+    "resend": "^6.28.0"
   }
 }

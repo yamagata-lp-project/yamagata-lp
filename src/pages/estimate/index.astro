@@ -211,8 +211,12 @@ const timeSlots = ["特になし", "午前", "午後"];
 					</div>
 				</section>
 
+				<p class="estimate__error" data-estimate-error hidden>
+					送信に失敗しました。お手数ですが時間をおいて再度お試しいただくか、お電話にてお問い合わせください。
+				</p>
+
 				<div class="estimate__submit-row">
-					<button type="submit" class="estimate__submit-btn">フォームを送信する</button>
+					<button type="submit" class="estimate__submit-btn" data-estimate-submit>フォームを送信する</button>
 				</div>
 			</form>
 		</div>
@@ -244,11 +248,56 @@ const timeSlots = ["特になし", "午前", "午後"];
 			});
 		});
 
+		const submitBtn = form.querySelector<HTMLButtonElement>("[data-estimate-submit]");
+		const errorEl = form.querySelector<HTMLElement>("[data-estimate-error]");
+
 		// all fields live on one page now, so the browser's native constraint
 		// validation (triggered on submit) checks everything in one pass
-		form.addEventListener("submit", (e) => {
+		form.addEventListener("submit", async (e) => {
 			e.preventDefault();
-			window.location.href = "/estimate/thanks/";
+			if (errorEl) errorEl.hidden = true;
+
+			const formData = new FormData(form);
+			const payload = {
+				name: formData.get("name"),
+				contactMethod: formData.get("contactMethod"),
+				phone: formData.get("phone"),
+				email: formData.get("email"),
+				residence: formData.get("residence"),
+				residenceCity: formData.get("residenceCity"),
+				floor: formData.get("floor"),
+				elevator: formData.get("elevator"),
+				volume: formData.get("volume"),
+				desiredItems: formData.getAll("desiredItems"),
+				items: formData.get("items"),
+				date1: formData.get("date1"),
+				time1: formData.get("time1"),
+				date2: formData.get("date2"),
+				time2: formData.get("time2"),
+				note: formData.get("note"),
+				privacy: formData.get("privacy") === "on",
+			};
+
+			if (submitBtn) {
+				submitBtn.disabled = true;
+				submitBtn.textContent = "送信中...";
+			}
+
+			try {
+				const res = await fetch("/api/estimate", {
+					method: "POST",
+					headers: { "Content-Type": "application/json" },
+					body: JSON.stringify(payload),
+				});
+				if (!res.ok) throw new Error("submit_failed");
+				window.location.href = "/estimate/thanks/";
+			} catch {
+				if (errorEl) errorEl.hidden = false;
+				if (submitBtn) {
+					submitBtn.disabled = false;
+					submitBtn.textContent = "フォームを送信する";
+				}
+			}
 		});
 	}
 </script>
@@ -492,6 +541,18 @@ const timeSlots = ["特になし", "午前", "午後"];
 		text-decoration: underline;
 	}
 
+	.estimate__error {
+		max-width: 640px;
+		margin: 0 auto 16px;
+		padding: 14px 16px;
+		border-radius: 8px;
+		background: #fdecec;
+		color: #c0392b;
+		font-size: 13px;
+		line-height: 1.7;
+		text-align: center;
+	}
+
 	.estimate__submit-row {
 		margin-top: 4px;
 	}
@@ -515,6 +576,11 @@ const timeSlots = ["特になし", "午前", "午後"];
 
 	.estimate__submit-btn:hover {
 		opacity: 0.85;
+	}
+
+	.estimate__submit-btn:disabled {
+		cursor: not-allowed;
+		opacity: 0.6;
 	}
 
 	@media (min-width: 768px) {
