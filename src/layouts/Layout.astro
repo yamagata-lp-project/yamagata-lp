@@ -89,7 +89,7 @@ const {
 				if (!a) return;
 				var href = a.getAttribute("href") || "";
 				if (href.indexOf("tel:") === 0) {
-					gtag("event", "tel_tap", { event_category: "cv", event_label: href });
+					gtag("event", "phone_click", { event_category: "cv", event_label: href });
 					gtag("event", "conversion", {
 						send_to: GOOGLE_ADS_ID + "/" + ADS_CONVERSION_LABELS.tel,
 					});

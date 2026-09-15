@@ -22,11 +22,11 @@ export const ADS_CONVERSION_LABELS = {
 } as const;
 
 /**
- * GA4の測定ID（G-XXXXXXXXXX）。
- * GA4プロパティ「山形不用品回収サービス」の 管理 → データストリーム → ウェブ → 測定ID から取得して入れる。
- * 空のままだとGA4は読み込まれない（Google広告のコンバージョンは動く）。
+ * GA4の測定ID。プロパティ「yamagata-huyouhin.com」(554315526) のウェブストリーム。
+ * キーイベントは phone_click / line_click / generate_lead の3つを登録済み。
+ * 空にするとGA4は読み込まれない（Google広告のコンバージョンだけ動く）。
  */
-export const GA4_MEASUREMENT_ID = "";
+export const GA4_MEASUREMENT_ID = "G-FFMKWBQPC9";
 
 /** Microsoft Clarity のプロジェクトID */
 export const CLARITY_ID = "yhmctq29h3";
