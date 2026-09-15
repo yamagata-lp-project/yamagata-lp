@@ -1,5 +1,11 @@
 ---
 import "../styles/global.css";
+import {
+	ADS_CONVERSION_LABELS,
+	CLARITY_ID,
+	GA4_MEASUREMENT_ID,
+	GOOGLE_ADS_ID,
+} from "../config/tracking";
 
 interface Props {
 	title?: string;
@@ -43,12 +49,97 @@ const {
 			/>
 		</noscript>
 
-		<script type="text/javascript" is:inline>
-			(function (c, l, a, r, i, t, y) {
-				c[a] = c[a] || function () { (c[a].q = c[a].q || []).push(arguments); };
-				t = l.createElement(r); t.async = 1; t.src = "https://www.clarity.ms/tag/" + i;
-				y = l.getElementsByTagName(r)[0]; y.parentNode.insertBefore(t, y);
-			})(window, document, "clarity", "script", "yhmctq29h3");
+		{
+			/* 計測タグ（Google広告 / GA4 / Clarity）
+			   dataLayer と gtag() の「器」だけ先に用意し、外部スクリプト本体は
+			   「最初の操作（タップ・スクロール等）」または7秒後の早い方で読み込む。
+			   初期表示のメインスレッドを空けるため（仙台の広告LPと同じ方式）。
+
+			   ・電話/LINEのクリックCVは下のハンドラが dataLayer に積むので、
+			     タグ本体の読み込み後に順番どおり送信される
+			     （クリック自体が「最初の操作」なので、その場で読み込みが始まる）
+			   ・操作せず7秒未満で離脱した訪問は GA4/Clarity に記録されない（許容）
+			   ・フォーム送信CVは estimate ページ側で「送信成功時のみ」発火させる（偽CV防止）。
+			     感謝ページ着地では発火させない（再読み込み・直接アクセスで二重計上されるため）
+			   ・IDとラベルは src/config/tracking.ts に集約
+
+			   ※この手の内部メモは波括弧のJSXコメントで書くこと。HTMLコメントは公開ソースに出る。 */
+		}
+		<script
+			is:inline
+			define:vars={{
+				GOOGLE_ADS_ID,
+				GA4_MEASUREMENT_ID,
+				CLARITY_ID,
+				ADS_CONVERSION_LABELS,
+			}}
+		>
+			window.dataLayer = window.dataLayer || [];
+			function gtag() {
+				dataLayer.push(arguments);
+			}
+			window.gtag = gtag;
+			gtag("js", new Date());
+			gtag("config", GOOGLE_ADS_ID);
+			if (GA4_MEASUREMENT_ID) gtag("config", GA4_MEASUREMENT_ID);
+
+			// CV計測：電話タップ / LINEタップ（どちらも 1クリック＝1CV）
+			document.addEventListener("click", function (e) {
+				var a = e.target && e.target.closest ? e.target.closest("a") : null;
+				if (!a) return;
+				var href = a.getAttribute("href") || "";
+				if (href.indexOf("tel:") === 0) {
+					gtag("event", "phone_click", { event_category: "cv", event_label: href });
+					gtag("event", "conversion", {
+						send_to: GOOGLE_ADS_ID + "/" + ADS_CONVERSION_LABELS.tel,
+					});
+				} else if (href.indexOf("lin.ee") !== -1 || href.indexOf("line.me") !== -1) {
+					gtag("event", "line_click", { event_category: "cv", event_label: href });
+					gtag("event", "conversion", {
+						send_to: GOOGLE_ADS_ID + "/" + ADS_CONVERSION_LABELS.line,
+					});
+				}
+			});
+
+			// 「最初の操作 or 7秒後」にタグ本体を読み込む
+			(function () {
+				var done = false;
+				var events = ["pointerdown", "touchstart", "keydown", "scroll", "wheel", "mousemove"];
+				var opts = { passive: true, capture: true };
+				function load() {
+					if (done) return;
+					done = true;
+					events.forEach(function (ev) {
+						removeEventListener(ev, load, opts);
+					});
+
+					// Google広告 / GA4（gtag.js）
+					var g = document.createElement("script");
+					g.async = true;
+					g.src =
+						"https://www.googletagmanager.com/gtag/js?id=" +
+						(GA4_MEASUREMENT_ID || GOOGLE_ADS_ID);
+					document.head.appendChild(g);
+
+					// Microsoft Clarity
+					(function (c, l, a, r, i, t, y) {
+						c[a] =
+							c[a] ||
+							function () {
+								(c[a].q = c[a].q || []).push(arguments);
+							};
+						t = l.createElement(r);
+						t.async = 1;
+						t.src = "https://www.clarity.ms/tag/" + i;
+						y = l.getElementsByTagName(r)[0];
+						y.parentNode.insertBefore(t, y);
+					})(window, document, "clarity", "script", CLARITY_ID);
+				}
+				events.forEach(function (ev) {
+					addEventListener(ev, load, opts);
+				});
+				setTimeout(load, 7000);
+			})();
 		</script>
 	</head>
 	<body>
