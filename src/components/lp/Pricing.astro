@@ -54,10 +54,8 @@ const plans = [
 	},
 ];
 
-// Only the 5 real plans are rendered here. The mobile slider needs clone
-// copies before/after the real set to fake an endless loop, but those clones
-// are pure presentation — the client script below builds and inserts them at
-// runtime (aria-hidden) so the page's actual markup stays at 5 items.
+// A plain, non-looping strip of the 5 plans. On mobile it scrolls
+// horizontally between the first and last card only — no wraparound.
 ---
 
 <section id="pricing" class="pricing">
@@ -68,7 +66,7 @@ const plans = [
 			<p class="section-heading__lead">物量を確認したうえで、お荷物が収まる最適なプランをご案内いたします。</p>
 		</div>
 
-		<div class="pricing__slider" data-pricing-slider data-plan-count={plans.length}>
+		<div class="pricing__slider" data-pricing-slider>
 			<ul class="pricing__list" data-pricing-track>
 				{
 					plans.map((plan) => (
@@ -110,37 +108,19 @@ const plans = [
 
 <script>
 	document.querySelectorAll<HTMLElement>("[data-pricing-slider]").forEach((slider) => {
-		// the infinite-loop slider only applies at mobile widths; PC shows a
-		// static grid (see the >=768px CSS), so skip wiring it up there
+		// the strip only scrolls at mobile widths; PC shows a static grid (see
+		// the >=768px CSS), so skip wiring it up there
 		if (window.matchMedia("(min-width: 768px)").matches) return;
 
 		const track = slider.querySelector<HTMLElement>("[data-pricing-track]");
 		if (!track) return;
 
-		const count = Number(slider.dataset.planCount || "0");
-		const realCards = Array.from(track.querySelectorAll<HTMLElement>(".pricing__item"));
-		if (!count || realCards.length !== count) return;
-
-		// Clone the real cards into a copy before and after the real set so the
-		// track can be scrolled seamlessly past either edge. The clones are
-		// presentation-only duplicates of content already in the page, so they're
-		// hidden from assistive tech and excluded from the page's real markup —
-		// the server only ever renders the 5 real cards.
-		const cloneSet = () => {
-			const fragment = document.createDocumentFragment();
-			realCards.forEach((card) => {
-				const clone = card.cloneNode(true) as HTMLElement;
-				clone.setAttribute("aria-hidden", "true");
-				clone.setAttribute("inert", "");
-				fragment.appendChild(clone);
-			});
-			return fragment;
-		};
-		track.insertBefore(cloneSet(), track.firstChild);
-		track.appendChild(cloneSet());
-
 		const cards = Array.from(track.querySelectorAll<HTMLElement>(".pricing__item"));
-		if (cards.length !== count * 3) return;
+		const count = cards.length;
+		if (!count) return;
+
+		const prevBtn = slider.querySelector<HTMLButtonElement>("[data-pricing-prev]");
+		const nextBtn = slider.querySelector<HTMLButtonElement>("[data-pricing-next]");
 
 		const centerOn = (index: number, smooth: boolean) => {
 			const card = cards[index];
@@ -152,14 +132,15 @@ const plans = [
 			const trackRect = track.getBoundingClientRect();
 			const cardLeftInTrack = cardRect.left - trackRect.left + track.scrollLeft;
 			const target = cardLeftInTrack + card.offsetWidth / 2 - track.clientWidth / 2;
+			// at either end the target overshoots past what's scrollable; the
+			// browser clamps it to the real min/max on its own, which is exactly
+			// the "stop at the first/last card" behavior we want — no wraparound
 			track.scrollTo({ left: target, behavior: smooth ? "smooth" : "instant" });
 		};
 
-		// find whichever card currently sits closest to the track's center. This
-		// is the single source of truth for "where are we" — nothing keeps its
-		// own index counter — so a button click and a finger swipe (or two rapid
-		// button clicks racing a still-pending resync) can never disagree about
-		// the current position.
+		// find whichever card currently sits closest to the track's center; this
+		// is the source of truth for "where are we", covering both button taps
+		// and manual finger swipes
 		const getCenterIndex = () => {
 			const trackRect = track.getBoundingClientRect();
 			const centerX = trackRect.left + trackRect.width / 2;
@@ -176,63 +157,39 @@ const plans = [
 			return closest;
 		};
 
-		// If we're currently resting on a clone (outside the middle copy
-		// [count, count*2 - 1]), snap back by one full loop — identical content,
-		// so it's visually invisible — and return the corrected index. Reading
-		// position fresh via getCenterIndex() every time (rather than trusting a
-		// separately-tracked counter) makes this idempotent: calling it twice in
-		// a row, from two different triggers, only ever corrects once, because
-		// the second call sees the already-corrected position and no-ops. That
-		// previously wasn't the case — a tap-triggered correction and the
-		// scroll-driven one below could each independently rebase the same wrap,
-		// double-shifting by a full loop and making the next tap appear to do
-		// nothing.
-		const rebaseIfNeeded = () => {
-			let index = getCenterIndex();
-			if (index >= count * 2) {
-				index -= count;
-				centerOn(index, false);
-			} else if (index < count) {
-				index += count;
-				centerOn(index, false);
-			}
-			return index;
+		// disable prev on the first card and next on the last, so there's no way
+		// to request stepping past either end
+		const updateNavState = (index: number) => {
+			if (prevBtn) prevBtn.disabled = index <= 0;
+			if (nextBtn) nextBtn.disabled = index >= count - 1;
 		};
 
-		// "scrollend" fires exactly once when the browser considers a scroll
-		// (including a smooth-scroll animation or touch-momentum coast) truly
-		// finished, so this only ever runs against a final rest position rather
-		// than guessing via a fixed timer. Falls back to a debounced "scroll"
-		// listener for browsers without scrollend support.
+		const go = (dir: number) => {
+			const target = Math.min(count - 1, Math.max(0, getCenterIndex() + dir));
+			centerOn(target, true);
+			updateNavState(target);
+		};
+
+		prevBtn?.addEventListener("click", () => go(-1));
+		nextBtn?.addEventListener("click", () => go(1));
+
+		// keep the buttons' enabled/disabled state in sync with manual swiping
+		// too, once a swipe settles. "scrollend" fires exactly once when the
+		// browser considers scrolling truly finished; fall back to a debounced
+		// "scroll" listener for browsers without scrollend support.
+		const syncNavState = () => updateNavState(getCenterIndex());
 		if ("onscrollend" in window) {
-			track.addEventListener("scrollend", rebaseIfNeeded);
+			track.addEventListener("scrollend", syncNavState);
 		} else {
 			let settleTimer: ReturnType<typeof setTimeout>;
 			track.addEventListener("scroll", () => {
 				clearTimeout(settleTimer);
-				settleTimer = setTimeout(rebaseIfNeeded, 150);
+				settleTimer = setTimeout(syncNavState, 150);
 			});
 		}
 
-		const go = (dir: number) => {
-			// rebase first (a no-op if we're already on the middle copy) so a
-			// tap always steps exactly one card, however fast repeated taps
-			// arrive relative to the scrollend-driven rebase above
-			const index = rebaseIfNeeded();
-			centerOn(index + dir, true);
-		};
-
-		slider.querySelector("[data-pricing-prev]")?.addEventListener("click", () => go(-1));
-		slider.querySelector("[data-pricing-next]")?.addEventListener("click", () => go(1));
-
-		// center the initial (real, middle-copy) card without animation, then
-		// re-center on resize on whatever card is currently showing
-		centerOn(count, false);
-		let resizeTimer: ReturnType<typeof setTimeout>;
-		window.addEventListener("resize", () => {
-			clearTimeout(resizeTimer);
-			resizeTimer = setTimeout(() => centerOn(getCenterIndex(), false), 150);
-		});
+		// start on the first card with prev disabled
+		updateNavState(0);
 	});
 </script>
 
@@ -254,7 +211,12 @@ const plans = [
 		overflow-x: auto;
 		scroll-snap-type: x mandatory;
 		padding-block: 4px 12px;
-		padding-inline: 4px;
+		/* half the track's width minus half a card's width (236px), so the
+		   scrollable range starts/ends with that much empty space on each
+		   side — enough for the first/last card to reach dead-center like
+		   every card in between, instead of stopping flush against the edge
+		   because there's nothing left to scroll past */
+		padding-inline: calc(50% - 118px);
 		-webkit-overflow-scrolling: touch;
 		scrollbar-width: none;
 		margin: 0 auto;
@@ -448,6 +410,16 @@ const plans = [
 		.pricing__nav-btn svg {
 			animation: none;
 		}
+	}
+
+	.pricing__nav-btn:disabled {
+		opacity: 0.3;
+		cursor: default;
+		pointer-events: none;
+	}
+
+	.pricing__nav-btn:disabled svg {
+		animation: none;
 	}
 
 	/* PC: back to the original static grid (3 up top, 2 below) instead of
