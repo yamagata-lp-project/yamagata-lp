@@ -54,11 +54,8 @@ const plans = [
 	},
 ];
 
-// Render 3 copies back-to-back so the slider can loop infinitely: the
-// middle copy is what's shown initially, and the JS below silently jumps
-// between copies at the edges to fake an endless loop.
-const loopedPlans = [...plans, ...plans, ...plans];
-const initialIndex = plans.length; // first card of the middle copy
+// A plain, non-looping strip of the 5 plans. On mobile it scrolls
+// horizontally between the first and last card only — no wraparound.
 ---
 
 <section id="pricing" class="pricing">
@@ -69,11 +66,11 @@ const initialIndex = plans.length; // first card of the middle copy
 			<p class="section-heading__lead">物量を確認したうえで、お荷物が収まる最適なプランをご案内いたします。</p>
 		</div>
 
-		<div class="pricing__slider" data-pricing-slider data-plan-count={plans.length} data-initial-index={initialIndex}>
+		<div class="pricing__slider" data-pricing-slider>
 			<ul class="pricing__list" data-pricing-track>
 				{
-					loopedPlans.map((plan, i) => (
-						<li class="pricing__item" data-copy={Math.floor(i / plans.length)}>
+					plans.map((plan) => (
+						<li class="pricing__item">
 							<p class="pricing__badge">{plan.badge}</p>
 							<p class="pricing__name">{plan.name}</p>
 							<div class="pricing__capacity">
@@ -83,7 +80,6 @@ const initialIndex = plans.length; // first card of the middle copy
 							<Image src={plan.img} alt={plan.name} width={plan.width} height={plan.height} class="pricing__truck" />
 							<p class="pricing__price">
 								{plan.price}<span class="pricing__price-unit">円</span>
-								<span class="pricing__price-tax">(税抜)</span>
 							</p>
 						</li>
 					))
@@ -112,18 +108,19 @@ const initialIndex = plans.length; // first card of the middle copy
 
 <script>
 	document.querySelectorAll<HTMLElement>("[data-pricing-slider]").forEach((slider) => {
-		// the infinite-loop slider only applies at mobile widths; PC shows a
-		// static grid (see the >=768px CSS), so skip wiring it up there
+		// the strip only scrolls at mobile widths; PC shows a static grid (see
+		// the >=768px CSS), so skip wiring it up there
 		if (window.matchMedia("(min-width: 768px)").matches) return;
 
 		const track = slider.querySelector<HTMLElement>("[data-pricing-track]");
 		if (!track) return;
 
-		const count = Number(slider.dataset.planCount || "0");
 		const cards = Array.from(track.querySelectorAll<HTMLElement>(".pricing__item"));
-		if (!count || cards.length !== count * 3) return;
+		const count = cards.length;
+		if (!count) return;
 
-		let currentIndex = Number(slider.dataset.initialIndex || count);
+		const prevBtn = slider.querySelector<HTMLButtonElement>("[data-pricing-prev]");
+		const nextBtn = slider.querySelector<HTMLButtonElement>("[data-pricing-next]");
 
 		const centerOn = (index: number, smooth: boolean) => {
 			const card = cards[index];
@@ -135,14 +132,15 @@ const initialIndex = plans.length; // first card of the middle copy
 			const trackRect = track.getBoundingClientRect();
 			const cardLeftInTrack = cardRect.left - trackRect.left + track.scrollLeft;
 			const target = cardLeftInTrack + card.offsetWidth / 2 - track.clientWidth / 2;
+			// at either end the target overshoots past what's scrollable; the
+			// browser clamps it to the real min/max on its own, which is exactly
+			// the "stop at the first/last card" behavior we want — no wraparound
 			track.scrollTo({ left: target, behavior: smooth ? "smooth" : "instant" });
 		};
 
-		// find whichever card currently sits closest to the track's center;
-		// needed because manual touch-swipe scrolling changes the on-screen
-		// card without ever updating `currentIndex` (that only happened via
-		// the prev/next button handlers), which let finger-swiping scroll
-		// straight through into the 2nd/3rd cloned copy undetected
+		// find whichever card currently sits closest to the track's center; this
+		// is the source of truth for "where are we", covering both button taps
+		// and manual finger swipes
 		const getCenterIndex = () => {
 			const trackRect = track.getBoundingClientRect();
 			const centerX = trackRect.left + trackRect.width / 2;
@@ -159,45 +157,39 @@ const initialIndex = plans.length; // first card of the middle copy
 			return closest;
 		};
 
-		// keep the index inside the middle copy [count, count*2 - 1]; if
-		// scrolling (by button or by touch) left it in an outer clone,
-		// silently snap back by one full loop (identical content, so it's
-		// visually seamless)
-		const resyncIfNeeded = () => {
-			currentIndex = getCenterIndex();
-			if (currentIndex >= count * 2) {
-				currentIndex -= count;
-				centerOn(currentIndex, false);
-			} else if (currentIndex < count) {
-				currentIndex += count;
-				centerOn(currentIndex, false);
-			}
+		// disable prev on the first card and next on the last, so there's no way
+		// to request stepping past either end
+		const updateNavState = (index: number) => {
+			if (prevBtn) prevBtn.disabled = index <= 0;
+			if (nextBtn) nextBtn.disabled = index >= count - 1;
 		};
-
-		let settleTimer: ReturnType<typeof setTimeout>;
-		track.addEventListener("scroll", () => {
-			clearTimeout(settleTimer);
-			settleTimer = setTimeout(resyncIfNeeded, 150);
-		});
 
 		const go = (dir: number) => {
-			currentIndex += dir;
-			// always retarget an absolute position (rather than a relative
-			// scrollBy) so rapid repeated clicks each land exactly one card
-			// further instead of compounding on an in-flight animation
-			centerOn(currentIndex, true);
+			const target = Math.min(count - 1, Math.max(0, getCenterIndex() + dir));
+			centerOn(target, true);
+			updateNavState(target);
 		};
 
-		slider.querySelector("[data-pricing-prev]")?.addEventListener("click", () => go(-1));
-		slider.querySelector("[data-pricing-next]")?.addEventListener("click", () => go(1));
+		prevBtn?.addEventListener("click", () => go(-1));
+		nextBtn?.addEventListener("click", () => go(1));
 
-		// center the initial card without animation, then re-center on resize
-		centerOn(currentIndex, false);
-		let resizeTimer: ReturnType<typeof setTimeout>;
-		window.addEventListener("resize", () => {
-			clearTimeout(resizeTimer);
-			resizeTimer = setTimeout(() => centerOn(currentIndex, false), 150);
-		});
+		// keep the buttons' enabled/disabled state in sync with manual swiping
+		// too, once a swipe settles. "scrollend" fires exactly once when the
+		// browser considers scrolling truly finished; fall back to a debounced
+		// "scroll" listener for browsers without scrollend support.
+		const syncNavState = () => updateNavState(getCenterIndex());
+		if ("onscrollend" in window) {
+			track.addEventListener("scrollend", syncNavState);
+		} else {
+			let settleTimer: ReturnType<typeof setTimeout>;
+			track.addEventListener("scroll", () => {
+				clearTimeout(settleTimer);
+				settleTimer = setTimeout(syncNavState, 150);
+			});
+		}
+
+		// start on the first card with prev disabled
+		updateNavState(0);
 	});
 </script>
 
@@ -219,7 +211,12 @@ const initialIndex = plans.length; // first card of the middle copy
 		overflow-x: auto;
 		scroll-snap-type: x mandatory;
 		padding-block: 4px 12px;
-		padding-inline: 4px;
+		/* half the track's width minus half a card's width (236px), so the
+		   scrollable range starts/ends with that much empty space on each
+		   side — enough for the first/last card to reach dead-center like
+		   every card in between, instead of stopping flush against the edge
+		   because there's nothing left to scroll past */
+		padding-inline: calc(50% - 118px);
 		-webkit-overflow-scrolling: touch;
 		scrollbar-width: none;
 		margin: 0 auto;
@@ -339,13 +336,6 @@ const initialIndex = plans.length; // first card of the middle copy
 		font-size: 15px;
 	}
 
-	.pricing__price-tax {
-		font-family: var(--font-heading);
-		font-size: 11px;
-		color: var(--color-accent-red);
-		margin-left: 4px;
-	}
-
 	.pricing__note {
 		text-align: center;
 		font-family: var(--font-en);
@@ -422,6 +412,16 @@ const initialIndex = plans.length; // first card of the middle copy
 		}
 	}
 
+	.pricing__nav-btn:disabled {
+		opacity: 0.3;
+		cursor: default;
+		pointer-events: none;
+	}
+
+	.pricing__nav-btn:disabled svg {
+		animation: none;
+	}
+
 	/* PC: back to the original static grid (3 up top, 2 below) instead of
 	   the slider — only the middle (non-clone) copy of cards is shown */
 	@media (min-width: 768px) {
@@ -444,11 +444,6 @@ const initialIndex = plans.length; // first card of the middle copy
 			width: auto;
 			scroll-snap-align: none;
 			padding: 24px 20px;
-		}
-
-		.pricing__item[data-copy="0"],
-		.pricing__item[data-copy="2"] {
-			display: none;
 		}
 
 		.pricing__badge {
@@ -494,11 +489,6 @@ const initialIndex = plans.length; // first card of the middle copy
 
 		.pricing__price-unit {
 			font-size: 28px;
-		}
-
-		.pricing__price-tax {
-			font-size: 16px;
-			margin-left: 6px;
 		}
 
 		.pricing__nav {
