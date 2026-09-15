@@ -227,6 +227,8 @@ const timeSlots = ["特になし", "午前", "午後"];
 </Layout>
 
 <script>
+	import { ADS_CONVERSION_LABELS, GOOGLE_ADS_ID } from "../../config/tracking";
+
 	const form = document.querySelector<HTMLFormElement>("[data-estimate-form]");
 	if (form) {
 		// today's date as the minimum selectable value for both date pickers
@@ -290,6 +292,25 @@ const timeSlots = ["特になし", "午前", "午後"];
 					body: JSON.stringify(payload),
 				});
 				if (!res.ok) throw new Error("submit_failed");
+
+				// CV計測はメール送信が成功した時だけ発火させる。
+				// 感謝ページ側で発火させると、直接アクセスや再読み込みで偽のCVが積まれるため。
+				const gtag = (window as unknown as { gtag?: (...args: unknown[]) => void }).gtag;
+				if (typeof gtag === "function") {
+					// 拡張コンバージョン：ハッシュ化前の生値を渡すと gtag が自動で SHA256 化する
+					const email = String(payload.email ?? "").trim();
+					const phone = String(payload.phone ?? "").trim();
+					if (email || phone) {
+						gtag("set", "user_data", { email, phone_number: phone });
+					}
+					gtag("event", "conversion", {
+						send_to: `${GOOGLE_ADS_ID}/${ADS_CONVERSION_LABELS.form}`,
+						value: 1.0,
+						currency: "JPY",
+					});
+					gtag("event", "generate_lead", { method: "estimate_form" });
+				}
+
 				window.location.href = "/estimate/thanks/";
 			} catch {
 				if (errorEl) errorEl.hidden = false;
