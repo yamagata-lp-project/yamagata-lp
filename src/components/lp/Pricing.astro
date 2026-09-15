@@ -142,8 +142,6 @@ const plans = [
 		const cards = Array.from(track.querySelectorAll<HTMLElement>(".pricing__item"));
 		if (cards.length !== count * 3) return;
 
-		let currentIndex = count; // first card of the middle (real) copy
-
 		const centerOn = (index: number, smooth: boolean) => {
 			const card = cards[index];
 			if (!card) return;
@@ -157,11 +155,11 @@ const plans = [
 			track.scrollTo({ left: target, behavior: smooth ? "smooth" : "instant" });
 		};
 
-		// find whichever card currently sits closest to the track's center;
-		// needed because manual touch-swipe scrolling changes the on-screen
-		// card without ever updating `currentIndex` (that only happened via
-		// the prev/next button handlers), which let finger-swiping scroll
-		// straight through into the 2nd/3rd cloned copy undetected
+		// find whichever card currently sits closest to the track's center. This
+		// is the single source of truth for "where are we" — nothing keeps its
+		// own index counter — so a button click and a finger swipe (or two rapid
+		// button clicks racing a still-pending resync) can never disagree about
+		// the current position.
 		const getCenterIndex = () => {
 			const trackRect = track.getBoundingClientRect();
 			const centerX = trackRect.left + trackRect.width / 2;
@@ -178,44 +176,62 @@ const plans = [
 			return closest;
 		};
 
-		// keep the index inside the middle copy [count, count*2 - 1]; if
-		// scrolling (by button or by touch) left it in an outer clone,
-		// silently snap back by one full loop (identical content, so it's
-		// visually seamless)
-		const resyncIfNeeded = () => {
-			currentIndex = getCenterIndex();
-			if (currentIndex >= count * 2) {
-				currentIndex -= count;
-				centerOn(currentIndex, false);
-			} else if (currentIndex < count) {
-				currentIndex += count;
-				centerOn(currentIndex, false);
+		// If we're currently resting on a clone (outside the middle copy
+		// [count, count*2 - 1]), snap back by one full loop — identical content,
+		// so it's visually invisible — and return the corrected index. Reading
+		// position fresh via getCenterIndex() every time (rather than trusting a
+		// separately-tracked counter) makes this idempotent: calling it twice in
+		// a row, from two different triggers, only ever corrects once, because
+		// the second call sees the already-corrected position and no-ops. That
+		// previously wasn't the case — a tap-triggered correction and the
+		// scroll-driven one below could each independently rebase the same wrap,
+		// double-shifting by a full loop and making the next tap appear to do
+		// nothing.
+		const rebaseIfNeeded = () => {
+			let index = getCenterIndex();
+			if (index >= count * 2) {
+				index -= count;
+				centerOn(index, false);
+			} else if (index < count) {
+				index += count;
+				centerOn(index, false);
 			}
+			return index;
 		};
 
-		let settleTimer: ReturnType<typeof setTimeout>;
-		track.addEventListener("scroll", () => {
-			clearTimeout(settleTimer);
-			settleTimer = setTimeout(resyncIfNeeded, 150);
-		});
+		// "scrollend" fires exactly once when the browser considers a scroll
+		// (including a smooth-scroll animation or touch-momentum coast) truly
+		// finished, so this only ever runs against a final rest position rather
+		// than guessing via a fixed timer. Falls back to a debounced "scroll"
+		// listener for browsers without scrollend support.
+		if ("onscrollend" in window) {
+			track.addEventListener("scrollend", rebaseIfNeeded);
+		} else {
+			let settleTimer: ReturnType<typeof setTimeout>;
+			track.addEventListener("scroll", () => {
+				clearTimeout(settleTimer);
+				settleTimer = setTimeout(rebaseIfNeeded, 150);
+			});
+		}
 
 		const go = (dir: number) => {
-			currentIndex += dir;
-			// always retarget an absolute position (rather than a relative
-			// scrollBy) so rapid repeated clicks each land exactly one card
-			// further instead of compounding on an in-flight animation
-			centerOn(currentIndex, true);
+			// rebase first (a no-op if we're already on the middle copy) so a
+			// tap always steps exactly one card, however fast repeated taps
+			// arrive relative to the scrollend-driven rebase above
+			const index = rebaseIfNeeded();
+			centerOn(index + dir, true);
 		};
 
 		slider.querySelector("[data-pricing-prev]")?.addEventListener("click", () => go(-1));
 		slider.querySelector("[data-pricing-next]")?.addEventListener("click", () => go(1));
 
-		// center the initial card without animation, then re-center on resize
-		centerOn(currentIndex, false);
+		// center the initial (real, middle-copy) card without animation, then
+		// re-center on resize on whatever card is currently showing
+		centerOn(count, false);
 		let resizeTimer: ReturnType<typeof setTimeout>;
 		window.addEventListener("resize", () => {
 			clearTimeout(resizeTimer);
-			resizeTimer = setTimeout(() => centerOn(currentIndex, false), 150);
+			resizeTimer = setTimeout(() => centerOn(getCenterIndex(), false), 150);
 		});
 	});
 </script>
