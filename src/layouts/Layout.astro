@@ -21,6 +21,12 @@ const {
 		<meta name="generator" content={Astro.generator} />
 		<title>{title}</title>
 		<meta name="description" content={description} />
+		<meta name="robots" content="noindex" />
+		<!-- iOS Safari auto-detects addresses/phone numbers in plain text and
+		     makes them tap-to-open-Maps/dialer; the footer address was getting
+		     swept up in this even though it's plain text, not a link. Explicit
+		     tel: links elsewhere are unaffected by this meta tag. -->
+		<meta name="format-detection" content="telephone=no, address=no" />
 
 		<link rel="preconnect" href="https://fonts.googleapis.com" />
 		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />

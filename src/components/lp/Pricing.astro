@@ -54,11 +54,10 @@ const plans = [
 	},
 ];
 
-// Render 3 copies back-to-back so the slider can loop infinitely: the
-// middle copy is what's shown initially, and the JS below silently jumps
-// between copies at the edges to fake an endless loop.
-const loopedPlans = [...plans, ...plans, ...plans];
-const initialIndex = plans.length; // first card of the middle copy
+// Only the 5 real plans are rendered here. The mobile slider needs clone
+// copies before/after the real set to fake an endless loop, but those clones
+// are pure presentation — the client script below builds and inserts them at
+// runtime (aria-hidden) so the page's actual markup stays at 5 items.
 ---
 
 <section id="pricing" class="pricing">
@@ -69,11 +68,11 @@ const initialIndex = plans.length; // first card of the middle copy
 			<p class="section-heading__lead">物量を確認したうえで、お荷物が収まる最適なプランをご案内いたします。</p>
 		</div>
 
-		<div class="pricing__slider" data-pricing-slider data-plan-count={plans.length} data-initial-index={initialIndex}>
+		<div class="pricing__slider" data-pricing-slider data-plan-count={plans.length}>
 			<ul class="pricing__list" data-pricing-track>
 				{
-					loopedPlans.map((plan, i) => (
-						<li class="pricing__item" data-copy={Math.floor(i / plans.length)}>
+					plans.map((plan) => (
+						<li class="pricing__item">
 							<p class="pricing__badge">{plan.badge}</p>
 							<p class="pricing__name">{plan.name}</p>
 							<div class="pricing__capacity">
@@ -83,7 +82,6 @@ const initialIndex = plans.length; // first card of the middle copy
 							<Image src={plan.img} alt={plan.name} width={plan.width} height={plan.height} class="pricing__truck" />
 							<p class="pricing__price">
 								{plan.price}<span class="pricing__price-unit">円</span>
-								<span class="pricing__price-tax">(税抜)</span>
 							</p>
 						</li>
 					))
@@ -120,10 +118,31 @@ const initialIndex = plans.length; // first card of the middle copy
 		if (!track) return;
 
 		const count = Number(slider.dataset.planCount || "0");
-		const cards = Array.from(track.querySelectorAll<HTMLElement>(".pricing__item"));
-		if (!count || cards.length !== count * 3) return;
+		const realCards = Array.from(track.querySelectorAll<HTMLElement>(".pricing__item"));
+		if (!count || realCards.length !== count) return;
 
-		let currentIndex = Number(slider.dataset.initialIndex || count);
+		// Clone the real cards into a copy before and after the real set so the
+		// track can be scrolled seamlessly past either edge. The clones are
+		// presentation-only duplicates of content already in the page, so they're
+		// hidden from assistive tech and excluded from the page's real markup —
+		// the server only ever renders the 5 real cards.
+		const cloneSet = () => {
+			const fragment = document.createDocumentFragment();
+			realCards.forEach((card) => {
+				const clone = card.cloneNode(true) as HTMLElement;
+				clone.setAttribute("aria-hidden", "true");
+				clone.setAttribute("inert", "");
+				fragment.appendChild(clone);
+			});
+			return fragment;
+		};
+		track.insertBefore(cloneSet(), track.firstChild);
+		track.appendChild(cloneSet());
+
+		const cards = Array.from(track.querySelectorAll<HTMLElement>(".pricing__item"));
+		if (cards.length !== count * 3) return;
+
+		let currentIndex = count; // first card of the middle (real) copy
 
 		const centerOn = (index: number, smooth: boolean) => {
 			const card = cards[index];
@@ -339,13 +358,6 @@ const initialIndex = plans.length; // first card of the middle copy
 		font-size: 15px;
 	}
 
-	.pricing__price-tax {
-		font-family: var(--font-heading);
-		font-size: 11px;
-		color: var(--color-accent-red);
-		margin-left: 4px;
-	}
-
 	.pricing__note {
 		text-align: center;
 		font-family: var(--font-en);
@@ -446,11 +458,6 @@ const initialIndex = plans.length; // first card of the middle copy
 			padding: 24px 20px;
 		}
 
-		.pricing__item[data-copy="0"],
-		.pricing__item[data-copy="2"] {
-			display: none;
-		}
-
 		.pricing__badge {
 			font-size: 14px;
 		}
@@ -494,11 +501,6 @@ const initialIndex = plans.length; // first card of the middle copy
 
 		.pricing__price-unit {
 			font-size: 28px;
-		}
-
-		.pricing__price-tax {
-			font-size: 16px;
-			margin-left: 6px;
 		}
 
 		.pricing__nav {
