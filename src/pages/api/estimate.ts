@@ -8,6 +8,11 @@ export const prerender = false;
 const TEL = "0120-442-999";
 const SITE_NAME = "山形不用品回収サービス";
 
+// The auto-reply's From address isn't a monitored inbox yet, so customer
+// replies are routed here for now. Switch to info@yamagata-huyouhin.com once
+// that inbox is set up.
+const AUTO_REPLY_REPLY_TO = "8step.yamagata@gmail.com";
+
 interface EstimatePayload {
 	name: string;
 	contactMethod: string;
@@ -222,6 +227,7 @@ export const POST: APIRoute = async ({ request }) => {
 		resend.emails.send({
 			from: fromEmail,
 			to: payload.email,
+			replyTo: AUTO_REPLY_REPLY_TO,
 			subject: autoReply.subject,
 			text: autoReply.text,
 			html: autoReply.html,
