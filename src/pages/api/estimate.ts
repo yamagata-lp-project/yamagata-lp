@@ -7,6 +7,12 @@ export const prerender = false;
 
 const TEL = "0120-442-999";
 const SITE_NAME = "山形不用品回収サービス";
+const SITE_DOMAIN = "yamagata-huyouhin.com";
+
+// Matches --color-primary in src/styles/global.css (the LP's form CTA button color).
+const BRAND_COLOR = "#0381dc";
+// Matches --color-accent-red in src/styles/global.css.
+const ACCENT_RED = "#ff0211";
 
 // The auto-reply's From address isn't a monitored inbox yet, so customer
 // replies are routed here for now. Switch to info@yamagata-huyouhin.com once
@@ -159,23 +165,53 @@ ${buildSummaryRows(p)
 ${SITE_NAME}
 TEL：${TEL}`;
 
-	const html = `
-		<p>${escapeHtml(p.name)} 様</p>
-		<p>この度は${SITE_NAME}のお見積り・ご相談フォームにご入力いただき、誠にありがとうございます。<br />
-		以下の内容で承りました。担当者が内容を確認のうえ、ご希望のご連絡方法にて折り返しご連絡いたします。</p>
-		<table cellpadding="6" cellspacing="0" style="border-collapse:collapse;">
-			${buildSummaryRows(p)
-				.map(
-					([label, value]) => `
+	const phoneNotice =
+		p.contactMethod === "電話"
+			? `
+			<table cellpadding="0" cellspacing="0" style="width:100%;border-collapse:collapse;margin:0 0 20px;">
 				<tr>
-					<th style="text-align:left;background:#f5f5f5;border:1px solid #ddd;white-space:nowrap;">${escapeHtml(label)}</th>
-					<td style="border:1px solid #ddd;white-space:pre-wrap;">${escapeHtml(value)}</td>
-				</tr>`,
-				)
-				.join("")}
+					<td style="border:2px solid ${ACCENT_RED};background:#fff5f5;color:${ACCENT_RED};font-weight:bold;padding:14px 16px;border-radius:4px;">
+						お客様は電話希望です。${escapeHtml(p.phone)}へお電話ください（このメールへの返信は届きません）。
+					</td>
+				</tr>
+			</table>`
+			: "";
+
+	const html = `
+		<table cellpadding="0" cellspacing="0" style="width:100%;max-width:600px;border-collapse:collapse;font-family:'Hiragino Sans','Yu Gothic',sans-serif;color:#222222;">
+			<tr>
+				<td style="background:${BRAND_COLOR};color:#ffffff;padding:24px 20px;text-align:center;border-radius:4px 4px 0 0;">
+					<div style="font-size:13px;letter-spacing:0.05em;opacity:0.9;">${SITE_NAME}</div>
+					<div style="font-size:20px;font-weight:bold;margin-top:4px;">お見積り・ご相談を受け付けました</div>
+				</td>
+			</tr>
+			<tr>
+				<td style="border:1px solid #eeeeee;border-top:none;padding:24px 20px;">
+					<p style="margin:0 0 16px;">${escapeHtml(p.name)} 様</p>
+					<p style="margin:0 0 20px;">この度は${SITE_NAME}のお見積り・ご相談フォームにご入力いただき、誠にありがとうございます。<br />
+					以下の内容で承りました。担当者が内容を確認のうえ、ご希望のご連絡方法にて折り返しご連絡いたします。</p>
+					${phoneNotice}
+					<table cellpadding="0" cellspacing="0" style="width:100%;border-collapse:collapse;margin:0 0 20px;">
+						${buildSummaryRows(p)
+							.map(
+								([label, value]) => `
+						<tr>
+							<th style="text-align:left;background:#eaf4ff;border:1px solid #bac9d9;white-space:nowrap;padding:10px 12px;font-weight:bold;">${escapeHtml(label)}</th>
+							<td style="border:1px solid #bac9d9;white-space:pre-wrap;padding:10px 12px;">${escapeHtml(value)}</td>
+						</tr>`,
+							)
+							.join("")}
+					</table>
+					<p style="margin:0;">${SITE_NAME}<br />
+					TEL：${TEL}</p>
+				</td>
+			</tr>
+			<tr>
+				<td style="padding:16px 20px;text-align:center;color:#7d7d7d;font-size:12px;">
+					このメールは${SITE_DOMAIN}の見積もりフォームから自動送信されています。
+				</td>
+			</tr>
 		</table>
-		<p>${SITE_NAME}<br />
-		TEL：${TEL}</p>
 	`;
 
 	return {
