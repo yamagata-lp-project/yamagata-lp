@@ -156,9 +156,8 @@ ${buildSummaryRows(p)
 	.join("\n")}
 ――――――――――――――
 
-お急ぎの場合は、お電話（${TEL}）またはLINE（https://lin.ee/zZWo2lf）にて直接お問い合わせください。
-
-${SITE_NAME}`;
+${SITE_NAME}
+TEL：${TEL}`;
 
 	const html = `
 		<p>${escapeHtml(p.name)} 様</p>
@@ -175,9 +174,8 @@ ${SITE_NAME}`;
 				)
 				.join("")}
 		</table>
-		<p>お急ぎの場合は、お電話（<a href="tel:${TEL.replace(/-/g, "")}">${TEL}</a>）または
-		<a href="https://lin.ee/zZWo2lf">LINE</a>にて直接お問い合わせください。</p>
-		<p>${SITE_NAME}</p>
+		<p>${SITE_NAME}<br />
+		TEL：${TEL}</p>
 	`;
 
 	return {
