@@ -30,3 +30,6 @@ export const GA4_MEASUREMENT_ID = "G-FFMKWBQPC9";
 
 /** Microsoft Clarity のプロジェクトID */
 export const CLARITY_ID = "yhmctq29h3";
+
+/** Google Tag Manager のコンテナID */
+export const GTM_ID = "GTM-KPFB2H56";
