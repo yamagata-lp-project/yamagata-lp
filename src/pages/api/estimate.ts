@@ -14,10 +14,7 @@ const BRAND_COLOR = "#0381dc";
 // Matches --color-accent-red in src/styles/global.css.
 const ACCENT_RED = "#ff0211";
 
-// The auto-reply's From address isn't a monitored inbox yet, so customer
-// replies are routed here for now. Switch to info@yamagata-huyouhin.com once
-// that inbox is set up.
-const AUTO_REPLY_REPLY_TO = "8step.yamagata@gmail.com";
+const AUTO_REPLY_REPLY_TO = "info@yamagata-huyouhin.com";
 
 interface EstimatePayload {
 	name: string;
