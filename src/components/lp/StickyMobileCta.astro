@@ -12,8 +12,7 @@ const TEL = "0120-442-999";
 			<Image src={iconPhone} alt="" width={22} height={22} />
 		</span>
 		<span class="sticky-cta__text">
-			<span class="sticky-cta__text-sub">フリーダイヤル</span>
-			<span class="sticky-cta__text-main">電話で問い合わせ</span>
+			<span class="sticky-cta__text-main">フリーダイヤル</span>
 			<span class="sticky-cta__text-sub">9:00〜21:00</span>
 		</span>
 	</a>
@@ -22,8 +21,19 @@ const TEL = "0120-442-999";
 			<Image src={iconLine} alt="" width={140} height={140} />
 		</span>
 		<span class="sticky-cta__text">
-			<span class="sticky-cta__text-sub">LINEで</span>
-			<span class="sticky-cta__text-main">カンタン見積もり</span>
+			<span class="sticky-cta__text-main">LINE見積もり</span>
+			<span class="sticky-cta__text-sub">24時間受付</span>
+		</span>
+	</a>
+	<a href="/estimate/" class="sticky-cta__btn sticky-cta__btn--form">
+		<span class="sticky-cta__icon sticky-cta__icon--form">
+			<svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+				<rect x="2" y="4" width="20" height="16" rx="2"></rect>
+				<path d="m22 7-10 6L2 7"></path>
+			</svg>
+		</span>
+		<span class="sticky-cta__text">
+			<span class="sticky-cta__text-main">メールフォーム</span>
 			<span class="sticky-cta__text-sub">24時間受付</span>
 		</span>
 	</a>
@@ -42,7 +52,7 @@ const TEL = "0120-442-999";
 			bottom: 0;
 			z-index: 200;
 			display: flex;
-			gap: 10px;
+			gap: 6px;
 			background: #fff;
 			padding: 8px 10px calc(8px + env(safe-area-inset-bottom, 0px));
 			box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.15);
@@ -51,12 +61,14 @@ const TEL = "0120-442-999";
 		.sticky-cta__btn {
 			flex: 1;
 			display: flex;
+			flex-direction: column;
 			align-items: center;
 			justify-content: center;
-			gap: 8px;
-			height: 65px;
+			gap: 2px;
+			height: 72px;
+			min-width: 0;
 			color: #fff;
-			padding-inline: 8px;
+			padding-inline: 4px;
 			border-radius: 12px;
 			box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
 		}
@@ -72,40 +84,42 @@ const TEL = "0120-442-999";
 		.sticky-cta__text-sub {
 			font-family: var(--font-heading);
 			font-weight: 400;
-			font-size: 10px;
-			letter-spacing: 0.02em;
+			font-size: 11px;
+			letter-spacing: 0;
+			white-space: nowrap;
 		}
 
 		.sticky-cta__text-main {
 			font-family: var(--font-heading);
 			font-weight: 700;
-			font-size: 13px;
-			letter-spacing: 0.02em;
+			font-size: 12px;
+			letter-spacing: 0;
+			white-space: nowrap;
 		}
 
 		.sticky-cta__icon {
 			flex-shrink: 0;
-			width: 26px;
-			height: 26px;
+			width: 24px;
+			height: 24px;
 			display: flex;
 			align-items: center;
 			justify-content: center;
 		}
 
 		.sticky-cta__icon--phone :global(img) {
-			width: 22px;
-			height: 22px;
+			width: 20px;
+			height: 20px;
 			filter: brightness(0) invert(1);
 		}
 
 		.sticky-cta__icon--line {
-			width: 34px;
-			height: 34px;
+			width: 24px;
+			height: 24px;
 		}
 
 		.sticky-cta__icon--line :global(img) {
-			width: 34px;
-			height: 34px;
+			width: 24px;
+			height: 24px;
 			display: block;
 		}
 
@@ -115,6 +129,10 @@ const TEL = "0120-442-999";
 
 		.sticky-cta__btn--line {
 			background: var(--color-cta-line);
+		}
+
+		.sticky-cta__btn--form {
+			background: var(--color-primary);
 		}
 
 		:global(body.is-menu-open) .sticky-cta {

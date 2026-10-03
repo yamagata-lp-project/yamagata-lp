@@ -1,0 +1,136 @@
+---
+import { Image } from "astro:assets";
+import uniqlo from "../../assets/lp/partner-uniqlo.svg";
+import nitori from "../../assets/lp/partner-nitori.svg";
+import katitas from "../../assets/lp/partner-katitas.svg";
+import tokyuLivable from "../../assets/lp/partner-tokyu-livable.svg";
+import sumifu from "../../assets/lp/partner-sumitomo.svg";
+import kurieito from "../../assets/lp/kurieito.webp";
+import seiouhudosan from "../../assets/lp/seiouhudosan.png";
+
+// logo: undefined renders the name as text only (no logo asset)
+const partners = [
+	{ name: "UNIQLO", logo: uniqlo },
+	{ name: "ニトリ", logo: nitori },
+	{ name: "カチタス", logo: katitas },
+	{ name: "東急リバブル", logo: tokyuLivable },
+	{ name: "すみふの仲介ステップ", logo: sumifu },
+	{ name: "クリエイト礼文", logo: kurieito },
+	{ name: "西王不動産", logo: seiouhudosan },
+	{ name: "各種行政法人様", logo: undefined },
+];
+---
+
+<section id="partners" class="partners">
+	<div class="l-container">
+		<div class="section-heading">
+			<p class="section-heading__kicker">法人・行政お取引実績</p>
+			<p class="section-heading__ja partners__title">大手企業・公的機関にも<br class="partners__br" />ご利用いただいています</p>
+			<p class="section-heading__lead">アパレル・家具大手から地場不動産・行政まで、<br class="partners__br" />多数の法人様と継続的にお取引しています</p>
+		</div>
+
+		<ul class="partners__list">
+			{
+				partners.map((partner) => (
+					<li class="partners__card">
+						{partner.logo ? (
+							<Image src={partner.logo} alt={partner.name} class="partners__logo" loading="lazy" />
+						) : (
+							<span class="partners__text">{partner.name}</span>
+						)}
+					</li>
+				))
+			}
+		</ul>
+
+		<p class="partners__note">※ロゴ画像は各企業様・行政機関様の登録商標です。取引実績の証として掲載しています。</p>
+	</div>
+</section>
+
+<style>
+	.partners {
+		background: var(--color-bg-pale-1);
+		padding-block: 60px 70px;
+	}
+
+	.partners__title {
+		font-size: clamp(22px, 4vw, 38px);
+		line-height: 1.4;
+	}
+
+	.partners__br {
+		display: none;
+	}
+
+	.partners__list {
+		list-style: none;
+		margin: 0 auto;
+		padding: 0;
+		max-width: 960px;
+		display: grid;
+		grid-template-columns: repeat(2, 1fr);
+		gap: 12px;
+	}
+
+	.partners__card {
+		position: relative;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		height: 80px;
+		padding: 12px;
+		background: #fff;
+		border: 1px solid var(--color-border-gray);
+		border-radius: 8px;
+		box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.06);
+	}
+
+	.partners__card :global(.partners__logo) {
+		width: 100%;
+		height: 100%;
+		object-fit: contain;
+	}
+
+	.partners__text {
+		font-family: var(--font-heading);
+		font-weight: 900;
+		font-size: 14px;
+		line-height: 1.4;
+		text-align: center;
+		color: var(--color-text);
+	}
+
+	.partners__note {
+		margin-top: 24px;
+		text-align: center;
+		font-family: var(--font-heading);
+		font-size: 12px;
+		color: var(--color-text-sub);
+	}
+
+	@media (max-width: 767px) {
+		.partners__br {
+			display: inline;
+		}
+	}
+
+	@media (min-width: 768px) {
+		.partners {
+			padding-block: 80px 90px;
+		}
+
+		.partners__list {
+			grid-template-columns: repeat(4, 1fr);
+			gap: 20px;
+		}
+
+		.partners__card {
+			height: 96px;
+			padding: 16px;
+		}
+
+		.partners__text {
+			font-size: 16px;
+		}
+	}
+</style>
