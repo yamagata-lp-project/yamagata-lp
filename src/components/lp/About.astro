@@ -1,7 +1,6 @@
 ---
 import { Image } from "astro:assets";
-import yamagataKaishaGazou from "../../assets/lp/yamagata-kaisha-gazou.webp";
-import komattahitoImg from "../../assets/lp/komattahito.png";
+import yamagataMember from "../../assets/lp/yamagata-member.webp";
 import yamagataKeshiki from "../../assets/lp/yamagata-keshiki.webp";
 ---
 
@@ -10,48 +9,43 @@ import yamagataKeshiki from "../../assets/lp/yamagata-keshiki.webp";
 	<div class="about__overlay"></div>
 	<div class="l-container">
 		<div class="section-heading">
-			<p class="section-heading__kicker">山形県の対応実績No.1に挑戦中!</p>
+			<p class="section-heading__kicker">グループ全体で<span class="about__kicker-accent">18万件以上</span>の作業実績あり!</p>
 			<p class="section-heading__ja"><span class="section-heading__ja-accent">不用品</span>に困ったら<br />山形不用品回収サービス!</p>
 		</div>
 
 		<p class="about__catch"><span class="about__catch-marker">安いだけじゃない、真心込めた丁寧・スピーディな対応!</span></p>
 
-		<div class="about__photo">
-			<Image src={yamagataKaishaGazou} alt="山形不用品回収サービスの対応実績" width={1280} height={720} />
-		</div>
-
 		<div class="about__panel">
-			<p class="about__text"><strong>「誰に頼めばいいか分からない」「対応してもらえるか不安」</strong></p>
-
 			<p class="about__text">
-				そんな山形県内のお困りごとに、私たちがすぐに駆けつけます。引越し・実家の片付け・空き家整理・オフィス撤去まで、山形県内No.1の親切対応を目指し、一件一件丁寧に向き合っています。
+				<span class="about__text-bold">「大量の家財処分に困っている」「今すぐ片付けたい」</span>。そんなお悩みは、山形不用品回収サービスへご相談ください。
 			</p>
 
-			<div class="about__worries">
-				<p class="about__worries-title">
-					<span class="about__worries-marker">こんなお悩みありませんか?</span>
-				</p>
-				<div class="about__worries-layout">
-					<p class="about__worry-bubble about__worry-bubble--1">
-						<strong class="about__worry-accent">大きい家具・家電</strong>が自分では運び出せない
-					</p>
-					<p class="about__worry-bubble about__worry-bubble--2">
-						<strong class="about__worry-accent">引っ越しまで</strong>に不用品を処分しきれない
-					</p>
-					<div class="about__worries-figure">
-						<Image src={komattahitoImg} alt="" width={612} height={408} />
-					</div>
-					<p class="about__worry-bubble about__worry-bubble--3">
-						<strong class="about__worry-accent">実家の片付け</strong>をどこから始めればいいか分からない
-					</p>
-					<p class="about__worry-bubble about__worry-bubble--4">
-						<strong class="about__worry-accent">空き家</strong>をどうにかしたいが手が回らない
-					</p>
-				</div>
+			<p class="about__text">
+				お電話一本で、最短30分でプロのスタッフがご自宅へお伺いします。
+			</p>
+
+			<p class="about__text">
+				研修を積んだ専属スタッフが、<span class="about__text-marker about__text-bold">業界最安値クラスの料金で迅速・ていねいに作業</span>。山形市内なら出張費0円で、追加料金なしの誠実対応でお引き取りいたします。もちろん、山形県全域の他の市町村にも対応。
+			</p>
+
+			<div class="about__member">
+				<Image
+					src={yamagataMember}
+					alt="黒いポロシャツ姿のスタッフ6名がトラックの前で笑顔で並ぶ写真と、各現場の片付け・搬出作業の様子を集めたコラージュ"
+					width={1280}
+					height={720}
+					widths={[640, 960, 1280]}
+					sizes="(min-width: 768px) 848px, calc(100vw - 80px)"
+					loading="lazy"
+				/>
 			</div>
 
 			<p class="about__text">
-				こうしたお悩みも、しっかりとヒアリングし、<span class="about__text-marker">社内研修と経験を積んだ熟練スタッフが対応</span>。数多くの現場で培ったチームワークで、迅速・丁寧に解決いたします。
+				<span class="about__text-marker about__text-bold">「丁寧な対応」「見積もり通りで安心」「他社で断られた相談も安心して依頼できた」</span>と口コミも多数いただいております。
+			</p>
+
+			<p class="about__text">
+				グループ全体で<span class="about__text-bold">累計18万件の作業実績で培ったノウハウ</span>で、家具1点のご依頼からゴミ屋敷・空き家まるごとの片付けまで、迅速にお部屋をスッキリさせます。
 			</p>
 		</div>
 	</div>
@@ -134,8 +128,34 @@ import yamagataKeshiki from "../../assets/lp/yamagata-keshiki.webp";
 		color: var(--color-text);
 	}
 
+	/* team photo between two paragraphs: full inner width of the panel, same
+	   8px corner radius as the site's other photos, and the same 24px
+	   spacing below as a paragraph so the rhythm of the text is kept */
+	.about__member {
+		margin: 0 0 24px;
+		border-radius: 8px;
+		overflow: hidden;
+	}
+
+	.about__member :global(img) {
+		display: block;
+		width: 100%;
+		height: auto;
+	}
+
 	.about__text-marker {
 		background: linear-gradient(180deg, transparent 60%, #ffe066 60%);
+		/* repeat the highlight on every line when the text wraps */
+		-webkit-box-decoration-break: clone;
+		box-decoration-break: clone;
+	}
+
+	.about__text-bold {
+		font-weight: 700;
+	}
+
+	.about__kicker-accent {
+		color: var(--color-accent-red);
 	}
 
 	.about__worries {
@@ -156,33 +176,14 @@ import yamagataKeshiki from "../../assets/lp/yamagata-keshiki.webp";
 		background: linear-gradient(180deg, transparent 60%, #ffe066 60%);
 	}
 
-	/* mobile: bubbles overlap the corners of the photo instead of stacking
-	   above/below it, so the layout is a relative box the bubbles are
-	   absolutely positioned within, sized around the centered figure */
+	/* the four worry bubbles sit in a 2 x 2 grid (two per row) */
 	.about__worries-layout {
-		position: relative;
-		max-width: 300px;
-		margin: 0 auto;
-		padding-block: 46px 54px;
-	}
-
-	.about__worries-figure {
-		width: 60%;
-		margin-inline: auto;
-		position: relative;
-		z-index: 1;
-	}
-
-	.about__worries-figure :global(img) {
-		width: 100%;
-		height: auto;
-		display: block;
+		display: grid;
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+		gap: 12px;
 	}
 
 	.about__worry-bubble {
-		position: absolute;
-		z-index: 2;
-		width: 44%;
 		margin: 0;
 		background: #fff;
 		border: 2px solid var(--color-primary);
@@ -195,30 +196,22 @@ import yamagataKeshiki from "../../assets/lp/yamagata-keshiki.webp";
 		text-align: center;
 		color: var(--color-text);
 		box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.15);
+		/* centre the text vertically so bubbles in the same row look even */
+		display: flex;
+		align-items: center;
+		justify-content: center;
 	}
 
 	.about__worry-accent {
 		color: var(--color-accent-red);
 	}
 
-	.about__worry-bubble--1 {
-		top: 14px;
-		left: 0;
-	}
-
-	.about__worry-bubble--2 {
-		bottom: 20px;
-		left: 0;
-	}
-
-	.about__worry-bubble--3 {
-		top: 2px;
-		right: 0;
-	}
-
-	.about__worry-bubble--4 {
-		bottom: 30px;
-		right: 0;
+	.about__arrow {
+		margin: -4px 0 20px;
+		font-size: 28px;
+		line-height: 1;
+		text-align: center;
+		color: var(--color-primary);
 	}
 
 	@media (min-width: 768px) {
@@ -250,55 +243,20 @@ import yamagataKeshiki from "../../assets/lp/yamagata-keshiki.webp";
 		}
 
 		.about__worries-layout {
-			display: grid;
-			grid-template-columns: 1fr minmax(240px, 320px) 1fr;
-			grid-template-areas:
-				"b1 img b3"
-				"b2 img b4";
-			align-items: center;
 			gap: 24px 32px;
-			max-width: none;
-			margin: 0;
-			padding-block: 0;
-		}
-
-		.about__worries-figure {
-			grid-area: img;
-			width: auto;
-			max-width: 320px;
+			max-width: 720px;
+			margin: 0 auto;
 		}
 
 		.about__worry-bubble {
-			position: static;
-			z-index: auto;
-			width: auto;
 			font-size: 15px;
 			padding: 18px 20px;
 			border-radius: 16px;
 		}
 
-		.about__worry-bubble--1 {
-			grid-area: b1;
-			top: auto;
-			left: auto;
-		}
-
-		.about__worry-bubble--2 {
-			grid-area: b2;
-			bottom: auto;
-			left: auto;
-		}
-
-		.about__worry-bubble--3 {
-			grid-area: b3;
-			top: auto;
-			right: auto;
-		}
-
-		.about__worry-bubble--4 {
-			grid-area: b4;
-			bottom: auto;
-			right: auto;
+		.about__arrow {
+			margin-bottom: 24px;
+			font-size: 36px;
 		}
 	}
 </style>
