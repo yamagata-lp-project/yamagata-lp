@@ -1,83 +1,87 @@
 ---
-import truckLight from "../../assets/lp/truck-light.webp";
-import truckNormal from "../../assets/lp/truck-normal.webp";
-import truckFull from "../../assets/lp/truck-full.webp";
-import truck15t from "../../assets/lp/truck-1_5t-maroon2.webp";
-import truck2t from "../../assets/lp/truck-2t-final.webp";
+import keitora from "../../assets/lp/keitora.webp";
+import truck15t from "../../assets/lp/1.5t.webp";
+import truck2t from "../../assets/lp/2tver2.webp";
 import { Image } from "astro:assets";
 
 const plans = [
 	{
-		img: truckLight,
-		name: "軽トラお手軽プラン",
-		badge: "＼お試しにぴったり!／",
-		desc: "軽トラの荷台の半分まで\n縦型洗濯機3台分ほど",
-		price: "9,000",
-		width: 280,
-		height: 210,
-	},
-	{
-		img: truckNormal,
-		name: "軽トラ通常プラン",
-		badge: "＼一番人気!／",
-		desc: "軽トラの屋根の高さまで\n縦型洗濯機6台分ほど",
-		price: "15,000",
-		width: 280,
-		height: 210,
-	},
-	{
-		img: truckFull,
-		name: "軽トラ満載プラン",
-		badge: "＼一人暮らし丸ごと!／",
-		desc: "軽トラに入る限界まで",
-		price: "19,000",
-		width: 280,
-		height: 210,
-	},
-	{
 		img: truck15t,
 		name: "1.5tトラックプラン",
-		badge: "＼コスパ最強!／",
-		desc: "軽トラでは載りきらない\n大きな家具・家電もまとめて",
+		guide: "二人暮らし・2K～2LDK",
+		truckClass: "pricing__truck",
 		price: "40,000",
-		width: 280,
-		height: 164,
+		width: 560,
+		height: 420,
 	},
 	{
 		img: truck2t,
 		name: "2tトラックプラン",
-		badge: "＼お家丸ごと!／",
-		desc: "お部屋まるごとのお片付けも\nこれ一台でまとめて対応",
+		guide: "戸建・マンション丸ごと",
+		truckClass: "pricing__truck pricing__truck--2t",
 		price: "75,000",
-		width: 280,
-		height: 165,
+		width: 560,
+		height: 420,
 	},
 ];
 
-// A plain, non-looping strip of the 5 plans. On mobile it scrolls
-// horizontally between the first and last card only — no wraparound.
+// 1 wide light-truck card on top (spans both columns), then 1.5t + 2t side by side.
+// The light-truck plan is three size tiers of the same truck, so it is a single
+// card with a static (non-interactive) price guide instead of three cards.
+const keitoraGuide = "一人暮らし・1R～1LDK";
+
+// shown once, at the bottom of the section, as two separate lines
+const cardNotes = [
+	"法律で定められたリサイクル家電や一部特殊品を回収する場合や、オプション作業などが必要な場合は別途費用となります。",
+	"現地確認後、追加料金を頂くことは一切ございません。",
+];
+
+const keitoraSizes = [
+	{ label: "お手軽サイズ", price: "9,000", note: "荷台の半分で収まる場合" },
+	{ label: "通常サイズ", price: "15,000", note: "屋根の高さまでに収まる場合" },
+	{ label: "満載サイズ", price: "19,000", note: "屋根を超える高さまで積む場合" },
+];
 ---
 
 <section id="pricing" class="pricing">
 	<div class="l-container">
 		<div class="section-heading">
 			<p class="section-heading__kicker">明確・分かりやすい</p>
-			<p class="section-heading__ja"><span class="section-heading__ja-accent">5つ</span>の料金プラン</p>
-			<p class="section-heading__lead">物量を確認したうえで、お荷物が収まる最適なプランをご案内いたします。</p>
+			<p class="section-heading__ja"><span class="section-heading__ja-accent">3つ</span>の料金プラン</p>
+			<p class="section-heading__lead">物量を確認したうえで、お荷物が収まる最適なトラックプランをご案内いたします。</p>
 		</div>
 
-		<div class="pricing__slider" data-pricing-slider>
-			<ul class="pricing__list" data-pricing-track>
+		<div class="pricing__slider">
+			<ul class="pricing__list">
+				<li class="pricing__item pricing__item--keitora">
+					<div class="pricing__head">
+						<p class="pricing__name">軽トラプラン</p>
+					</div>
+					<p class="pricing__guide-line"><span class="pricing__guide-pill">容量目安</span><span class="pricing__guide-text">{keitoraGuide}</span></p>
+					<Image src={keitora} alt="軽トラック" width={800} height={600} class="pricing__keitora-img" />
+					<div class="pricing__sizes">
+						{
+							keitoraSizes.map((size) => (
+								<div class="pricing__size">
+									<p class="pricing__size-label">{size.label}</p>
+									<p class="pricing__size-price">
+										<span class="pricing__size-num">{size.price}</span>
+										<span class="pricing__size-unit">円</span>
+									</p>
+									<p class="pricing__size-note">{size.note}</p>
+								</div>
+							))
+						}
+					</div>
+				</li>
 				{
 					plans.map((plan) => (
 						<li class="pricing__item">
-							<p class="pricing__badge">{plan.badge}</p>
-							<p class="pricing__name">{plan.name}</p>
-							<div class="pricing__capacity">
-								<p class="pricing__capacity-label">積載量目安</p>
-								<p class="pricing__desc" style="white-space:pre-line;">{plan.desc}</p>
+							<div class="pricing__head">
+								<p class="pricing__name">{plan.name}</p>
 							</div>
-							<Image src={plan.img} alt={plan.name} width={plan.width} height={plan.height} class="pricing__truck" />
+							<p class="pricing__guide-line"><span class="pricing__guide-pill">容量目安</span><span class="pricing__guide-text">{plan.guide}</span></p>
+							<Image src={plan.img} alt={plan.name} width={plan.width} height={plan.height} class={plan.truckClass} />
 							<p class="pricing__price">
 								{plan.price}<span class="pricing__price-unit">円</span>
 							</p>
@@ -85,113 +89,13 @@ const plans = [
 					))
 				}
 			</ul>
-
-			<div class="pricing__nav">
-				<button type="button" class="pricing__nav-btn pricing__nav-btn--prev" data-pricing-prev aria-label="前のプラン">
-					<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-						<polyline points="15 5 8 12 15 19" />
-					</svg>
-				</button>
-				<button type="button" class="pricing__nav-btn pricing__nav-btn--next" data-pricing-next aria-label="次のプラン">
-					<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-						<polyline points="9 5 16 12 9 19" />
-					</svg>
-				</button>
-			</div>
 		</div>
 
 		<p class="pricing__note">
-			現地確認後、追加料金を頂くことは一切ございません。法律で定められたリサイクル製品・一部特殊品・オプション作業は別途費用となります。
+			{cardNotes.map((note) => <span class="pricing__note-line">{note}</span>)}
 		</p>
 	</div>
 </section>
-
-<script>
-	document.querySelectorAll<HTMLElement>("[data-pricing-slider]").forEach((slider) => {
-		// the strip only scrolls at mobile widths; PC shows a static grid (see
-		// the >=768px CSS), so skip wiring it up there
-		if (window.matchMedia("(min-width: 768px)").matches) return;
-
-		const track = slider.querySelector<HTMLElement>("[data-pricing-track]");
-		if (!track) return;
-
-		const cards = Array.from(track.querySelectorAll<HTMLElement>(".pricing__item"));
-		const count = cards.length;
-		if (!count) return;
-
-		const prevBtn = slider.querySelector<HTMLButtonElement>("[data-pricing-prev]");
-		const nextBtn = slider.querySelector<HTMLButtonElement>("[data-pricing-next]");
-
-		const centerOn = (index: number, smooth: boolean) => {
-			const card = cards[index];
-			if (!card) return;
-			// measure via getBoundingClientRect rather than offsetLeft: offsetLeft
-			// is relative to the nearest positioned ancestor (here, the section),
-			// not the scroll track, so it can't be used directly against scrollLeft
-			const cardRect = card.getBoundingClientRect();
-			const trackRect = track.getBoundingClientRect();
-			const cardLeftInTrack = cardRect.left - trackRect.left + track.scrollLeft;
-			const target = cardLeftInTrack + card.offsetWidth / 2 - track.clientWidth / 2;
-			// at either end the target overshoots past what's scrollable; the
-			// browser clamps it to the real min/max on its own, which is exactly
-			// the "stop at the first/last card" behavior we want — no wraparound
-			track.scrollTo({ left: target, behavior: smooth ? "smooth" : "instant" });
-		};
-
-		// find whichever card currently sits closest to the track's center; this
-		// is the source of truth for "where are we", covering both button taps
-		// and manual finger swipes
-		const getCenterIndex = () => {
-			const trackRect = track.getBoundingClientRect();
-			const centerX = trackRect.left + trackRect.width / 2;
-			let closest = 0;
-			let closestDist = Infinity;
-			cards.forEach((card, i) => {
-				const rect = card.getBoundingClientRect();
-				const dist = Math.abs(rect.left + rect.width / 2 - centerX);
-				if (dist < closestDist) {
-					closestDist = dist;
-					closest = i;
-				}
-			});
-			return closest;
-		};
-
-		// disable prev on the first card and next on the last, so there's no way
-		// to request stepping past either end
-		const updateNavState = (index: number) => {
-			if (prevBtn) prevBtn.disabled = index <= 0;
-			if (nextBtn) nextBtn.disabled = index >= count - 1;
-		};
-
-		const go = (dir: number) => {
-			const target = Math.min(count - 1, Math.max(0, getCenterIndex() + dir));
-			centerOn(target, true);
-			updateNavState(target);
-		};
-
-		prevBtn?.addEventListener("click", () => go(-1));
-		nextBtn?.addEventListener("click", () => go(1));
-
-		// keep the buttons' enabled/disabled state in sync with manual swiping
-		// too, once a swipe settles. "scrollend" fires exactly once when the
-		// browser considers scrolling truly finished; fall back to a debounced
-		// "scroll" listener for browsers without scrollend support.
-		const syncNavState = () => updateNavState(getCenterIndex());
-		if ("onscrollend" in window) {
-			track.addEventListener("scrollend", syncNavState);
-		} else {
-			let settleTimer: ReturnType<typeof setTimeout>;
-			track.addEventListener("scroll", () => {
-				clearTimeout(settleTimer);
-				settleTimer = setTimeout(syncNavState, 150);
-			});
-		}
-
-		// start on the first card with prev disabled
-		updateNavState(0);
-	});
-</script>
 
 <style>
 	.pricing {
@@ -206,35 +110,213 @@ const plans = [
 	}
 
 	.pricing__list {
-		display: flex;
-		gap: 14px;
-		overflow-x: auto;
-		scroll-snap-type: x mandatory;
-		padding-block: 4px 12px;
-		/* half the track's width minus half a card's width (236px), so the
-		   scrollable range starts/ends with that much empty space on each
-		   side — enough for the first/last card to reach dead-center like
-		   every card in between, instead of stopping flush against the edge
-		   because there's nothing left to scroll past */
-		padding-inline: calc(50% - 118px);
-		-webkit-overflow-scrolling: touch;
-		scrollbar-width: none;
+		display: grid;
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+		gap: 12px;
+		padding: 4px 0 12px;
 		margin: 0 auto;
 		list-style: none;
 	}
 
-	.pricing__list::-webkit-scrollbar {
-		display: none;
+	/* the light-truck card spans both columns, so it matches the combined
+	   width of the 1.5t + 2t cards below it */
+	/* one value for both the card's left/right padding and the gap between the
+	   three size boxes, so the boxes are evenly spaced edge to edge. The
+	   selector is doubled-up on specificity so it beats the later
+	   .pricing__item padding. */
+	.pricing__list > .pricing__item--keitora {
+		--keitora-gutter: 10px;
+		/* type scale mirrored from the 1.5t/2t cards (.pricing__name,
+		   .pricing__price(-unit), .pricing__desc) so the three read as one set;
+		   the 1.5t/2t rules themselves are untouched */
+		--keitora-name-fs: 15px;
+		--keitora-price-fs: 22px;
+		--keitora-unit-fs: 15px;
+		--keitora-desc-fs: 10px;
+		--keitora-desc-lh: 1.6;
+		grid-column: 1 / -1;
+		padding: 12px var(--keitora-gutter) 16px;
+	}
+
+	/* plan name on top, small gray capacity guide below. The head's bottom
+	   margin takes over the name's old margin so the spacing to what follows
+	   (image / capacity box) stays as it was. */
+	.pricing__head {
+		margin-bottom: 6px;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+	}
+
+	.pricing__head .pricing__name {
+		margin-bottom: 2px;
+	}
+
+	/* the capacity-guide box reuses .pricing__capacity; it holds one line of
+	   text, so it doesn't need the 2-line min-height the old load-estimate box
+	   had. Doubled class so this also wins over the PC media rule below. */
+	.pricing__capacity.pricing__capacity--guide {
+		width: fit-content;
+		min-height: 0;
+	}
+
+	/* one-line oval badge: "容量目安" bold, the rest regular, all white on the
+	   site's primary blue. nowrap keeps it on a single line; the font-size
+	   floor/ceiling is what lets it fit the narrow 2-up mobile cards. */
+	.pricing__guide-badge {
+		margin: 0 0 12px;
+		padding: 4px 8px;
+		max-width: 100%;
+		background: var(--color-primary);
+		border-radius: 9999px;
+		color: #fff;
+		font-size: clamp(8px, 2.1vw, 14px);
+		font-weight: 400;
+		line-height: 1.5;
+		white-space: nowrap;
+	}
+
+	.pricing__guide-badge-label {
+		font-weight: 700;
+	}
+
+	/* capacity guide, one centered line: a blue oval holding only "容量目安",
+	   with the plan's content as plain dark text beside it (no background or
+	   border). nowrap + clamp() sizes keep it on one line in the narrow
+	   2-up mobile cards. */
+	.pricing__guide-line {
+		/* same size as the light-truck card's description text
+		   (.pricing__size-note, --keitora-desc-fs); the line's own font-size
+		   below only drives the 0.5em gap between the oval and the content */
+		--guide-fs: 10px;
+		margin: 0 0 12px;
+		max-width: 100%;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		gap: 0.5em;
+		font-size: clamp(8px, 2.2vw, 14px);
+		line-height: 1.5;
+		white-space: nowrap;
+	}
+
+	.pricing__guide-pill {
+		padding: 3px 6px;
+		background: var(--color-primary);
+		border-radius: 9999px;
+		color: #fff;
+		font-size: var(--guide-fs);
+		font-weight: 700;
+		line-height: 1.5;
+	}
+
+	.pricing__guide-text {
+		color: var(--color-text);
+		font-size: var(--guide-fs);
+		font-weight: 400;
+	}
+
+	/* the 2t artwork fills its canvas edge to edge while the 1.5t one has some
+	   margin, so at the same box size the 2t truck looks oversized; scale it
+	   down from the bottom so the wheels stay on the shared baseline */
+	.pricing__truck--2t {
+		transform: scale(0.93);
+		transform-origin: bottom center;
+	}
+
+	.pricing__guide {
+		margin: 0;
+		font-size: 9px;
+		line-height: 1.5;
+		color: var(--color-text-sub);
+	}
+
+	.pricing__guide span {
+		display: inline-block;
+	}
+
+	.pricing__card-notes {
+		margin-top: 12px;
+		display: flex;
+		flex-direction: column;
+		gap: 4px;
+	}
+
+	.pricing__card-note {
+		margin: 0;
+		font-size: 10px;
+		line-height: 1.6;
+		color: #666;
+	}
+
+	.pricing__keitora-img {
+		width: 100%;
+		max-width: 216px;
+		height: auto;
+		margin-bottom: 10px;
+	}
+
+	/* static price guide, not a choice: no button styling, hover or pointer */
+	.pricing__sizes {
+		width: 100%;
+		display: grid;
+		grid-template-columns: repeat(3, minmax(0, 1fr));
+		gap: var(--keitora-gutter);
+	}
+
+	.pricing__size {
+		background: #e5e9ee;
+		border-radius: 8px;
+		padding: 10px 4px 12px;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		text-align: center;
+	}
+
+	.pricing__size-label {
+		margin: 0 0 6px;
+		font-family: var(--font-heading);
+		font-weight: 900;
+		font-size: var(--keitora-name-fs);
+		line-height: 1.3;
+		color: var(--color-text);
+	}
+
+	.pricing__size-price {
+		margin: 0 0 6px;
+		font-family: var(--font-number);
+		font-weight: 700;
+		line-height: 1.2;
+		color: var(--color-accent-red);
+		white-space: nowrap;
+	}
+
+	.pricing__size-num {
+		font-size: var(--keitora-price-fs);
+		/* yellow highlighter-style underline across the lower part of the digits */
+		background: linear-gradient(transparent 62%, #ffe14d 62%);
+		padding-inline: 2px;
+	}
+
+	.pricing__size-unit {
+		font-size: var(--keitora-unit-fs);
+	}
+
+	.pricing__size-note {
+		margin: 0;
+		font-size: var(--keitora-desc-fs);
+		line-height: var(--keitora-desc-lh);
+		color: var(--color-text);
+		text-wrap: balance;
 	}
 
 	.pricing__item {
-		flex: 0 0 auto;
-		width: 236px;
-		scroll-snap-align: center;
+		min-width: 0;
 		background: #fff;
 		border: 1px solid #d9d9d9;
 		border-radius: 4px;
-		padding: 16px 12px;
+		padding: 16px 4px;
 		display: flex;
 		flex-direction: column;
 		align-items: center;
@@ -269,7 +351,8 @@ const plans = [
 
 	.pricing__capacity {
 		position: relative;
-		width: 80%;
+		width: fit-content;
+		max-width: 100%;
 		/* tall enough to fit 2 lines of .pricing__desc (11px * 1.6 * 2 + the
 		   box's own padding) so 1-line plans get the same box height as
 		   2-line plans, keeping the truck image and price aligned below */
@@ -302,7 +385,7 @@ const plans = [
 	}
 
 	.pricing__desc {
-		font-size: 11px;
+		font-size: 10px;
 		line-height: 1.6;
 		color: var(--color-text);
 		margin: 0;
@@ -336,6 +419,11 @@ const plans = [
 		font-size: 15px;
 	}
 
+	.pricing__note-line {
+		display: block;
+		text-wrap: balance;
+	}
+
 	.pricing__note {
 		text-align: center;
 		font-family: var(--font-en);
@@ -343,107 +431,89 @@ const plans = [
 		color: var(--color-text);
 	}
 
-	.pricing__nav {
-		margin-top: 4px;
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		gap: 32px;
-	}
-
-	.pricing__nav-btn {
-		width: 40px;
-		height: 40px;
-		padding: 0;
-		border: none;
-		border-radius: 50%;
-		background: transparent;
-		color: var(--color-primary);
-		cursor: pointer;
-		display: inline-flex;
-		align-items: center;
-		justify-content: center;
-		transition: background-color 0.2s ease;
-	}
-
-	.pricing__nav-btn:hover,
-	.pricing__nav-btn:focus-visible,
-	.pricing__nav-btn:active {
-		background: rgba(3, 129, 220, 0.1);
-	}
-
-	.pricing__nav-btn svg {
-		width: 20px;
-		height: 20px;
-		animation: pricing-nav-hint 1.8s ease-in-out infinite;
-	}
-
-	.pricing__nav-btn--prev svg {
-		animation-name: pricing-nav-hint-prev;
-	}
-
-	.pricing__nav-btn--next svg {
-		animation-name: pricing-nav-hint-next;
-	}
-
-	@keyframes pricing-nav-hint-prev {
-		0%,
-		100% {
-			transform: translateX(0);
+	/* mobile 2-up cards (1.5t / 2t) are too narrow to hold the oval and its
+	   content on one line at the description's font size, so the content drops
+	   below the oval. Always wrapping (not width-dependent) keeps the two cards
+	   identical in height and alignment. The light-truck card stays on one line. */
+	@media (max-width: 767px) {
+		.pricing__item:not(.pricing__item--keitora) .pricing__guide-line {
+			flex-wrap: wrap;
+			row-gap: 4px;
 		}
-		50% {
-			transform: translateX(-4px);
+
+		.pricing__item:not(.pricing__item--keitora) .pricing__guide-text {
+			flex-basis: 100%;
+			text-align: center;
 		}
 	}
 
-	@keyframes pricing-nav-hint-next {
-		0%,
-		100% {
-			transform: translateX(0);
-		}
-		50% {
-			transform: translateX(4px);
-		}
-	}
-
-	@media (prefers-reduced-motion: reduce) {
-		.pricing__nav-btn svg {
-			animation: none;
-		}
-	}
-
-	.pricing__nav-btn:disabled {
-		opacity: 0.3;
-		cursor: default;
-		pointer-events: none;
-	}
-
-	.pricing__nav-btn:disabled svg {
-		animation: none;
-	}
-
-	/* PC: back to the original static grid (3 up top, 2 below) instead of
-	   the slider — only the middle (non-clone) copy of cards is shown */
+	/* PC: same 1 + 2 layout, with the 1.5t/2t cards at their original width */
 	@media (min-width: 768px) {
 		.pricing__slider {
 			max-width: none;
 		}
 
+		/* keep the 1.5t/2t cards at their previous width: two of them plus the
+		   gap = two thirds of the old 3-up row, and the light-truck card spans it */
 		.pricing__list {
-			flex-wrap: wrap;
-			justify-content: center;
-			overflow-x: visible;
-			scroll-snap-type: none;
-			max-width: none;
+			max-width: calc((100% - 64px) * 2 / 3 + 32px);
 			gap: 32px;
 			padding: 0;
 		}
 
 		.pricing__item {
-			flex: 0 0 calc((100% - 64px) / 3);
-			width: auto;
-			scroll-snap-align: none;
 			padding: 24px 20px;
+		}
+
+		.pricing__list > .pricing__item--keitora {
+			--keitora-gutter: 24px;
+			--keitora-name-fs: 24px;
+			--keitora-price-fs: 40px;
+			--keitora-unit-fs: 28px;
+			--keitora-desc-fs: 15px;
+			--keitora-desc-lh: 1.7;
+			padding: 20px var(--keitora-gutter) 26px;
+		}
+
+		.pricing__head {
+			margin-bottom: 8px;
+		}
+
+		.pricing__guide {
+			font-size: 14px;
+		}
+
+		.pricing__guide-line {
+			--guide-fs: 15px;
+			margin-bottom: 16px;
+			font-size: clamp(9px, 1.1vw, 14px);
+		}
+
+		.pricing__guide-pill {
+			padding: 5px clamp(10px, 1.1vw, 14px);
+		}
+
+		.pricing__guide-badge {
+			margin-bottom: 16px;
+			padding: 6px clamp(12px, 1.4vw, 18px);
+			font-size: clamp(9px, 1.1vw, 14px);
+		}
+
+		.pricing__card-notes {
+			margin-top: 16px;
+		}
+
+		.pricing__card-note {
+			font-size: 12px;
+		}
+
+		.pricing__keitora-img {
+			max-width: 360px;
+			margin-bottom: 14px;
+		}
+
+		.pricing__size {
+			padding: 18px 4px 20px;
 		}
 
 		.pricing__badge {
@@ -459,6 +529,7 @@ const plans = [
 			/* tall enough to fit 2 lines of .pricing__desc (15px * 1.7 * 2 +
 			   the box's own padding) so all cards align below regardless of
 			   1-line vs 2-line description text */
+			width: 80%;
 			min-height: 78px;
 			padding: 16px 10px 8px;
 			margin-bottom: 16px;
@@ -489,10 +560,6 @@ const plans = [
 
 		.pricing__price-unit {
 			font-size: 28px;
-		}
-
-		.pricing__nav {
-			display: none;
 		}
 
 		.pricing__note {
