@@ -9,8 +9,8 @@ import yamagataKeshiki from "../../assets/lp/yamagata-keshiki.webp";
 	<div class="about__overlay"></div>
 	<div class="l-container">
 		<div class="section-heading">
-			<p class="section-heading__kicker">グループ全体で<span class="about__kicker-accent">18万件以上</span>の作業実績あり!</p>
-			<p class="section-heading__ja"><span class="section-heading__ja-accent">不用品</span>に困ったら<br />山形不用品回収サービス!</p>
+			<p class="section-heading__kicker">グループ全体で<span class="about__kicker-accent">18万件以上</span>の作業依頼あり!</p>
+			<p class="section-heading__ja">山形不用品回収サービスが<br /><span class="section-heading__ja-accent">選ばれる理由</span></p>
 		</div>
 
 		<p class="about__catch"><span class="about__catch-marker">安いだけじゃない、真心込めた丁寧・スピーディな対応!</span></p>
@@ -45,7 +45,7 @@ import yamagataKeshiki from "../../assets/lp/yamagata-keshiki.webp";
 			</p>
 
 			<p class="about__text">
-				グループ全体で<span class="about__text-bold">累計18万件の作業実績で培ったノウハウ</span>で、家具1点のご依頼からゴミ屋敷・空き家まるごとの片付けまで、迅速にお部屋をスッキリさせます。
+				グループ全体で<span class="about__text-bold">累計18万件の作業依頼で培ったノウハウ</span>で、家具1点のご依頼からゴミ屋敷・空き家まるごとの片付けまで、迅速にお部屋をスッキリさせます。
 			</p>
 		</div>
 	</div>
@@ -78,6 +78,16 @@ import yamagataKeshiki from "../../assets/lp/yamagata-keshiki.webp";
 
 	.about .section-heading__ja {
 		text-shadow: 0 1px 3px rgba(255, 255, 255, 0.9), 0 2px 16px rgba(255, 255, 255, 0.8), 0 0 4px rgba(255, 255, 255, 0.9);
+	}
+
+	/* "山形不用品回収サービスが" (12 chars) is wider than the old first line, and
+	   the global 28px floor would wrap it on narrow phones. Scale the size down
+	   with the viewport on mobile only; at 767px and up it is the same 28px
+	   (and PC keeps the global clamp). */
+	@media (max-width: 767px) {
+		.about .section-heading__ja {
+			font-size: clamp(20px, 6.9vw, 28px);
+		}
 	}
 
 	.about__catch {
