@@ -99,15 +99,6 @@ const initialIndex = reviews.length; // first card of the middle copy
 					))
 				}
 			</ul>
-
-			<div class="reviews__nav">
-				<button type="button" class="reviews__nav-btn" data-reviews-prev aria-label="前の口コミ">
-					‹
-				</button>
-				<button type="button" class="reviews__nav-btn" data-reviews-next aria-label="次の口コミ">
-					›
-				</button>
-			</div>
 		</div>
 	</div>
 </section>
@@ -163,8 +154,11 @@ const initialIndex = reviews.length; // first card of the middle copy
 			alignOn(currentIndex, true);
 		};
 
-		slider.querySelector("[data-reviews-prev]")?.addEventListener("click", () => go(-1));
-		slider.querySelector("[data-reviews-next]")?.addEventListener("click", () => go(1));
+		// tap flip: left of the current card's center = back, right = forward
+		slider.addEventListener("click", (e) => {
+			const rect = cards[currentIndex].getBoundingClientRect();
+			go(e.clientX < rect.left + rect.width / 2 ? -1 : 1);
+		});
 
 		// align the initial card without animation, then re-align on resize
 		alignOn(currentIndex, false);
@@ -231,11 +225,17 @@ const initialIndex = reviews.length; // first card of the middle copy
 		color: var(--color-text-sub);
 	}
 
+	.reviews__slider {
+		cursor: pointer;
+		-webkit-tap-highlight-color: transparent;
+		user-select: none;
+	}
+
 	.reviews__list {
 		display: flex;
 		gap: 16px;
-		overflow-x: auto;
-		scroll-snap-type: x mandatory;
+		overflow-x: hidden;
+		touch-action: pan-y;
 		padding-block: 4px 12px;
 		padding-inline: 4px;
 		-webkit-overflow-scrolling: touch;
@@ -249,7 +249,6 @@ const initialIndex = reviews.length; // first card of the middle copy
 	.reviews__card {
 		flex: 0 0 auto;
 		width: 260px;
-		scroll-snap-align: start;
 		background: #fff;
 		border: 1px solid var(--color-border-gray);
 		border-radius: 8px;
@@ -323,26 +322,5 @@ const initialIndex = reviews.length; // first card of the middle copy
 		.reviews__card {
 			width: 300px;
 		}
-	}
-
-	.reviews__nav {
-		margin-top: 4px;
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		gap: 20px;
-	}
-
-	.reviews__nav-btn {
-		width: 44px;
-		height: 44px;
-		border-radius: 50%;
-		border: none;
-		background: var(--color-primary);
-		color: #fff;
-		font-size: 22px;
-		line-height: 1;
-		cursor: pointer;
-		box-shadow: 0 0 8px rgba(0, 0, 0, 0.2);
 	}
 </style>

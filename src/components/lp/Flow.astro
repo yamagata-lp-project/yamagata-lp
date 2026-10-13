@@ -84,19 +84,6 @@ const steps = [
 				}
 				<li class="flow__spacer" aria-hidden="true" />
 			</ol>
-
-			<div class="flow__nav">
-				<button type="button" class="flow__nav-btn flow__nav-btn--prev" data-flow-prev aria-label="前のステップ">
-					<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-						<polyline points="15 5 8 12 15 19" />
-					</svg>
-				</button>
-				<button type="button" class="flow__nav-btn flow__nav-btn--next" data-flow-next aria-label="次のステップ">
-					<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-						<polyline points="9 5 16 12 9 19" />
-					</svg>
-				</button>
-			</div>
 		</div>
 	</div>
 </section>
@@ -106,8 +93,6 @@ const steps = [
 		const track = slider.querySelector<HTMLElement>("[data-flow-track]");
 		if (!track) return;
 
-		const prevBtn = slider.querySelector<HTMLButtonElement>("[data-flow-prev]");
-		const nextBtn = slider.querySelector<HTMLButtonElement>("[data-flow-next]");
 		const cards = Array.from(track.querySelectorAll<HTMLElement>(".flow__step"));
 		if (!cards.length) return;
 
@@ -141,38 +126,27 @@ const steps = [
 			track.scrollTo({ left: target, behavior: smooth ? "smooth" : "instant" });
 		};
 
-		// no looping: disable prev/next once the centered card is the first/last
-		const updateNavState = () => {
-			if (!prevBtn || !nextBtn) return;
-			const index = getCenterIndex();
-			prevBtn.disabled = index <= 0;
-			nextBtn.disabled = index >= cards.length - 1;
-		};
-
 		const go = (dir: number) => {
 			const next = getCenterIndex() + dir;
 			centerOn(Math.min(cards.length - 1, Math.max(0, next)), true);
 		};
 
-		prevBtn?.addEventListener("click", () => go(-1));
-		nextBtn?.addEventListener("click", () => go(1));
-
-		let settleTimer: ReturnType<typeof setTimeout>;
-		track.addEventListener("scroll", () => {
-			clearTimeout(settleTimer);
-			settleTimer = setTimeout(updateNavState, 150);
+		// tap flip (mobile slider only): left of the centered card's center = back, right = forward
+		const desktop = window.matchMedia("(min-width: 900px)");
+		slider.addEventListener("click", (e) => {
+			if (desktop.matches) return;
+			const rect = cards[getCenterIndex()].getBoundingClientRect();
+			go(e.clientX < rect.left + rect.width / 2 ? -1 : 1);
 		});
 
 		// center the first card without animation, then re-center on resize
 		centerOn(0, false);
-		updateNavState();
 		let resizeTimer: ReturnType<typeof setTimeout>;
 		window.addEventListener("resize", () => {
 			clearTimeout(resizeTimer);
 			resizeTimer = setTimeout(() => {
 				centerOn(getCenterIndex(), false);
-				updateNavState();
-			}, 150);
+					}, 150);
 		});
 	});
 </script>
@@ -205,6 +179,8 @@ const steps = [
 	}
 
 	.flow__slider {
+		cursor: pointer;
+		-webkit-tap-highlight-color: transparent;
 		max-width: 640px;
 		margin-inline: auto;
 	}
@@ -212,16 +188,10 @@ const steps = [
 	.flow__steps {
 		display: flex;
 		gap: 12px;
-		overflow-x: auto;
-		scroll-snap-type: x mandatory;
-		-webkit-overflow-scrolling: touch;
-		scrollbar-width: none;
+		overflow-x: hidden;
+		touch-action: pan-y;
 		margin: 0;
 		padding: 0;
-	}
-
-	.flow__steps::-webkit-scrollbar {
-		display: none;
 	}
 
 	/* real flex items (rather than container padding) reserve the space
@@ -230,12 +200,10 @@ const steps = [
 	   area across browsers, which left card 04 unable to reach center */
 	.flow__spacer {
 		flex: 0 0 calc(8.75% - 12px);
-		scroll-snap-align: none;
 	}
 
 	.flow__step {
 		flex: 0 0 82.5%;
-		scroll-snap-align: center;
 		background: #ffffff;
 		border-radius: 8px;
 		padding: 24px 20px;
@@ -318,40 +286,6 @@ const steps = [
 		color: #444;
 	}
 
-	.flow__nav {
-		margin-top: 24px;
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		gap: 32px;
-	}
-
-	.flow__nav-btn {
-		width: 44px;
-		height: 44px;
-		padding: 0;
-		border: none;
-		border-radius: 50%;
-		background: #ffffff;
-		color: var(--color-primary);
-		cursor: pointer;
-		display: inline-flex;
-		align-items: center;
-		justify-content: center;
-		box-shadow: 0 0 8px rgba(0, 0, 0, 0.25);
-	}
-
-	.flow__nav-btn:disabled {
-		opacity: 0.35;
-		cursor: not-allowed;
-		box-shadow: none;
-	}
-
-	.flow__nav-btn svg {
-		width: 20px;
-		height: 20px;
-	}
-
 	/* PC: back to the original static grid instead of the slider */
 	@media (min-width: 900px) {
 		.flow__slider {
@@ -376,8 +310,5 @@ const steps = [
 			scroll-snap-align: none;
 		}
 
-		.flow__nav {
-			display: none;
-		}
 	}
 </style>

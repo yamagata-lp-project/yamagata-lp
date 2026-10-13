@@ -122,7 +122,7 @@ const allItemCategories = [
 			<p class="section-heading__kicker">1点から大量まで</p>
 			<p class="section-heading__ja">回収対応品目</p>
 			<p class="section-heading__lead">
-				冷蔵庫・洗濯機・マットレス・ベッドフレーム・自転車など、ご家庭で出るお荷物を1点からまとめて回収します。料金は無料お見積もりにて明確にご案内します。
+				<span class="items__red">ご自宅にあるものはほぼすべて回収可能！</span><br />冷蔵庫・洗濯機・マットレス・ベッドフレーム・自転車など、ご家庭で出るお荷物を1点からまとめてまで幅広く回収します。
 			</p>
 		</div>
 
@@ -173,9 +173,10 @@ const allItemCategories = [
 
 		<details class="items__accordion">
 			<summary class="items__accordion-summary">
-				<span class="items__accordion-title">すべての回収品目一覧</span>
+				<span class="items__accordion-title">その他の回収品目一覧</span>
 				<span class="items__accordion-chevron" aria-hidden="true">▼</span>
 			</summary>
+			<p class="items__accordion-intro"><span class="items__red">ご自宅にあるものはほぼすべて回収可能！</span><br />気になるお荷物があれば遠慮なくご相談ください。</p>
 			<div class="items__accordion-grid">
 				{
 					allItemCategories.map((cat) => (
@@ -214,6 +215,21 @@ const allItemCategories = [
 </script>
 
 <style>
+	.items__red {
+		color: #e60012;
+		font-weight: 700;
+	}
+
+	.items__accordion-intro {
+		margin: 16px 0;
+		background: var(--color-bg-gray);
+		border-radius: 8px;
+		padding: 16px 14px;
+		font-size: 14px;
+		line-height: 1.8;
+		text-align: left;
+	}
+
 	.items {
 		background: #fff;
 		padding-block: 60px 90px;
@@ -469,7 +485,8 @@ const allItemCategories = [
 			margin-bottom: 20px;
 		}
 
-		.items__highlight-text {
+		.items__highlight-text,
+		.items__accordion-intro {
 			font-size: 16px;
 		}
 
