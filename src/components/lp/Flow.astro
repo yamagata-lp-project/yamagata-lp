@@ -27,7 +27,7 @@ const steps = [
 		photoW: 480,
 		photoH: 360,
 		title: "無料見積もり",
-		desc: "ご予約いただいた日時に現地見積もりにお伺いします。内容によっては、電話やLINEでもお見積り可能です。",
+		desc: "ご予約いただいた日時に現地見積もりにお伺いします。内容によっては、電話・メール・LINEでもお見積り可能です。",
 	},
 	{
 		n: "03",
@@ -60,9 +60,8 @@ const steps = [
 			<p class="section-heading__ja" style="color:#fff;">ご利用の流れ</p>
 		</div>
 
-		<div class="flow__slider" data-flow-slider>
-			<ol class="flow__steps" data-flow-track>
-				<li class="flow__spacer" aria-hidden="true" />
+		<div class="flow__slider">
+			<ol class="flow__steps">
 				{
 					steps.map((step) => (
 						<li class="flow__step">
@@ -82,88 +81,10 @@ const steps = [
 						</li>
 					))
 				}
-				<li class="flow__spacer" aria-hidden="true" />
 			</ol>
-			<span class="flow__arrow flow__arrow--prev" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 5 8 12 15 19" /></svg></span>
-			<span class="flow__arrow flow__arrow--next" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 5 16 12 9 19" /></svg></span>
 		</div>
 	</div>
 </section>
-
-<script>
-	document.querySelectorAll<HTMLElement>("[data-flow-slider]").forEach((slider) => {
-		const track = slider.querySelector<HTMLElement>("[data-flow-track]");
-		if (!track) return;
-
-		const cards = Array.from(track.querySelectorAll<HTMLElement>(".flow__step"));
-		if (!cards.length) return;
-
-		// find whichever card currently sits closest to the track's center
-		const getCenterIndex = () => {
-			const trackRect = track.getBoundingClientRect();
-			const centerX = trackRect.left + trackRect.width / 2;
-			let closest = 0;
-			let closestDist = Infinity;
-			cards.forEach((card, i) => {
-				const rect = card.getBoundingClientRect();
-				const dist = Math.abs(rect.left + rect.width / 2 - centerX);
-				if (dist < closestDist) {
-					closestDist = dist;
-					closest = i;
-				}
-			});
-			return closest;
-		};
-
-		const centerOn = (index: number, smooth: boolean) => {
-			const card = cards[index];
-			if (!card) return;
-			// measure via getBoundingClientRect rather than offsetLeft: offsetLeft
-			// is relative to the nearest positioned ancestor (here, the section),
-			// not the scroll track, so it can't be used directly against scrollLeft
-			const cardRect = card.getBoundingClientRect();
-			const trackRect = track.getBoundingClientRect();
-			const cardLeftInTrack = cardRect.left - trackRect.left + track.scrollLeft;
-			const target = cardLeftInTrack + card.offsetWidth / 2 - track.clientWidth / 2;
-			track.scrollTo({ left: target, behavior: smooth ? "smooth" : "instant" });
-		};
-
-		// no looping: hide the prev arrow on the first card and the next arrow on the last
-		const prevArrow = slider.querySelector<HTMLElement>(".flow__arrow--prev");
-		const nextArrow = slider.querySelector<HTMLElement>(".flow__arrow--next");
-		const updateArrows = (index: number) => {
-			prevArrow?.classList.toggle("is-hidden", index <= 0);
-			nextArrow?.classList.toggle("is-hidden", index >= cards.length - 1);
-		};
-
-		const go = (dir: number) => {
-			const next = Math.min(cards.length - 1, Math.max(0, getCenterIndex() + dir));
-			centerOn(next, true);
-			updateArrows(next);
-		};
-
-		// tap flip (mobile slider only): left of the centered card's center = back, right = forward
-		const desktop = window.matchMedia("(min-width: 900px)");
-		slider.addEventListener("click", (e) => {
-			if (desktop.matches) return;
-			const rect = cards[getCenterIndex()].getBoundingClientRect();
-			go(e.clientX < rect.left + rect.width / 2 ? -1 : 1);
-		});
-
-		// center the first card without animation, then re-center on resize
-		centerOn(0, false);
-		updateArrows(0);
-		let resizeTimer: ReturnType<typeof setTimeout>;
-		window.addEventListener("resize", () => {
-			clearTimeout(resizeTimer);
-			resizeTimer = setTimeout(() => {
-				const index = getCenterIndex();
-				centerOn(index, false);
-				updateArrows(index);
-			}, 150);
-		});
-	});
-</script>
 
 <style>
 	.flow {
@@ -193,75 +114,43 @@ const steps = [
 	}
 
 	.flow__slider {
-		position: relative;
-		cursor: pointer;
-		-webkit-tap-highlight-color: transparent;
 		max-width: 640px;
 		margin-inline: auto;
 	}
 
-	.flow__arrow {
-		position: absolute;
-		top: 50%;
-		z-index: 1;
-		width: 40px;
-		height: 40px;
-		margin-top: -20px;
-		border-radius: 50%;
-		background: rgba(255, 255, 255, 0.9);
-		color: var(--color-primary);
-		box-shadow: 0 1px 6px rgba(0, 0, 0, 0.3);
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		pointer-events: none;
-	}
-
-	.flow__arrow.is-hidden {
-		display: none;
-	}
-
-	.flow__arrow svg {
-		width: 22px;
-		height: 22px;
-	}
-
-	.flow__arrow--prev {
-		left: calc(8.75% - 20px);
-	}
-
-	.flow__arrow--next {
-		right: calc(8.75% - 20px);
-	}
-
+	/* mobile: steps stacked top to bottom, joined by a down-pointing arrow */
 	.flow__steps {
 		display: flex;
-		gap: 12px;
-		overflow-x: hidden;
-		touch-action: pan-y;
+		flex-direction: column;
+		gap: 40px;
 		margin: 0;
 		padding: 0;
-	}
-
-	/* real flex items (rather than container padding) reserve the space
-	   needed to center the first/last card — end-side padding on a
-	   scrolling flex container isn't reliably included in the scrollable
-	   area across browsers, which left card 04 unable to reach center */
-	.flow__spacer {
-		flex: 0 0 calc(8.75% - 12px);
+		list-style: none;
 	}
 
 	.flow__step {
-		flex: 0 0 82.5%;
+		position: relative;
 		background: #ffffff;
 		border-radius: 8px;
-		padding: 24px 20px;
+		padding: 16px 16px 18px;
 		display: flex;
 		flex-direction: column;
 		align-items: center;
 		text-align: center;
-		gap: 10px;
+		gap: 0;
 		box-shadow: 3px 3px 6px rgba(0, 0, 0, 0.15);
+	}
+
+	.flow__step:not(:last-child)::after {
+		content: "";
+		position: absolute;
+		left: 50%;
+		bottom: -30px;
+		transform: translateX(-50%);
+		border-style: solid;
+		border-width: 18px 16px 0;
+		border-color: #ffffff transparent transparent;
+		filter: drop-shadow(0 2px 2px rgba(0, 0, 0, 0.25));
 	}
 
 	.flow__step-head {
@@ -297,6 +186,7 @@ const steps = [
 	}
 
 	.flow__title {
+		margin: 0 0 8px;
 		font-family: var(--font-heading);
 		font-weight: 700;
 		font-size: 17px;
@@ -313,8 +203,9 @@ const steps = [
 	}
 
 	.flow__photo {
-		flex: 0 0 42%;
-		aspect-ratio: 4 / 3;
+		flex: 0 0 32%;
+		/* about 4 lines of the 13px / 1.7 description text */
+		height: calc(13px * 1.7 * 4);
 		border-radius: 6px;
 		overflow: hidden;
 	}
@@ -335,12 +226,8 @@ const steps = [
 		color: #444;
 	}
 
-	/* PC: back to the original static grid instead of the slider */
+	/* PC: 4 columns side by side, no connector arrows */
 	@media (min-width: 900px) {
-		.flow__arrow {
-			display: none;
-		}
-
 		.flow__slider {
 			max-width: none;
 		}
@@ -350,18 +237,26 @@ const steps = [
 			grid-template-columns: repeat(4, 1fr);
 			max-width: none;
 			gap: 20px;
-			overflow-x: visible;
-			scroll-snap-type: none;
 		}
 
-		.flow__spacer {
+		.flow__step:not(:last-child)::after {
 			display: none;
 		}
 
+		/* keep the original roomy card proportions on PC */
 		.flow__step {
-			flex: none;
-			scroll-snap-align: none;
+			padding: 24px 20px;
+			gap: 10px;
 		}
 
+		.flow__title {
+			margin: 0;
+		}
+
+		.flow__photo {
+			flex: 0 0 42%;
+			height: auto;
+			aspect-ratio: 4 / 3;
+		}
 	}
 </style>
