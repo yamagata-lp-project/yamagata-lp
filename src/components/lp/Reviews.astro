@@ -123,8 +123,8 @@ const initialIndex = reviews.length; // first card of the middle copy
 
 		let currentIndex = Number(slider.dataset.initialIndex || count);
 
-		// align the card's left edge with the track's left edge (matches the
-		// existing scroll-snap-align: start look), measured via
+		// center the card in the track (matches the
+		// scroll-snap-align: center), measured via
 		// getBoundingClientRect since offsetLeft is relative to the nearest
 		// positioned ancestor, not the scroll track
 		const alignOn = (index: number, smooth: boolean) => {
@@ -132,7 +132,7 @@ const initialIndex = reviews.length; // first card of the middle copy
 			if (!card) return;
 			const cardRect = card.getBoundingClientRect();
 			const trackRect = track.getBoundingClientRect();
-			const target = cardRect.left - trackRect.left + track.scrollLeft;
+			const target = cardRect.left - trackRect.left + track.scrollLeft + card.offsetWidth / 2 - track.clientWidth / 2;
 			track.scrollTo({ left: target, behavior: smooth ? "smooth" : "instant" });
 		};
 
@@ -168,6 +168,8 @@ const initialIndex = reviews.length; // first card of the middle copy
 
 		// align the initial card without animation, then re-align on resize
 		alignOn(currentIndex, false);
+		// re-center once images/fonts have settled the final layout
+		window.addEventListener("load", () => alignOn(currentIndex, false));
 		let resizeTimer: ReturnType<typeof setTimeout>;
 		window.addEventListener("resize", () => {
 			clearTimeout(resizeTimer);
@@ -178,6 +180,7 @@ const initialIndex = reviews.length; // first card of the middle copy
 
 <style>
 	.reviews {
+		overflow-x: clip;
 		background: #ffffff;
 		padding-block: 60px 70px;
 	}
@@ -232,6 +235,9 @@ const initialIndex = reviews.length; // first card of the middle copy
 	}
 
 	.reviews__list {
+		/* bleed to the screen edges so the side cards peek out symmetrically */
+		width: 100vw;
+		margin-inline: calc(50% - 50vw);
 		display: flex;
 		gap: 16px;
 		overflow-x: auto;
@@ -249,7 +255,7 @@ const initialIndex = reviews.length; // first card of the middle copy
 	.reviews__card {
 		flex: 0 0 auto;
 		width: 260px;
-		scroll-snap-align: start;
+		scroll-snap-align: center;
 		background: #fff;
 		border: 1px solid var(--color-border-gray);
 		border-radius: 8px;
