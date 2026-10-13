@@ -9,14 +9,10 @@ import tokushuseisoPhoto from "../../assets/lp/tokushuseiso-shasin.webp";
 
 const services = [
 	{
-		title: "不用品回収",
-		photo: huyohinkaishuPhoto,
-		desc: "お問い合わせ1つで、処分にお困りの家具・家電・雑貨などを1点から丸ごとまでお引取りします。",
-	},
-	{
-		title: "不用品買取",
-		photo: kaitoriPhoto,
-		desc: "高年式の家電、ブランド家具、アクセサリーなど幅広い品目を査定・買取します。作業負担額から相殺します。",
+		title: "不用品回収・買取",
+		wide: true,
+		photos: [huyohinkaishuPhoto, kaitoriPhoto],
+		desc: "お問い合わせ1つで、処分にお困りの家具・家電・雑貨などを1点から丸ごとまでお引取りします。高年式の家電、ブランド家具、アクセサリーなど買取品目があれば、回収作業のご負担額から相殺します。",
 	},
 	{
 		title: "遺品整理・生前整理",
@@ -51,10 +47,12 @@ const services = [
 		<div class="services__grid">
 			{
 				services.map((s) => (
-					<div class="services__card">
+					<div class:list={["services__card", { "services__card--wide": s.wide }]}>
 						<h3 class="services__title">{s.title}</h3>
-						<div class="services__photo">
-							<Image src={s.photo} alt={`${s.title}のイメージ写真`} width={600} height={338} />
+						<div class:list={["services__photo", { "services__photo--split": s.photos }]}>
+							{(s.photos ?? [s.photo]).map((photo) => (
+								<Image src={photo} alt={`${s.title}のイメージ写真`} width={600} height={338} />
+							))}
 						</div>
 						<p class="services__desc">{s.desc}</p>
 					</div>
@@ -76,6 +74,7 @@ const services = [
 		gap: 12px;
 		max-width: 900px;
 		margin-inline: auto;
+		container-type: inline-size;
 	}
 
 	.services__card {
@@ -85,6 +84,10 @@ const services = [
 		display: flex;
 		flex-direction: column;
 		box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.1);
+	}
+
+	.services__card--wide {
+		grid-column: 1 / -1;
 	}
 
 	.services__title {
@@ -112,6 +115,25 @@ const services = [
 		align-items: center;
 		justify-content: center;
 		overflow: hidden;
+	}
+
+	.services__photo--split {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		grid-template-rows: minmax(0, 1fr);
+		gap: 10px;
+		padding: 10px;
+		box-sizing: border-box;
+		/* cancel the bottom padding so the gap above the text matches the other cards */
+		margin-bottom: -10px;
+		background: #fff;
+		/* match the 16:9 image height of the half-width cards: (grid width - gap) / 2 * 9 / 16 */
+		aspect-ratio: auto;
+		height: calc((100cqw - 12px) * 9 / 32);
+	}
+
+	.services__photo--split :global(img) {
+		border-radius: 8px;
 	}
 
 	.services__photo :global(img) {
