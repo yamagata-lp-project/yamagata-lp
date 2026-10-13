@@ -84,6 +84,8 @@ const steps = [
 				}
 				<li class="flow__spacer" aria-hidden="true" />
 			</ol>
+			<span class="flow__arrow flow__arrow--prev" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 5 8 12 15 19" /></svg></span>
+			<span class="flow__arrow flow__arrow--next" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 5 16 12 9 19" /></svg></span>
 		</div>
 	</div>
 </section>
@@ -126,9 +128,18 @@ const steps = [
 			track.scrollTo({ left: target, behavior: smooth ? "smooth" : "instant" });
 		};
 
+		// no looping: hide the prev arrow on the first card and the next arrow on the last
+		const prevArrow = slider.querySelector<HTMLElement>(".flow__arrow--prev");
+		const nextArrow = slider.querySelector<HTMLElement>(".flow__arrow--next");
+		const updateArrows = (index: number) => {
+			prevArrow?.classList.toggle("is-hidden", index <= 0);
+			nextArrow?.classList.toggle("is-hidden", index >= cards.length - 1);
+		};
+
 		const go = (dir: number) => {
-			const next = getCenterIndex() + dir;
-			centerOn(Math.min(cards.length - 1, Math.max(0, next)), true);
+			const next = Math.min(cards.length - 1, Math.max(0, getCenterIndex() + dir));
+			centerOn(next, true);
+			updateArrows(next);
 		};
 
 		// tap flip (mobile slider only): left of the centered card's center = back, right = forward
@@ -141,12 +152,15 @@ const steps = [
 
 		// center the first card without animation, then re-center on resize
 		centerOn(0, false);
+		updateArrows(0);
 		let resizeTimer: ReturnType<typeof setTimeout>;
 		window.addEventListener("resize", () => {
 			clearTimeout(resizeTimer);
 			resizeTimer = setTimeout(() => {
-				centerOn(getCenterIndex(), false);
-					}, 150);
+				const index = getCenterIndex();
+				centerOn(index, false);
+				updateArrows(index);
+			}, 150);
 		});
 	});
 </script>
@@ -179,10 +193,45 @@ const steps = [
 	}
 
 	.flow__slider {
+		position: relative;
 		cursor: pointer;
 		-webkit-tap-highlight-color: transparent;
 		max-width: 640px;
 		margin-inline: auto;
+	}
+
+	.flow__arrow {
+		position: absolute;
+		top: 50%;
+		z-index: 1;
+		width: 40px;
+		height: 40px;
+		margin-top: -20px;
+		border-radius: 50%;
+		background: rgba(255, 255, 255, 0.9);
+		color: var(--color-primary);
+		box-shadow: 0 1px 6px rgba(0, 0, 0, 0.3);
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		pointer-events: none;
+	}
+
+	.flow__arrow.is-hidden {
+		display: none;
+	}
+
+	.flow__arrow svg {
+		width: 22px;
+		height: 22px;
+	}
+
+	.flow__arrow--prev {
+		left: calc(8.75% - 20px);
+	}
+
+	.flow__arrow--next {
+		right: calc(8.75% - 20px);
 	}
 
 	.flow__steps {
@@ -288,6 +337,10 @@ const steps = [
 
 	/* PC: back to the original static grid instead of the slider */
 	@media (min-width: 900px) {
+		.flow__arrow {
+			display: none;
+		}
+
 		.flow__slider {
 			max-width: none;
 		}
