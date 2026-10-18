@@ -5,19 +5,17 @@ import case3 from "../../assets/lp/case3.webp";
 import case4 from "../../assets/lp/case4.webp";
 import case5 from "../../assets/lp/case5.webp";
 import case6 from "../../assets/lp/case6.webp";
+import tuika1 from "../../assets/lp/tuika-jirei①.webp";
+import tuika2 from "../../assets/lp/tuika-jirei②.webp";
+import tuika3 from "../../assets/lp/tuika-jirei③.webp";
+import tuika4 from "../../assets/lp/tuika-jirei④.webp";
 import { Image } from "astro:assets";
 
+// order: the two 引越しに伴う回収作業 cases come first; cases with similar titles (…／…②) sit next to each other
 const cases = [
 	{
-		title: "即日対応のご相談",
-		items: "ベッドフレーム、ソファなど",
-		duration: "15分",
-		cost: "9,000円",
-		comment: "急なご依頼でしたが、丁寧に状況を確認しながら手早く対応させていただきました。",
-		photo: case1,
-	},
-	{
-		title: "お引越しに伴う家電引取",
+		title: "引越しに伴う回収作業①",
+		plan: "軽トラ",
 		items: "冷蔵庫・洗濯機、モニター、電子レンジ",
 		duration: "15分",
 		cost: "15,000円",
@@ -25,7 +23,35 @@ const cases = [
 		photo: case2,
 	},
 	{
+		title: "引越しに伴う回収作業②",
+		plan: "軽トラ",
+		items: "冷蔵庫、洗濯機、自転車、ラック、布団類など",
+		duration: "1時間半",
+		cost: "27,000円",
+		comment: "大型家電から日用品まで幅広い品目でしたが、搬出動線を工夫しながらスムーズに運び出し、予定時間内に作業を完了いたしました。",
+		photo: tuika4,
+	},
+	{
+		title: "即日対応のご相談",
+		plan: "軽トラ",
+		items: "ベッドフレーム、ソファなど",
+		duration: "15分",
+		cost: "9,000円",
+		comment: "急なご依頼でしたが、丁寧に状況を確認しながら手早く対応させていただきました。",
+		photo: case1,
+	},
+	{
+		title: "即日対応のご相談②",
+		plan: "軽トラ",
+		items: "ベッドフレーム(解体含む)、こたつテーブルなど",
+		duration: "30分",
+		cost: "16,000円",
+		comment: "ご連絡をいただいてからすぐにお伺いし、その場で搬出まで対応いたしました。解体が必要なベッドフレームも手早く分解し、短時間で終えることができました。",
+		photo: tuika1,
+	},
+	{
 		title: "日常のお片付けでのご利用",
+		plan: "軽トラ",
 		items: "人形・収納など",
 		duration: "20分",
 		cost: "9,000円",
@@ -33,7 +59,17 @@ const cases = [
 		photo: case3,
 	},
 	{
+		title: "日常のお片付けでのご利用②",
+		plan: "軽トラ",
+		items: "ダイニングセット、棚、ソファなど",
+		duration: "1時間",
+		cost: "15,000円",
+		comment: "大きな家具が複数ございましたが、搬出経路を確認しながら手際よく運び出しました。お部屋もすっきりと片付き、お客様にも喜んでいただけました。",
+		photo: tuika2,
+	},
+	{
 		title: "実家の家財整理でのご依頼",
+		plan: "軽トラ",
 		items: "布団類、棚類、雑貨類",
 		duration: "1時間",
 		cost: "19,000円",
@@ -41,7 +77,17 @@ const cases = [
 		photo: case4,
 	},
 	{
+		title: "実家の家財整理でのご依頼②",
+		plan: "軽トラ",
+		items: "ゴルフセット、衣装ケース、オーディオ機器、段ボールなど",
+		duration: "30分",
+		cost: "17,000円",
+		comment: "趣味の品や思い出の品が多く含まれていたため、お客様のご意向を伺いながら一つひとつ丁寧に確認して作業を進めました。",
+		photo: tuika3,
+	},
+	{
 		title: "ご実家の大型家財撤去",
+		plan: "1.5t",
 		items: "大型タンス・本棚など",
 		duration: "2時間",
 		cost: "50,000円",
@@ -50,6 +96,7 @@ const cases = [
 	},
 	{
 		title: "一軒家丸ごとお片付け",
+		plan: "2t",
 		items: "お部屋にあるすべてのお荷物",
 		duration: "1日",
 		cost: "130,000円",
@@ -77,9 +124,20 @@ const cases = [
 							</h3>
 							<div class="case__body">
 								<div class="case__photo">
-									<Image src={c.photo} alt={`${c.title}の作業事例写真`} width={600} height={338} />
+									{c.photo ? (
+										<Image src={c.photo} alt={c.title ? `${c.title}の作業事例写真` : "作業事例のビフォーアフター写真"} width={600} height={338} />
+									) : (
+										<div class="case__photo-empty" aria-hidden="true">
+											<span>BEFORE</span>
+											<span>AFTER</span>
+										</div>
+									)}
 								</div>
 								<dl class="case__desc">
+									<div class="case__row">
+										<dt>プラン</dt>
+										<dd>{c.plan}</dd>
+									</div>
 									<div class="case__row">
 										<dt>お荷物</dt>
 										<dd>{c.items}</dd>
@@ -211,6 +269,26 @@ const cases = [
 		display: block;
 	}
 
+	/* placeholder frame for cards that have no before/after photo yet */
+	.case__photo-empty {
+		width: 100%;
+		height: 100%;
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		gap: 2px;
+	}
+
+	.case__photo-empty span {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		background: #e3e8ef;
+		color: #9aa7b8;
+		font-family: var(--font-en);
+		font-size: 14px;
+		letter-spacing: 0.12em;
+	}
+
 	.case__desc {
 		margin: 0;
 		display: flex;
@@ -270,6 +348,7 @@ const cases = [
 
 	.case__comment-text {
 		margin: 0;
+		min-height: 3.4em; /* keeps empty cards as tall as filled ones */
 		font-size: 13px;
 		line-height: 1.7;
 		color: var(--color-text);
