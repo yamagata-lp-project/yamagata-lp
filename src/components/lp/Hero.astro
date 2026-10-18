@@ -1,78 +1,102 @@
 ---
-import { getImage } from "astro:assets";
-import pcMain from "../../assets/lp/pc-main.png";
-import sumahoMain from "../../assets/lp/sumaho-main.png";
+import { Image } from "astro:assets";
+import tileDriver from "../../assets/lp/hero①.jpg";
+import tileHelmet from "../../assets/lp/LP②.jpeg";
+import tileRoom from "../../assets/lp/LP③.jpg";
+import tileFridge from "../../assets/lp/LP④.jpg";
+import tileDrawer from "../../assets/lp/LP⑦.jpeg";
+import tileAlbum from "../../assets/lp/LP⑥.png";
+// transparent-background cutout of zisseki-bajji.jpeg (same artwork, white backdrop removed)
+import badgeImg from "../../assets/lp/zisseki-bajji.webp";
 
-const heroAlt =
-	"不用品・粗大ごみ回収でお部屋を丸ごとスッキリ。即日対応可・お見積り無料。今日中に片付けたい方へ。";
+// `filter` evens out the tone against the bright, fresh t2 photo (the reference).
+// every tile is a placeholder photo from src/assets/lp; swapping a photo
+// later only means changing `src` / `position` here.
+const tiles = [
+	{ cls: "t1", src: tileDriver, position: "30% 30%", filter: "brightness(1.02) saturate(1.05)" },
+	{ cls: "t2", src: tileHelmet, position: "55% 40%", positionMobile: "48% 40%" },
+	{ cls: "t3", src: tileRoom, position: "70% 40%", positionMobile: "78% 40%", filter: "brightness(1.12) contrast(1.04) saturate(1.08)" },
+	{ cls: "t4", src: tileDrawer, position: "48% 40%", filter: "brightness(1.02)" },
+	{ cls: "t5", src: tileAlbum, position: "75% 35%", filter: "brightness(1.08) saturate(0.95)" },
+	{ cls: "t6", src: tileFridge, position: "50% 35%", positionMobile: "36% 35%", filter: "brightness(1.18) contrast(1.06) saturate(1.12)" },
+];
 
-// desktop (>=768px) art-directed visual — native 1920x1080, so the widest
-// step matches the source 1:1 (no upscaling) while still covering smaller
-// desktop viewports without over-serving bytes.
-const pcImage = await getImage({
-	src: pcMain,
-	format: "webp",
-	widths: [640, 960, 1280, 1600, 1920],
-	priority: true,
-});
+const tags = ["安い", "速い", "安心"];
 
-// mobile (<768px) art-directed visual — native 960x1200, same idea.
-const mobileImage = await getImage({
-	src: sumahoMain,
-	format: "webp",
-	widths: [375, 480, 640, 750, 960],
-	priority: true,
-});
+const badges = [
+	{ top: "グループ累計", big: "18万件", mid: "以上", bottom: "作業依頼あり" },
+	{ top: "他社より", big: "1円", mid: "でも", bottom: "高ければご相談を" },
+	{ top: "お見積もり", big: "完全無料", mid: "", bottom: "お気軽にどうぞ" },
+];
 ---
 
 <section class="hero">
-	<picture>
-		<source media="(min-width: 768px)" srcset={pcImage.srcSet.attribute || pcImage.src} sizes="100vw" type="image/webp" />
-		<img
-			src={mobileImage.src}
-			srcset={mobileImage.srcSet.attribute}
-			sizes="100vw"
-			alt={heroAlt}
-			class="hero__bg"
-			width={mobileImage.attributes.width}
-			height={mobileImage.attributes.height}
-			loading="eager"
-			decoding="sync"
-			fetchpriority="high"
-		/>
-	</picture>
+	<div class="hero__stage">
+		<div class="hero__tiles" aria-hidden="true">
+			{
+				tiles.map((t) => (
+					<div class={`hero__tile hero__tile--${t.cls}`}>
+						<Image
+							src={t.src}
+							alt=""
+							widths={[240, 480, 720]}
+							sizes="(min-width: 768px) 260px, 33vw"
+							loading="eager"
+							style={`--pos: ${t.position}; --pos-m: ${t.positionMobile ?? t.position};${t.filter ? ` filter: ${t.filter};` : ""}`}
+						/>
+					</div>
+				))
+			}
+		</div>
 
-	<!-- the hero photo/illustration is purely decorative; the real page
-	     heading below carries the equivalent message for SEO/a11y -->
-	<h1 class="sr-only">今日中に片付けたい方へ｜山形不用品回収サービス</h1>
+		<div class="hero__main">
+			<div class="hero__main-inner">
+				<div class="hero__pills">
+					<span class="hero__pill">山形県全域対応</span>
+					<span class="hero__pill">最短即日</span>
+				</div>
 
-	<div class="hero__content l-container">
-		<div class="hero__price">
-			<span class="hero__price-badge">最短30分</span>
-			<span class="hero__price-amount">9,000円〜</span>
+				<ul class="hero__tags">
+					{tags.map((tag, i) => <li class={`hero__tag hero__tag--${i + 1}`}>{tag}</li>)}
+				</ul>
+
+				<h1 class="hero__title">
+					不用品回収<span class="sr-only">｜山形不用品回収サービス</span>
+				</h1>
+
+				<p class="hero__lead">
+					サービス品質に圧倒的自信！<br />不用品のお悩みは<br />山形不用品回収サービスへ
+				</p>
+
+				<ul class="hero__badges">
+					{
+						badges.map((b) => (
+							<li class="hero__badge">
+								<Image
+									src={badgeImg}
+									alt=""
+									class="hero__badge-img"
+									widths={[240, 480, 640]}
+									sizes="(min-width: 768px) 200px, 120px"
+									loading="eager"
+									aria-hidden="true"
+								/>
+								<div class="hero__badge-body">
+									<span class="hero__badge-small">{b.top}</span>
+									<span class="hero__badge-big">
+										{b.big}
+										{b.mid && <span class="hero__badge-mid">{b.mid}</span>}
+									</span>
+									<span class="hero__badge-small">{b.bottom}</span>
+								</div>
+							</li>
+						))
+					}
+				</ul>
+			</div>
 		</div>
 	</div>
 </section>
-
-<div class="hero__badges-wrap l-container">
-	<ul class="hero__badges">
-		<li class="hero__badge">
-			<span class="hero__badge-small">グループ累計</span>
-			<span class="hero__badge-big">18万件<span class="hero__badge-mid">以上</span></span>
-			<span class="hero__badge-small">作業依頼あり</span>
-		</li>
-		<li class="hero__badge">
-			<span class="hero__badge-small">他社より</span>
-			<span class="hero__badge-big">1円<span class="hero__badge-mid">でも</span></span>
-			<span class="hero__badge-small">高ければご相談を</span>
-		</li>
-		<li class="hero__badge">
-			<span class="hero__badge-small">お見積もり</span>
-			<span class="hero__badge-big">完全無料</span>
-			<span class="hero__badge-small">お気軽にどうぞ</span>
-		</li>
-	</ul>
-</div>
 
 <style>
 	.sr-only {
@@ -87,145 +111,287 @@ const mobileImage = await getImage({
 		border: 0;
 	}
 
-	/* the image sits in normal document flow and scales at width:100% /
-	   height:auto — its own intrinsic aspect ratio is the ONLY thing that
-	   determines .hero's height. Overlay content below is positioned
-	   against that same box, so there is no second, independently
-	   computed size (e.g. a container aspect-ratio + object-fit: cover)
-	   that could round differently and drift out of sync at odd zoom
-	   levels. */
 	.hero {
-		position: relative;
-		width: 100%;
+		background: var(--color-primary-dark);
+		overflow: hidden;
 	}
 
-	.hero__bg {
+	/* ---- layout (structure borrowed from the reference: a centre
+	   message panel flanked by a mosaic of photo tiles) ---- */
+
+	.hero__stage {
+		/* the blue band is as wide as the row of three tags plus one tag-gap of
+		   margin on each side (so edge margin == gap between tags);
+		   everything else in the message may overflow it onto the photos */
+		--tag-fs: 22px;
+		--tag-px: 11px;
+		--tag-gap: 6px;
+		--title-fs: clamp(38px, 12.5vw, 88px);
+		--band-w: calc(3 * (2 * var(--tag-fs) + 2 * var(--tag-px)) + 4 * var(--tag-gap));
+		position: relative;
+		isolation: isolate;
+		max-width: 1000px;
+		margin-inline: auto;
+		background: var(--color-primary-dark);
+		color: #fff;
+		text-align: center;
+	}
+
+	/* photo tiles fill the stage; a solid blue band (the message panel)
+	   sits on top of them in the middle, photos peek out around it */
+
+	.hero__tiles {
+		position: absolute;
+		inset: 0;
+		z-index: -1;
+		display: grid;
+		grid-template-columns: 1fr var(--band-w) 1fr;
+		grid-template-rows: repeat(3, 1fr);
+		gap: 0;
+	}
+
+	.hero__tile {
+		position: relative;
+		overflow: hidden;
+		min-height: 0;
+	}
+
+	.hero__tile :global(img) {
+		position: absolute;
+		inset: 0;
 		display: block;
 		width: 100%;
-		height: auto;
+		height: 100%;
+		object-fit: cover;
+		/* narrow tiles on mobile can use their own crop (--pos-m) */
+		object-position: var(--pos-m);
 	}
 
-	/* ---- price badge (overlaid on the hero visual's bottom edge) ---- */
+	/* same 3-column idea at every width: left photos | centre band | right photos */
+	.hero__tile--t1 { grid-column: 1; grid-row: 1; }
+	.hero__tile--t4 { grid-column: 1; grid-row: 2; }
+	.hero__tile--t6 { grid-column: 1; grid-row: 3; }
+	.hero__tile--t2 { grid-column: 3; grid-row: 1; }
+	.hero__tile--t3 { grid-column: 3; grid-row: 2; }
+	.hero__tile--t5 { grid-column: 3; grid-row: 3; }
 
-	.hero__content {
-		position: absolute;
-		inset-inline: 0;
-		bottom: 48px;
-		text-align: center;
-	}
-
-	.hero__price {
-		display: inline-flex;
-		flex-wrap: wrap;
-		align-items: center;
-		justify-content: center;
-		gap: 4px 14px;
-		background: #fff;
-		color: var(--color-text);
-		border-radius: 4px;
-		padding: 10px 22px;
-		box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
-	}
-
-	.hero__price-badge {
-		font-size: 10px;
-		line-height: 1.4;
-		text-align: center;
-	}
-
-	.hero__price-amount {
-		font-family: var(--font-number);
-		font-weight: 700;
-		font-size: 22px;
-		line-height: 1;
-		color: var(--color-accent-red);
-	}
-
-	.hero__badges-wrap {
+	.hero__main-inner {
 		position: relative;
-		margin-top: -44px;
-		padding-bottom: 32px;
+		z-index: 0;
+		padding: 28px 10px 28px;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: 8px;
 	}
+
+	.hero__main-inner::before {
+		content: "";
+		position: absolute;
+		inset-block: 0;
+		left: 50%;
+		width: var(--band-w);
+		transform: translateX(-50%);
+		/* brightest at ~35%: where the headline sits (same on mobile & desktop) */
+		background: linear-gradient(
+			180deg,
+			#0a63b8 0%,
+			#1584e0 17%,
+			#35afff 35%,
+			#1584e0 57%,
+			#0a5ca8 82%,
+			#06498f 100%
+		);
+		z-index: -1;
+	}
+
+	/* ---- area / speed pills ---- */
+
+	.hero__pills {
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: center;
+		gap: 8px;
+	}
+
+	.hero__pill {
+		background: #fff;
+		color: var(--color-primary-dark);
+		border: 2px solid var(--color-primary);
+		border-radius: 999px;
+		padding: 4px 14px;
+		font-size: 11px;
+		font-weight: 700;
+		line-height: 1.4;
+	}
+
+	/* ---- colour-coded feature tags ---- */
+
+	.hero__tags {
+		display: flex;
+		justify-content: center;
+		gap: 6px;
+	}
+
+	.hero__tag {
+		background: #ffe94a;
+		color: var(--color-text);
+		font-weight: 900;
+		font-size: var(--tag-fs);
+		line-height: 1.2;
+		padding: 6px var(--tag-px);
+		border-radius: 4px;
+		box-shadow: 0 2px 0 rgba(0, 0, 0, 0.25);
+	}
+
+	/* ---- headline / tagline ---- */
+
+	.hero__title {
+		font-family: var(--font-heading);
+		font-weight: 900;
+		font-size: var(--title-fs);
+		line-height: 1.1;
+		letter-spacing: 0.05em;
+		white-space: nowrap;
+		color: #fff;
+		/* soft, bleeding light-blue edge: stacked blurred shadows instead of a
+		   hard stroke, with a faint darker shadow underneath for lift */
+		text-shadow:
+			0 0 0.03em #1c6fd1,
+			0 0 0.06em #1c6fd1,
+			0 0 0.1em #1c6fd1,
+			0 0 0.16em rgba(28, 111, 209, 0.9),
+			0 0 0.24em rgba(28, 111, 209, 0.6),
+			0 0.06em 0.16em rgba(0, 50, 110, 0.45);
+		display: inline-block;
+		margin: 0;
+		padding: 0.04em 0.14em 0.1em;
+	}
+
+	.hero__lead {
+		font-size: 13px;
+		font-weight: 700;
+		line-height: 2;
+		text-shadow: 0 1px 4px rgba(0, 0, 0, 0.5);
+		/* dashed rule under each line of the tagline */
+		text-decoration: underline dashed rgba(255, 255, 255, 0.9);
+		text-decoration-thickness: 2px;
+		text-underline-offset: 5px;
+	}
+
+	/* ---- trust badges ---- */
 
 	.hero__badges {
 		display: grid;
 		grid-template-columns: repeat(3, 1fr);
-		gap: 8px;
-		max-width: 720px;
-		margin-inline: auto;
+		gap: 4px;
+		width: 100%;
+		/* a little wider than the heading (~5.5em wide), tracking its size */
+		max-width: calc(var(--title-fs) * 6.5);
+		margin-top: 12px;
 	}
 
+	/* the medal artwork is the badge; text sits inside its white disc
+	   (disc is ~72% of the image width, centred slightly above the middle) */
 	.hero__badge {
-		background: #fff;
-		color: var(--color-text);
-		border-radius: 4px;
-		padding: 10px 5px;
+		position: relative;
+		aspect-ratio: 640 / 550;
+	}
+
+	.hero__badge :global(.hero__badge-img) {
+		position: absolute;
+		inset: 0;
+		width: 100%;
+		height: 100%;
+		object-fit: contain;
+		filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.3));
+	}
+
+	.hero__badge-body {
+		position: absolute;
+		left: 19%;
+		width: 62%;
+		top: 17%;
+		height: 58%;
 		display: flex;
 		flex-direction: column;
 		align-items: center;
-		box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+		justify-content: center;
+		color: var(--color-text);
 	}
 
 	.hero__badge-small {
-		font-size: 10px;
-		line-height: 1.4;
+		font-size: 7.5px;
+		line-height: 1.3;
 		text-align: center;
+		white-space: nowrap;
 	}
 
 	.hero__badge-big {
 		color: var(--color-accent-red);
-		font-size: 15px;
+		font-size: 13px;
 		font-weight: 700;
-		line-height: 1.4;
+		line-height: 1.3;
+		white-space: nowrap;
 	}
 
 	.hero__badge-mid {
-		font-size: 10px;
+		font-size: 9.5px;
 	}
 
 	@media (min-width: 640px) {
-		.hero__badges {
-			gap: 12px;
-			max-width: none;
-		}
-
-		.hero__badge {
-			padding: 14px 12px;
-		}
-
 		.hero__badge-small {
-			font-size: 14px;
+			font-size: 13px;
 		}
 
 		.hero__badge-big {
-			font-size: 22px;
+			font-size: 24px;
 		}
 
 		.hero__badge-mid {
 			font-size: 16px;
 		}
-
-		.hero__price {
-			padding: 14px 28px;
-		}
-
-		.hero__price-badge {
-			font-size: 14px;
-		}
-
-		.hero__price-amount {
-			font-size: 32px;
-		}
 	}
 
+	/* ---- desktop: tiles hug the left/right edges, text sits in the middle ---- */
+
 	@media (min-width: 768px) {
-		.hero__content {
-			bottom: 85px;
+		.hero__tile :global(img) {
+			object-position: var(--pos);
 		}
 
-		.hero__badges-wrap {
-			margin-top: -65px;
-			padding-bottom: 40px;
+		.hero__stage {
+			--tag-fs: 38px;
+			--tag-px: 20px;
 		}
+
+		.hero__main-inner {
+			min-height: 545px;
+			justify-content: center;
+			padding: 24px 16px;
+			gap: 10px;
+		}
+
+		.hero__pill {
+			font-size: 16px;
+			padding: 5px 18px;
+		}
+
+		.hero__tag {
+			padding: 8px var(--tag-px);
+		}
+
+		.hero__lead {
+			text-underline-offset: 7px;
+		}
+
+		.hero__badges {
+			margin-top: 20px;
+		}
+
+		.hero__lead {
+			font-size: 18px;
+		}
+
 	}
 </style>
