@@ -79,7 +79,7 @@ const badges = [
 									alt=""
 									class="hero__badge-img"
 									widths={[240, 480, 640]}
-									sizes="(min-width: 768px) 200px, 120px"
+									sizes="(min-width: 768px) 250px, 135px"
 									loading="eager"
 									aria-hidden="true"
 								/>
@@ -296,11 +296,17 @@ const badges = [
 	.hero__badges {
 		display: grid;
 		grid-template-columns: repeat(3, 1fr);
-		gap: 4px;
-		width: 100%;
-		/* a little wider than the heading (~5.5em wide), tracking its size */
-		max-width: calc(var(--title-fs) * 6.5);
-		margin-top: 20px;
+		gap: 0;
+		/* ~7.8x the heading's font size: wider than the heading and than the
+		   blue band (it may spill over the photo tiles) */
+		width: calc(var(--title-fs) * 7.8);
+		max-width: none;
+		margin-top: 12px;
+		/* the larger badges grow downward into the section's bottom padding
+		   (and 8px comes from the margin above) so the hero's height is
+		   unchanged. Badge height gain vs. the old 6.5x layout:
+		   0.859 * (0.5433 * title-fs + 2.667) - 8 ≈ 0.4667 * title-fs - 5.7 */
+		margin-bottom: calc(var(--title-fs) * -0.4667 + 5.7px);
 	}
 
 	/* the medal artwork is the badge; text sits inside its white disc
@@ -308,6 +314,8 @@ const badges = [
 	.hero__badge {
 		position: relative;
 		aspect-ratio: 640 / 550;
+		/* let neighbouring badges overlap slightly so each can be bigger */
+		margin-inline: calc(var(--title-fs) * -0.055);
 	}
 
 	.hero__badge :global(.hero__badge-img) {
@@ -333,7 +341,7 @@ const badges = [
 	}
 
 	.hero__badge-small {
-		font-size: 7.5px;
+		font-size: 9.5px;
 		line-height: 1.3;
 		text-align: center;
 		white-space: nowrap;
@@ -341,27 +349,27 @@ const badges = [
 
 	.hero__badge-big {
 		color: var(--color-accent-red);
-		font-size: 13px;
+		font-size: 16.5px;
 		font-weight: 700;
 		line-height: 1.3;
 		white-space: nowrap;
 	}
 
 	.hero__badge-mid {
-		font-size: 9.5px;
+		font-size: 12px;
 	}
 
 	@media (min-width: 640px) {
 		.hero__badge-small {
-			font-size: 13px;
+			font-size: 16.5px;
 		}
 
 		.hero__badge-big {
-			font-size: 24px;
+			font-size: 30px;
 		}
 
 		.hero__badge-mid {
-			font-size: 16px;
+			font-size: 20px;
 		}
 	}
 
@@ -394,7 +402,7 @@ const badges = [
 		}
 
 		.hero__badges {
-			margin-top: 28px;
+			margin-top: 20px;
 		}
 
 		.hero__lead {
