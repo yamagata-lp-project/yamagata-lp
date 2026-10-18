@@ -65,7 +65,9 @@ const badges = [
 				</h1>
 
 				<p class="hero__lead">
-					サービス品質に圧倒的自信！<br />不用品のお悩みは<br />山形不用品回収サービスへ
+					<span class="hero__lead-line">サービス品質に圧倒的自信！</span>
+					<span class="hero__lead-line">不用品のお悩みは</span>
+					<span class="hero__lead-line">山形不用品回収サービスへ</span>
 				</p>
 
 				<ul class="hero__badges">
@@ -271,12 +273,22 @@ const badges = [
 	.hero__lead {
 		font-size: 13px;
 		font-weight: 700;
-		line-height: 2.2;
 		text-shadow: 0 1px 4px rgba(0, 0, 0, 0.5);
-		/* dashed rule under each line of the tagline */
-		text-decoration: underline dashed rgba(255, 255, 255, 0.9);
-		text-decoration-thickness: 2px;
-		text-underline-offset: 5px;
+	}
+
+	/* each line carries its own dashed rule (a border, not text-decoration, so
+	   it renders the same in every browser and at any line height) */
+	.hero__lead-line {
+		display: block;
+		width: fit-content;
+		margin-inline: auto;
+		line-height: 1.4;
+		padding-bottom: 0.28em;
+		border-bottom: 2px dashed rgba(255, 255, 255, 0.9);
+	}
+
+	.hero__lead-line + .hero__lead-line {
+		margin-top: 0.5em;
 	}
 
 	/* ---- trust badges ---- */
@@ -379,10 +391,6 @@ const badges = [
 
 		.hero__tag {
 			padding: 10px var(--tag-px);
-		}
-
-		.hero__lead {
-			text-underline-offset: 7px;
 		}
 
 		.hero__badges {
