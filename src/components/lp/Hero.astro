@@ -21,8 +21,6 @@ const tiles = [
 	{ cls: "t6", src: tileFridge, position: "50% 35%", positionMobile: "36% 35%", filter: "brightness(1.18) contrast(1.06) saturate(1.12)" },
 ];
 
-const tags = ["安い", "速い", "安心"];
-
 const badges = [
 	{ top: "グループ累計", big: "18万件", mid: "以上", bottom: "作業依頼あり" },
 	{ top: "他社より", big: "1円", mid: "でも", bottom: "高ければご相談を" },
@@ -56,9 +54,7 @@ const badges = [
 					<span class="hero__pill">最短即日</span>
 				</div>
 
-				<ul class="hero__tags">
-					{tags.map((tag, i) => <li class={`hero__tag hero__tag--${i + 1}`}>{tag}</li>)}
-				</ul>
+				<p class="hero__tag">ゴミ屋敷・遺品整理も対応</p>
 
 				<h1 class="hero__title">
 					不用品回収<span class="sr-only">｜山形不用品回収サービス</span>
@@ -128,6 +124,7 @@ const badges = [
 		--tag-fs: 22px;
 		--tag-px: 11px;
 		--tag-gap: 6px;
+		--tag-text-fs: 16px;
 		--title-fs: clamp(38px, 12.5vw, 88px);
 		--band-w: calc(3 * (2 * var(--tag-fs) + 2 * var(--tag-px)) + 4 * var(--tag-gap));
 		position: relative;
@@ -229,17 +226,14 @@ const badges = [
 
 	/* ---- colour-coded feature tags ---- */
 
-	.hero__tags {
-		display: flex;
-		justify-content: center;
-		gap: 6px;
-	}
-
 	.hero__tag {
 		background: #ffe94a;
 		color: var(--color-text);
 		font-weight: 900;
-		font-size: var(--tag-fs);
+		/* one tag, sized to fit within the blue band (12 chars) */
+		font-size: var(--tag-text-fs);
+		white-space: nowrap;
+		margin: 0;
 		line-height: 1.2;
 		padding: 8px var(--tag-px);
 		border-radius: 4px;
@@ -383,6 +377,7 @@ const badges = [
 		.hero__stage {
 			--tag-fs: 38px;
 			--tag-px: 20px;
+			--tag-text-fs: 27px;
 		}
 
 		.hero__main-inner {
