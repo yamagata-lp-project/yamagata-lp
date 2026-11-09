@@ -1,4 +1,5 @@
 ---
+const { heading = "不用品回収" } = Astro.props;
 import { Image } from "astro:assets";
 import tileDriver from "../../assets/lp/hero①.jpg";
 import tileHelmet from "../../assets/lp/LP②.jpeg";
@@ -57,7 +58,7 @@ const badges = [
 				<p class="hero__tag">ゴミ屋敷・遺品整理も対応</p>
 
 				<h1 class="hero__title">
-					不用品回収<span class="sr-only">｜山形不用品回収サービス</span>
+					{heading}<span class="sr-only">｜山形不用品回収サービス</span>
 				</h1>
 
 				<p class="hero__lead">

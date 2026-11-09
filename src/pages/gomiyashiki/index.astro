@@ -1,40 +1,40 @@
 ---
 import Layout from "../../layouts/Layout.astro";
 import Header from "../../components/lp/Header.astro";
-import GomiyashikiHero from "../../components/lp/GomiyashikiHero.astro";
-import FinalCta from "../../components/lp/FinalCta.astro";
+import Hero from "../../components/lp/Hero.astro";
+import PaymentMethods from "../../components/lp/PaymentMethods.astro";
 import Reviews from "../../components/lp/Reviews.astro";
 import Partners from "../../components/lp/Partners.astro";
-import GomiyashikiCases from "../../components/lp/GomiyashikiCases.astro";
-import GomiyashikiPriceCases from "../../components/lp/GomiyashikiPriceCases.astro";
-import GomiyashikiPricingSystem from "../../components/lp/GomiyashikiPricingSystem.astro";
-import GomiyashikiReasons from "../../components/lp/GomiyashikiReasons.astro";
+import About from "../../components/lp/About.astro";
+import Pricing from "../../components/lp/Pricing.astro";
 import Flow from "../../components/lp/Flow.astro";
+import CaseStudies from "../../components/lp/CaseStudies.astro";
+import CollectionItems from "../../components/lp/CollectionItems.astro";
+import ServiceList from "../../components/lp/ServiceList.astro";
 import Area from "../../components/lp/Area.astro";
-import GomiyashikiFaq from "../../components/lp/GomiyashikiFaq.astro";
+import Faq from "../../components/lp/Faq.astro";
+import FinalCta from "../../components/lp/FinalCta.astro";
 import Footer from "../../components/lp/Footer.astro";
 import StickyMobileCta from "../../components/lp/StickyMobileCta.astro";
 ---
 
-<Layout
-	title="ゴミ屋敷の片付け｜山形不用品回収サービス"
-	description="山形県内のゴミ屋敷片付けは山形不用品回収サービスへ。最短即日・確定金額のお見積もり。"
->
+<Layout title="ゴミ屋敷片付け｜山形不用品回収サービス｜最短30分・即日対応">
 	<Header />
 	<main>
-		<GomiyashikiHero />
-		<FinalCta />
+		<Hero heading="ゴミ屋敷片付け" />
+		<PaymentMethods />
 		<Reviews />
 		<Partners />
-		<GomiyashikiCases />
-		<GomiyashikiPriceCases />
-		<GomiyashikiPricingSystem />
-		<GomiyashikiReasons />
-		<FinalCta />
+		<Pricing />
+		<CaseStudies />
+		<About />
+		<CollectionItems />
+		<ServiceList />
 		<Flow />
 		<Area />
-		<GomiyashikiFaq />
+		<Faq />
 	</main>
+	<FinalCta />
 	<Footer />
 	<StickyMobileCta />
 </Layout>
