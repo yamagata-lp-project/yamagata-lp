@@ -9,8 +9,6 @@ import About from "../../components/lp/About.astro";
 import Pricing from "../../components/lp/Pricing.astro";
 import Flow from "../../components/lp/Flow.astro";
 import CaseStudies from "../../components/lp/CaseStudies.astro";
-import CollectionItems from "../../components/lp/CollectionItems.astro";
-import ServiceList from "../../components/lp/ServiceList.astro";
 import Area from "../../components/lp/Area.astro";
 import Faq from "../../components/lp/Faq.astro";
 import FinalCta from "../../components/lp/FinalCta.astro";
@@ -21,15 +19,13 @@ import StickyMobileCta from "../../components/lp/StickyMobileCta.astro";
 <Layout title="ゴミ屋敷片付け｜山形不用品回収サービス｜最短30分・即日対応">
 	<Header />
 	<main>
-		<Hero heading="ゴミ屋敷片付け" />
+		<Hero heading="ゴミ屋敷" headingLine2="片付け" showTag={false} leadLine2="ゴミ屋敷のお悩みは" />
 		<PaymentMethods />
 		<Reviews />
 		<Partners />
 		<Pricing />
 		<CaseStudies />
 		<About />
-		<CollectionItems />
-		<ServiceList />
 		<Flow />
 		<Area />
 		<Faq />
